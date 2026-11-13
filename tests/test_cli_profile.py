@@ -27,6 +27,9 @@ def test_plan_apply_sheet(books, tmp_path):
     assert (tmp_path / "s.jpg").stat().st_size > 10_000
     assert main(["sheet", books["blank"], "--recipe", str(rec), "--html", str(tmp_path / "rev")]) == 0
     assert (tmp_path / "rev" / "index.html").exists()
+    assert main(["sheet", books["blank"], "--recipe", str(rec), "--cards", str(tmp_path / "cards")]) == 0
+    first = json.loads((tmp_path / "cards" / "cards.jsonl").read_text().splitlines()[0])
+    assert first["id"] and len(first["images"]) == 2
 
 
 def test_drop_blank(books, tmp_path, capsys):
@@ -73,3 +76,18 @@ def test_version_and_help(capsys):
     with pytest.raises(SystemExit):
         main(["--version"])
     assert main([]) == 0
+
+
+def test_bench(books, prof, tmp_path, capsys):
+    from safha.bench import bench
+
+    rows = bench([books["tilt"], books["level"]], prof, out=str(tmp_path / "b.json"))
+    assert len(rows) == 2 and all("error" not in r for r in rows)
+    assert (tmp_path / "b.md").read_text().startswith("# safha bench")
+    assert rows[0]["filters"] == rows[0]["filters_out"]
+
+
+def test_demo(tmp_path, capsys):
+    assert main(["demo", "-o", str(tmp_path / "demo"), "-j", "2"]) == 0
+    out = capsys.readouterr().out
+    assert "sample-spreads" in out and (tmp_path / "demo" / "sample-latin.safha.pdf").exists()

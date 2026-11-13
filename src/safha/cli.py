@@ -207,7 +207,11 @@ def cmd_sheet(a: argparse.Namespace) -> int:
     if a.html:
         out = html_review(a.pdf, rec, a.html, every=a.all)
         print(f"review page: {out}")
-    if a.output or not a.html:
+    if a.cards:
+        from .sheet import review_cards
+
+        print(f"review cards: {review_cards(a.pdf, rec, a.cards)}")
+    if a.output or not (a.html or a.cards):
         pages = [(n - 1, "asked") for n in _pages(a.pages)] if a.pages else None
         out = contact_sheet(a.pdf, rec, a.output or os.path.splitext(a.pdf)[0] + ".sheet.jpg", pages, px=a.px, cols=a.cols)
         print(f"sheet: {out}")
@@ -358,6 +362,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--pages", metavar="PAGES", help="these pages instead of the telling ones, e.g. 3,10-12")
     p.add_argument("--html", metavar="DIR", help="write an HTML review folder")
     p.add_argument("--all", action="store_true", help="every page in the HTML review")
+    p.add_argument("--cards", metavar="DIR", help="write review cards (cards.jsonl + images) for a review page")
     p.add_argument("--px", type=int, default=360, help="width of each image")
     p.add_argument("--cols", type=int, default=2, help="pairs per row")
     p.set_defaults(fn=cmd_sheet)

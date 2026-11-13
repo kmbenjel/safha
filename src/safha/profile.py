@@ -13,8 +13,6 @@ from dataclasses import asdict, dataclass, fields, replace
 from pathlib import Path
 from typing import Any
 
-import tomllib
-
 
 @dataclass(frozen=True)
 class Profile:
@@ -112,7 +110,14 @@ def load_profile(spec: str | None, overrides: dict[str, Any] | None = None) -> P
         p = Path(spec)
         if not p.exists():
             raise ValueError(f"no profile named {spec!r} and no such file; built-in: {', '.join(PROFILES)}")
-        data = tomllib.loads(p.read_text()) if p.suffix == ".toml" else json.loads(p.read_text())
+        if p.suffix == ".toml":
+            try:
+                import tomllib
+            except ImportError:  # Python 3.10
+                import tomli as tomllib  # type: ignore[no-redef]
+            data = tomllib.loads(p.read_text())
+        else:
+            data = json.loads(p.read_text())
         base = PROFILES.get(data.pop("base", "warraq"), PROFILES["warraq"])
         prof = base.with_values(name=data.pop("name", p.stem), **data)
     return prof.with_values(**overrides) if overrides else prof

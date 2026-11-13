@@ -70,6 +70,18 @@ class Looker:
         self.tu.close()
 
 
+def texty(mk: dict, least: int = 100) -> bool:
+    """a page of real text, whose tilt can be read: at least ``least`` letter-sized marks (a blank leaf with a binding
+    shadow, a plate or a few words has no lines to level)"""
+    parts = mk.get("parts") or []
+    if len(parts) < least or not mk.get("text"):
+        return False
+    t = mk["text"]
+    h, w = max(1.0, t[3] - t[1]), max(1.0, t[2] - t[0])
+    small = sum(1 for b in parts if b[3] - b[1] <= 0.08 * h and b[2] - b[0] <= 0.15 * w)
+    return small >= least
+
+
 def _ink(mk: dict) -> int:
     return 0 if mk.get("xy") is None else len(mk["xy"][0])
 
@@ -113,7 +125,7 @@ def first_look(doc: pymupdf.Document, i: int, prof: Profile, lk: Looker) -> tupl
         al = mk["allowed"]
         rec["sheet"] = sheet
         mk["allowed"] = [max(al[0], sheet[0]), max(al[1], sheet[1]), min(al[2], sheet[2]), min(al[3], sheet[3])]
-    if mk["box"] is not None and mk["dark"] <= 0.35 and prof.deskew:
+    if mk["box"] is not None and mk["dark"] <= 0.35 and prof.deskew and texty(mk):
         ang, gain = skew_of(mk["xy"], wide=prof.skew_max)
         if 0.1 <= abs(ang) < 0.35:  # small: measured again at twice the resolution
             ang, gain = skew_of(lk.look(q0, 2 * prof.first_px)["xy"], wide=prof.skew_max)
@@ -221,7 +233,7 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
         else:
             p.pop("skew", None)
             flags.append("unsure_tilt")
-    elif mk0.get("xy") is not None and p.get("kind") == "text" and prof.deskew:
+    elif mk0.get("xy") is not None and p.get("kind") == "text" and prof.deskew and texty(mk0, 300):
         u, g = skew_of(mk0["xy"], wide=prof.skew_max)
         if abs(u) >= 1.0 and mk0.get("level_frame"):
             u = 0.0

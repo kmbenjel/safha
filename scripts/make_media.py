@@ -66,7 +66,7 @@ def hero(spreads: str, out: str, H: int = 520) -> Image.Image:
     right, left = render(dst[2 * k], H), render(dst[2 * k + 1], H)  # RTL: the right-hand page comes first
     gap = 18
     W = before.width + 90 + left.width + right.width + gap + 40
-    im = Image.new("RGB", (W, H + 70), BG)
+    im = Image.new("RGB", (W, H + 84), BG)
     im.paste(before, (20, 50))
     x = 20 + before.width + 70
     im.paste(left, (x, 50))
@@ -76,7 +76,7 @@ def hero(spreads: str, out: str, H: int = 520) -> Image.Image:
     label(d, (x, 12), "safha: two pages, one size, centred", 20)
     ax = 20 + before.width + 18
     d.polygon([(ax, 50 + H // 2 - 14), (ax + 34, 50 + H // 2), (ax, 50 + H // 2 + 14)], fill=RED)
-    label(d, (20, H + 54), "lossless: the scan's image stream is untouched, only the page boxes and matrices change",
+    label(d, (20, H + 58), "lossless: the scan's image stream is untouched, only the page boxes and matrices change",
           15, MUTED, False)
     os.remove(tmp)
     save_webp(im, out, 260)
@@ -87,7 +87,8 @@ def deskew_gif(book: str, out: str, H: int = 560) -> None:
     """the most tilted page safha turned: the scan with its box (red), then what a reader shows"""
     prof = safha.load_profile(None, {"min_text_pages": 1})
     rec = safha.plan(book, prof, jobs=4)
-    turned = sorted((p for p in rec["pages"] if p.get("skew") and p.get("crop")), key=lambda p: -abs(p["skew"]))
+    turned = sorted((p for p in rec["pages"] if p.get("skew") and p["kind"] == "text" and (p.get("after") or [9])[0] <= 0.15),
+                    key=lambda p: -abs(p["skew"]))
     if not turned:
         print("no turned page in", book)
         return

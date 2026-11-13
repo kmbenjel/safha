@@ -209,3 +209,26 @@ pre{{background:#fff;padding:8px;border:1px solid #ddd;white-space:pre-wrap}}
     with open(out, "w", encoding="utf-8") as f:
         f.write(page)
     return out
+
+
+def review_cards(src: str, rec: dict, outdir: str, px: int = 360) -> str:
+    """the telling pages as review cards, one JSON line each ({id, title, subtitle, why, body, images}), with their
+    before | after images: the format of the agent-workbench review pages"""
+    os.makedirs(outdir, exist_ok=True)
+    pr = Pair(src, rec)
+    out = os.path.join(outdir, "cards.jsonl")
+    with open(out, "w", encoding="utf-8") as f:
+        for i, why in pick_pages(rec, k=40):
+            p = rec["pages"][i]
+            b, a = pr.images(i, px)
+            fb, fa = os.path.join(outdir, f"p{i + 1:04d}-before.jpg"), os.path.join(outdir, f"p{i + 1:04d}-after.jpg")
+            b.save(fb, quality=72)
+            a.save(fa, quality=72)
+            turn = f"turn {p['skew']:+.2f} deg; " if p.get("skew") else ""
+            card = {"id": f"{rec['source'].get('md5', '')[:12]}-p{p['n']}", "title": f"{rec['source']['file']} p. {p['n']}",
+                    "subtitle": f"{p['kind']}; {turn}{', '.join(p.get('flags') or []) or 'no flag'}",
+                    "why": WHY.get(why, why), "body": f"mode {rec['mode']}; shown part {p.get('show') or p.get('crop')}",
+                    "images": [os.path.basename(fb), os.path.basename(fa)]}
+            f.write(json.dumps(card, ensure_ascii=False) + "\n")
+    pr.close()
+    return out

@@ -74,3 +74,31 @@ def test_jobs_do_not_change_the_result(books, prof):
     b = safha.plan(books["tilt"], prof, jobs=3)
     strip = lambda r: [{k: v for k, v in p.items()} for p in r["pages"]]
     assert strip(a) == strip(b)
+
+
+def test_level_only_book(books, tmp_path):
+    """a good scan whose only flaw is a tilted page: the page is turned, nothing else changes"""
+    prof = safha.load_profile(None, {"min_text_pages": 1, "gain_min": 3.0, "offcentre": 1.0, "sway": 1.0})
+    r = safha.plan(books["tilt"], prof)
+    assert r["mode"] == "level" and r["summary"]["turned"] == [3]
+    out = tmp_path / "l.pdf"
+    rep = safha.apply_recipe(books["tilt"], r, str(out))
+    assert rep["turned"] == 1
+    a, b = pymupdf.open(books["tilt"]), pymupdf.open(out)
+    assert [p.rect for p in a] == [p.rect for p in b]
+
+
+def test_cover_on_the_scanner_bed(tmp_path, prof):
+    """a coloured cover photographed on a dark bed is shown alone, filling the book's page"""
+    from PIL import Image, ImageDraw
+
+    import synth
+
+    cover = Image.new("RGB", (900, 1300), (30, 30, 30))
+    ImageDraw.Draw(cover).rectangle([120, 140, 780, 1180], fill=(150, 40, 40))
+    pages = [cover] + [synth.page(seed=i).convert("RGB") for i in range(5)]
+    path = synth.write(tmp_path / "c.pdf", pages)
+    r = safha.plan(path, prof)
+    assert r["pages"][0]["kind"] == "cover"
+    c = r["pages"][0]["cover"]
+    assert abs(c[0] - 120 * 72 / 150) < 6 and abs(c[2] - 780 * 72 / 150) < 6

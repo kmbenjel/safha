@@ -2,8 +2,14 @@
 
 For each input book and each tool: wall time, output size, whether the original image streams survive byte for byte
 (and the image codecs before and after), pixel fidelity (PSNR of level text pages against the input, after aligning),
-consistency of the result across pages (distinct page sizes, the text block's place from page to page), and, on a
-synthetic book with a known truth, turns: tilted pages levelled and warped pages (lines at two angles) wrongly turned.
+consistency of the result across pages (distinct page sizes, the text block's place from page to page), and turns:
+
+* on real pages that carry their own truth -- a two-column dictionary with a printed rule between the columns: the
+  rule's lean after each tool, read independently of safha (``bench/rules.py``);
+* on a synthetic book with a known truth: tilted pages levelled, and warped pages (lines at two angles) wrongly turned.
+
+Every tool runs the way a careful user would run it for this job (see ``run_tool``): the options that keep its output
+small and its pages whole. Where a tool has a lossless and a smaller lossy setting, both are run and both are published.
 
 Usage (see bench/compare.sh): python bench/compare.py WORKDIR BOOK.pdf [BOOK.pdf ...]
 """
@@ -23,6 +29,9 @@ import numpy as np
 import pymupdf
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "tests"))
+sys.path.insert(0, os.path.dirname(__file__))
+from rules import column_rule_lean
+
 import synth
 from safha.measure import marks
 from safha.pdf import gray, image_filters
@@ -47,6 +56,44 @@ def sh(cmd: str, timeout: int = 7200) -> None:
     subprocess.run(["bash", "-c", cmd], check=True, timeout=timeout, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
 
+def page_kind(path: str) -> str:
+    """what the scan's pages hold: ``mono`` (1-bit images only), ``gray`` or ``color``"""
+    d = pymupdf.open(path)
+    bpc, cs = set(), set()
+    for p in list(d)[: min(10, d.page_count)]:
+        for x in p.get_images(full=True):
+            bpc.add(x[4])
+            cs.add(str(x[5]))
+    if bpc == {1}:
+        return "mono"
+    return "gray" if cs <= {"DeviceGray", "", "None"} else "color"
+
+
+def _unpaper(src: str, dst: str, work: str, dpi: int, opts: str = "") -> None:
+    """unpaper works on images: the pages are rendered at the scan's own resolution and kind (1-bit, gray or colour),
+    cleaned, and wrapped again the way a careful user would: 1-bit pages as CCITT G4 (lossless), the others as JPEG 85,
+    at the page's own size"""
+    from PIL import Image
+
+    kind = page_kind(src)
+    flag, ext = {"mono": ("-mono", "pbm"), "gray": ("-gray", "pgm"), "color": ("", "ppm")}[kind]
+    t = tempfile.mkdtemp(dir=work)
+    sh(f'pdftoppm -r {dpi} {flag} "{src}" "{t}/p" && cd "{t}" && for f in p-*.{ext}; do '
+       f'unpaper -q --overwrite {opts} "$f" "u${{f#p}}"; done')
+    outs = []
+    for f in sorted((x for x in os.listdir(t) if x.startswith("u-")), key=lambda x: int("".join(c for c in x if c.isdigit()))):
+        im = Image.open(os.path.join(t, f))
+        if kind == "mono":
+            o = os.path.join(t, f + ".tif")
+            im.convert("1").save(o, compression="group4", dpi=(dpi, dpi))
+        else:
+            o = os.path.join(t, f + ".jpg")
+            im.convert("L" if kind == "gray" else "RGB").save(o, quality=85, dpi=(dpi, dpi))
+        outs.append(o)
+    sh("img2pdf -o " + f'"{dst}" ' + " ".join(f'"{o}"' for o in outs))
+    shutil.rmtree(t, ignore_errors=True)
+
+
 def run_tool(tool: str, src: str, dst: str, work: str) -> None:
     dpi = native_dpi(src)
     if tool in ("safha", "safha-reader"):
@@ -56,6 +103,11 @@ def run_tool(tool: str, src: str, dst: str, work: str) -> None:
             shutil.copyfile(src, dst)
     elif tool == "k2pdfopt":
         sh(f'k2pdfopt "{src}" -ui- -x -as -o "{dst}"')  # its default: reflowed for an e-reader, auto-straightened
+    elif tool == "k2pdfopt-tm":
+        sh(f'k2pdfopt "{src}" -ui- -x -mode tm -o "{dst}"')  # trim margins: its lossless mode (native PDF output)
+    elif tool == "k2pdfopt-as":
+        # one output page per source page at the scan's resolution, auto-straightened: its deskew without the reflow
+        sh(f'k2pdfopt "{src}" -ui- -x -mode copy -as -dpi {dpi} -idpi {dpi} -o "{dst}"')
     elif tool == "pdfCropMargins":
         sh(f'"{TOOLS_DIR}/pcm/bin/pdf-crop-margins" -u -s -p 10 -o "{dst}" "{src}"')
     elif tool == "briss":
@@ -63,13 +115,16 @@ def run_tool(tool: str, src: str, dst: str, work: str) -> None:
                              text=True).stdout.strip()
         sh(f'java -Djava.awt.headless=true -jar "{jar}" -s "{src}" -d "{dst}"')
     elif tool == "unpaper":
-        t = tempfile.mkdtemp(dir=work)
-        sh(f'pdftoppm -r {dpi} -gray "{src}" "{t}/p" && cd "{t}" && for f in p-*.pgm; do '
-           f'unpaper -q --overwrite "$f" "u${{f#p}}"; pnmtopng "u${{f#p}}" > "u${{f#p}}.png"; done && '
-           f'img2pdf --pagesize A5 -o "{dst}" $(ls u-*.png | sort -V)')
-        shutil.rmtree(t, ignore_errors=True)
-    elif tool == "ocrmypdf":
-        sh(f'ocrmypdf -q --force-ocr --deskew --tesseract-timeout 0 --output-type pdf "{src}" "{dst}"')
+        _unpaper(src, dst, work, dpi)
+    elif tool.startswith("ocrmypdf"):
+        # --force-ocr: the corpus files carry a text layer and --deskew needs the page rasterised; --tesseract-timeout 0
+        # skips the recognition itself (only the deskew is measured). "ocrmypdf-pdfa" is the tool's own default (PDF/A
+        # output through Ghostscript, which may re-encode images as JPEG); the others write a plain PDF: -O1 is its
+        # default optimisation (lossless), -O2/-O3 its lossy settings; jbig2enc and pngquant are installed
+        # (bench/install_tools.sh), --jbig2-lossy stays off
+        opt = {"ocrmypdf-pdfa": "", "ocrmypdf": "--output-type pdf", "ocrmypdf-O2": "--output-type pdf --optimize 2",
+               "ocrmypdf-O3": "--output-type pdf --optimize 3"}[tool]
+        sh(f'ocrmypdf -q --jobs 8 --force-ocr --deskew --tesseract-timeout 0 {opt} "{src}" "{dst}"')
     else:
         raise ValueError(tool)
 
@@ -208,7 +263,36 @@ def turns(dst: str, kinds: list[str]) -> dict:
     return {"tilted_levelled": f"{levelled}/{kinds.count('tilt')}", "warped_wrongly_turned": f"{wrong}/{kinds.count('warp')}"}
 
 
-TOOLS = ["safha", "safha-reader", "pdfCropMargins", "briss", "k2pdfopt", "unpaper", "ocrmypdf"]
+def rule_truth(path: str) -> dict:
+    """pages with a printed column rule: how far the rule stands from upright (degrees). -> {"pages": with a rule,
+    "median": median |lean|, "le02": pages within 0.2 deg, "gt05": pages beyond 0.5 deg, "leans": the leans by page}"""
+    d = pymupdf.open(path)
+    leans: dict[int, float] = {}
+    for i, p in enumerate(d):
+        z = 1400 / p.rect.width
+        pix = p.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csGRAY, alpha=False)
+        a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width]
+        v = column_rule_lean(a)
+        if v is not None:
+            leans[i] = v
+    v = [abs(x) for x in leans.values()]
+    return {"pages": len(v), "median": round(float(np.median(v)), 3) if v else None, "le02": sum(1 for x in v if x <= 0.2),
+            "gt05": sum(1 for x in v if x > 0.5), "leans": {str(k): x for k, x in leans.items()}}
+
+
+def rule_change(before: dict, after: dict) -> dict:
+    """page by page (those with a rule in both): pages the tool left further from upright than they were (by more than
+    0.1 deg), and level pages (within 0.15 deg) it left beyond 0.3 deg"""
+    both = [(before["leans"][k], after["leans"][k]) for k in before["leans"] if k in after["leans"]]
+    return {"both": len(both), "worse": sum(1 for b, a in both if abs(a) > abs(b) + 0.1),
+            "level_made_to_lean": sum(1 for b, a in both if abs(b) <= 0.15 and abs(a) > 0.3)}
+
+
+# k2pdfopt-tm (its "trim margins" mode, native PDF output) is run only on request (ONLY_TOOLS): it needs a k2pdfopt
+# built with MuPDF, and the Ubuntu 24.04 package (Ghostscript only) writes no file in that mode
+TOOLS = ["safha", "safha-reader", "pdfCropMargins", "briss", "k2pdfopt", "k2pdfopt-as", "unpaper",
+         "ocrmypdf-pdfa", "ocrmypdf", "ocrmypdf-O2", "ocrmypdf-O3"]
+RULE_BOOKS = ("dictionnairefra00lagogoog",)  # excerpts whose pages carry a printed column rule: real truth for turns
 
 
 def main() -> None:
@@ -223,8 +307,10 @@ def main() -> None:
         name = os.path.basename(src)
         sd = pymupdf.open(src)
         lv = level_pages(src) if src != truth else []
+        ruled = name.startswith(RULE_BOOKS)
+        rt_in = rule_truth(src) if ruled else None
         base = {"book": name, "pages": sd.page_count, "bytes_in": os.path.getsize(src), "filters_in": image_filters(sd),
-                "place_in": text_place(sd) if src != truth else None}
+                "place_in": text_place(sd) if src != truth else None, "rule_in": rt_in}
         print(json.dumps(base), flush=True)
         for tool in tools:
             dst = os.path.join(work, f"{os.path.splitext(name)[0]}.{tool}.pdf")
@@ -241,6 +327,9 @@ def main() -> None:
                 else:
                     row["place_out"] = text_place(dd)
                     row["psnr_level_pages"] = fidelity(src, dst, lv)
+                    if ruled and dd.page_count == sd.page_count:
+                        row["rule_out"] = rule_truth(dst)
+                        row["rule_change"] = rule_change(rt_in, row["rule_out"])
             except subprocess.CalledProcessError as e:
                 row["error"] = (e.stderr or b"").decode(errors="replace")[-300:]
             except Exception as e:  # report and go on

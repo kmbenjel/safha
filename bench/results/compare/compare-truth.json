@@ -2,7 +2,7 @@
  {
   "book": "truth-warped-tilted.pdf",
   "tool": "safha",
-  "seconds": 3.2,
+  "seconds": 3.6,
   "pages_out": 6,
   "bytes_out": 728445,
   "filters_out": {
@@ -15,7 +15,7 @@
  {
   "book": "truth-warped-tilted.pdf",
   "tool": "safha-reader",
-  "seconds": 3.7,
+  "seconds": 3.6,
   "pages_out": 6,
   "bytes_out": 728449,
   "filters_out": {
@@ -24,6 +24,17 @@
   "kept_streams": 1.0,
   "tilted_levelled": "3/3",
   "warped_wrongly_turned": "0/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "input",
+  "pages": 6,
+  "bytes_in": 726420,
+  "filters_in": {
+   "FlateDecode": 6
+  },
+  "place_in": null,
+  "rule_in": null
  },
  {
   "book": "truth-warped-tilted.pdf",
@@ -41,7 +52,7 @@
  {
   "book": "truth-warped-tilted.pdf",
   "tool": "briss",
-  "seconds": 2.0,
+  "seconds": 2.1,
   "pages_out": 6,
   "bytes_out": 726118,
   "filters_out": {
@@ -54,7 +65,7 @@
  {
   "book": "truth-warped-tilted.pdf",
   "tool": "k2pdfopt",
-  "seconds": 28.2,
+  "seconds": 27.5,
   "pages_out": 10,
   "bytes_out": 1094454,
   "filters_out": {
@@ -66,12 +77,25 @@
  },
  {
   "book": "truth-warped-tilted.pdf",
-  "tool": "unpaper",
-  "seconds": 7.5,
+  "tool": "k2pdfopt-as",
+  "seconds": 4.5,
   "pages_out": 6,
-  "bytes_out": 1079656,
+  "bytes_out": 508042,
   "filters_out": {
    "FlateDecode": 6
+  },
+  "kept_streams": 0.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "1/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "unpaper",
+  "seconds": 7.1,
+  "pages_out": 6,
+  "bytes_out": 938687,
+  "filters_out": {
+   "DCTDecode": 6
   },
   "kept_streams": 0.0,
   "tilted_levelled": "0/3",
@@ -80,7 +104,7 @@
  {
   "book": "truth-warped-tilted.pdf",
   "tool": "ocrmypdf",
-  "seconds": 4.5,
+  "seconds": 2.9,
   "pages_out": 6,
   "bytes_out": 2251826,
   "filters_out": {
@@ -92,12 +116,41 @@
  },
  {
   "book": "truth-warped-tilted.pdf",
-  "tool": "input",
-  "pages": 6,
-  "bytes_in": 726420,
-  "filters_in": {
+  "tool": "ocrmypdf-O2",
+  "seconds": 3.8,
+  "pages_out": 6,
+  "bytes_out": 581119,
+  "filters_out": {
    "FlateDecode": 6
   },
-  "place_in": null
+  "kept_streams": 0.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "3/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "ocrmypdf-O3",
+  "seconds": 4.4,
+  "pages_out": 6,
+  "bytes_out": 437300,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 0.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "3/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "ocrmypdf-pdfa",
+  "seconds": 3.1,
+  "pages_out": 6,
+  "bytes_out": 633136,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 0.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "3/3"
  }
 ]

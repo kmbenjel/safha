@@ -2,17 +2,17 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "safha",
-  "seconds": 38.4,
+  "seconds": 38.7,
   "pages_out": 40,
-  "bytes_out": 2514976,
+  "bytes_out": 2514749,
   "filters_out": {
    "JPXDecode": 80
   },
   "kept_streams": 1.0,
   "place_out": {
    "sizes": 1,
-   "offcentre_median": 0.014,
-   "sway_iqr": 0.0175,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.016,
    "text_width_share": 0.808
   },
   "psnr_level_pages": 99.0
@@ -20,9 +20,9 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "safha-reader",
-  "seconds": 40.1,
+  "seconds": 39.0,
   "pages_out": 40,
-  "bytes_out": 2514764,
+  "bytes_out": 2514536,
   "filters_out": {
    "JPXDecode": 80
   },
@@ -37,8 +37,24 @@
  },
  {
   "book": "chronologyofanci00biru.pdf",
+  "tool": "input",
+  "pages": 40,
+  "bytes_in": 2502639,
+  "filters_in": {
+   "JPXDecode": 80
+  },
+  "place_in": {
+   "sizes": 1,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.0275,
+   "text_width_share": 0.764
+  },
+  "rule_in": null
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
   "tool": "pdfCropMargins",
-  "seconds": 24.6,
+  "seconds": 26.7,
   "pages_out": 40,
   "bytes_out": 2504597,
   "filters_out": {
@@ -56,7 +72,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "briss",
-  "seconds": 2.2,
+  "seconds": 2.5,
   "pages_out": 40,
   "bytes_out": 2503735,
   "filters_out": {
@@ -74,7 +90,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "k2pdfopt",
-  "seconds": 309.9,
+  "seconds": 248.0,
   "pages_out": 88,
   "bytes_out": 8164280,
   "filters_out": {
@@ -91,28 +107,46 @@
  },
  {
   "book": "chronologyofanci00biru.pdf",
-  "tool": "unpaper",
-  "seconds": 152.1,
-  "pages_out": 40,
-  "bytes_out": 17902932,
+  "tool": "k2pdfopt-as",
+  "seconds": 133.4,
+  "pages_out": 39,
+  "bytes_out": 15522137,
   "filters_out": {
-   "FlateDecode": 40
+   "FlateDecode": 39
   },
   "kept_streams": 0.0,
   "place_out": {
    "sizes": 1,
-   "offcentre_median": 0.006,
-   "sway_iqr": 0.007,
-   "text_width_share": 0.682
+   "offcentre_median": 0.012,
+   "sway_iqr": 0.0245,
+   "text_width_share": 0.766
+  },
+  "psnr_level_pages": null
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
+  "tool": "unpaper",
+  "seconds": 100.6,
+  "pages_out": 40,
+  "bytes_out": 21533207,
+  "filters_out": {
+   "DCTDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.007,
+   "sway_iqr": 0.01,
+   "text_width_share": 0.772
   },
   "psnr_level_pages": null
  },
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "ocrmypdf",
-  "seconds": 83.5,
+  "seconds": 78.2,
   "pages_out": 40,
-  "bytes_out": 123057348,
+  "bytes_out": 123057347,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -127,17 +161,56 @@
  },
  {
   "book": "chronologyofanci00biru.pdf",
-  "tool": "input",
-  "pages": 40,
-  "bytes_in": 2502639,
-  "filters_in": {
-   "JPXDecode": 80
+  "tool": "ocrmypdf-O2",
+  "seconds": 89.5,
+  "pages_out": 40,
+  "bytes_out": 53419066,
+  "filters_out": {
+   "FlateDecode": 40
   },
-  "place_in": {
+  "kept_streams": 0.0,
+  "place_out": {
    "sizes": 1,
    "offcentre_median": 0.013,
-   "sway_iqr": 0.0275,
+   "sway_iqr": 0.027,
    "text_width_share": 0.764
-  }
+  },
+  "psnr_level_pages": 3.61
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
+  "tool": "ocrmypdf-O3",
+  "seconds": 103.5,
+  "pages_out": 40,
+  "bytes_out": 39174964,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.027,
+   "text_width_share": 0.764
+  },
+  "psnr_level_pages": 3.61
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
+  "tool": "ocrmypdf-pdfa",
+  "seconds": 121.4,
+  "pages_out": 40,
+  "bytes_out": 20271190,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.024,
+   "text_width_share": 0.764
+  },
+  "psnr_level_pages": 3.63
  }
 ]

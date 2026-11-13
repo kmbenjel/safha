@@ -2,9 +2,9 @@
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "safha",
-  "seconds": 155.9,
+  "seconds": 155.1,
   "pages_out": 79,
-  "bytes_out": 13321674,
+  "bytes_out": 13321895,
   "filters_out": {
    "JPXDecode": 80
   },
@@ -13,14 +13,14 @@
    "sizes": 1,
    "offcentre_median": 0.003,
    "sway_iqr": 0.0067,
-   "text_width_share": 0.792
+   "text_width_share": 0.79
   },
   "psnr_level_pages": null
  },
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "safha-reader",
-  "seconds": 148.8,
+  "seconds": 131.4,
   "pages_out": 79,
   "bytes_out": 13319523,
   "filters_out": {
@@ -37,8 +37,24 @@
  },
  {
   "book": "arabicmanuscript28loui.pdf",
+  "tool": "input",
+  "pages": 40,
+  "bytes_in": 13119671,
+  "filters_in": {
+   "JPXDecode": 80
+  },
+  "place_in": {
+   "sizes": 18,
+   "offcentre_median": 0.0065,
+   "sway_iqr": 0.0115,
+   "text_width_share": 0.667
+  },
+  "rule_in": null
+ },
+ {
+  "book": "arabicmanuscript28loui.pdf",
   "tool": "pdfCropMargins",
-  "seconds": 40.1,
+  "seconds": 48.2,
   "pages_out": 40,
   "bytes_out": 13120811,
   "filters_out": {
@@ -56,7 +72,7 @@
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "briss",
-  "seconds": 5.0,
+  "seconds": 5.1,
   "pages_out": 40,
   "bytes_out": 13113486,
   "filters_out": {
@@ -74,7 +90,7 @@
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "k2pdfopt",
-  "seconds": 989.6,
+  "seconds": 1012.1,
   "pages_out": 23,
   "bytes_out": 3327676,
   "filters_out": {
@@ -91,26 +107,44 @@
  },
  {
   "book": "arabicmanuscript28loui.pdf",
-  "tool": "unpaper",
-  "seconds": 355.9,
+  "tool": "k2pdfopt-as",
+  "seconds": 312.8,
   "pages_out": 40,
-  "bytes_out": 70926264,
+  "bytes_out": 43281494,
   "filters_out": {
    "FlateDecode": 40
   },
   "kept_streams": 0.0,
   "place_out": {
-   "sizes": 1,
-   "offcentre_median": 0.0175,
-   "sway_iqr": 0.0275,
-   "text_width_share": 0.664
+   "sizes": 18,
+   "offcentre_median": 0.0055,
+   "sway_iqr": 0.0132,
+   "text_width_share": 0.668
+  },
+  "psnr_level_pages": null
+ },
+ {
+  "book": "arabicmanuscript28loui.pdf",
+  "tool": "unpaper",
+  "seconds": 494.1,
+  "pages_out": 40,
+  "bytes_out": 55925502,
+  "filters_out": {
+   "DCTDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 18,
+   "offcentre_median": 0.014,
+   "sway_iqr": 0.0273,
+   "text_width_share": 0.66
   },
   "psnr_level_pages": null
  },
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "ocrmypdf",
-  "seconds": 428.3,
+  "seconds": 673.4,
   "pages_out": 40,
   "bytes_out": 710333169,
   "filters_out": {
@@ -127,17 +161,56 @@
  },
  {
   "book": "arabicmanuscript28loui.pdf",
-  "tool": "input",
-  "pages": 40,
-  "bytes_in": 13119671,
-  "filters_in": {
-   "JPXDecode": 80
+  "tool": "ocrmypdf-O2",
+  "seconds": 751.8,
+  "pages_out": 40,
+  "bytes_out": 290485498,
+  "filters_out": {
+   "FlateDecode": 40
   },
-  "place_in": {
+  "kept_streams": 0.0,
+  "place_out": {
    "sizes": 18,
-   "offcentre_median": 0.0065,
-   "sway_iqr": 0.0115,
-   "text_width_share": 0.667
-  }
+   "offcentre_median": 0.008,
+   "sway_iqr": 0.011,
+   "text_width_share": 0.666
+  },
+  "psnr_level_pages": null
+ },
+ {
+  "book": "arabicmanuscript28loui.pdf",
+  "tool": "ocrmypdf-O3",
+  "seconds": 792.3,
+  "pages_out": 40,
+  "bytes_out": 314190443,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 18,
+   "offcentre_median": 0.008,
+   "sway_iqr": 0.011,
+   "text_width_share": 0.666
+  },
+  "psnr_level_pages": null
+ },
+ {
+  "book": "arabicmanuscript28loui.pdf",
+  "tool": "ocrmypdf-pdfa",
+  "seconds": 785.7,
+  "pages_out": 40,
+  "bytes_out": 190611239,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 18,
+   "offcentre_median": 0.0075,
+   "sway_iqr": 0.0108,
+   "text_width_share": 0.668
+  },
+  "psnr_level_pages": null
  }
 ]

@@ -91,11 +91,17 @@ def summary_lines(rec: dict) -> list[str]:
                    f"larger on screen" + ("; framed" if rec.get("framed") else "")
                    + ("; clean margins" if rec.get("clean_margins") else ""))
     if rec.get("split"):
-        out.append(f"  split {len(rec['split'])} two-page sheets ({rec.get('direction')})")
+        order = {"rtl": "right page first", "ltr": "left page first"}.get(rec.get("direction"), "")
+        out.append(f"  split {len(rec['split'])} two-page sheets ({rec.get('direction')}: {order})"
+                   + ("; the file has no text layer to tell the reading order from: for right-to-left books add --rtl"
+                      if rec.get("direction_from") == "default" else ""))
     lab = {"turned": "turned level", "sheared": "sheared level", "frame_turn": "squared by a printed frame",
+           "by_columns": "two columns, turned by a column rule or the columns' edges",
+           "tilt_disputed": "the witnesses of the tilt disagree, left as scanned",
            "two_angles": "lines at two angles, left as scanned", "unsure_tilt": "tilt not confirmed, left as scanned",
            "untreated_tilt": "tilt seen but no safe turn", "whole": "content wider than the box, shown whole",
-           "curved": "curved, levelled as far as one turn can", "moved": "content moved to stay centred"}
+           "curved": "curved, levelled as far as one turn can", "moved": "content moved to stay centred",
+           "print_held": "box moved or grown to keep a line of print whole"}
     for k, v in lab.items():
         if s.get(k):
             pg = ", ".join(map(str, s[k][:12])) + (" ..." if len(s[k]) > 12 else "")
@@ -135,7 +141,8 @@ def cmd_crop(a: argparse.Namespace) -> int:
         with open(a.recipe, "w", encoding="utf-8") as f:
             json.dump(rec, f, ensure_ascii=False)
     if rec["mode"] == "skip" and not rec.get("drop") and not rec.get("split"):
-        print("  nothing to do: the file is left as it is (crop anyway: --profile reader or --always)")
+        print("  nothing to do: the file is left as it is"
+              + (" (crop anyway: --profile reader or --always)" if "good scan" in (rec.get("why") or "") else ""))
         return 0
     out = a.output or os.path.splitext(a.pdf)[0] + ".safha.pdf"
     try:

@@ -32,8 +32,10 @@ def decide(pages: list[dict], prof: Profile, wq: float = 0.95) -> dict[str, Any]
     text = [i for i, p in enumerate(pages) if p["kind"] == "text"]
     out["measured"] = len(text)
     if len(text) < prof.min_text_pages or len(text) < 0.5 * len(pages):
+        rot = sum(1 for p in pages if p["kind"] == "rotated")
         out["decision"] = "skip"
-        out["why"] = f"few text pages ({len(text)} of {len(pages)})"
+        out["why"] = f"few text pages ({len(text)} of {len(pages)})" \
+            + (f"; {rot} pages are turned by a /Rotate entry: such pages are shown whole, not measured" if rot else "")
         return out
     # a «stain» at the same place on 3 other pages or more is print (an ornament, a logo): content again
     allb = [(i, bl) for i in text for bl in pages[i].get("blots") or []]

@@ -15,7 +15,8 @@ from .profile import PROFILES, Profile, load_profile
 def crop(src: str, dst: str, profile: "Profile | str | None" = None, jobs: int = 1, **kw) -> dict:
     """plan and apply in one call -> the recipe, with the apply report under ``applied`` (None when nothing to do)"""
     rec = plan(src, profile, jobs=jobs)
-    rec["applied"] = apply_recipe(src, rec, dst, **kw) if rec["mode"] in ("crop", "level") or rec.get("drop") else None
+    todo = rec["mode"] in ("crop", "level") or rec.get("drop") or rec.get("split")
+    rec["applied"] = apply_recipe(src, rec, dst, **kw) if todo else None
     return rec
 
 

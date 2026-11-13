@@ -307,7 +307,9 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
     if src.needs_pass:
         raise ValueError(f"{path}: the PDF is encrypted with a password")
     n0 = src.page_count
-    direction = prof.direction if prof.direction in ("ltr", "rtl") else (text_direction(src) or "ltr")
+    found = None if prof.direction in ("ltr", "rtl") else text_direction(src)
+    direction = prof.direction if prof.direction in ("ltr", "rtl") else (found or "ltr")
+    direction_from = "option" if prof.direction in ("ltr", "rtl") else ("text layer" if found else "default")
     split = find_spreads(src, prof.split)
     src.close()
     n = n0 + len(split)
@@ -334,6 +336,7 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
     if rec["decision"] == "level" or (rec["decision"] == "skip" and "do not fit" in rec.get("why", "")
                                       and any(p.get("skew") or p.get("shear") for p in rec["pages"])):
         rec = level_only(rec)
+    rec["direction_from"] = direction_from
     return finish(rec, path, prof, split, direction, n0, drop, time.time() - t0)
 
 
@@ -360,6 +363,8 @@ def finish(rec: dict, path: str, prof: Profile, split: dict, direction: str, n0:
     if split:
         out["split"] = split
     out["direction"] = direction
+    if split and rec.get("direction_from"):
+        out["direction_from"] = rec["direction_from"]  # option | text layer | default (no text layer to tell: ltr)
     if drop:
         out["drop"] = sorted(set(drop))
     for k in ("reasons", "size", "gain", "gain_h", "framed", "clean_margins", "margin_pt", "offcentre", "sway",

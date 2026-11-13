@@ -1,0 +1,108 @@
+{
+ "mode": "crop",
+ "size": [
+  627.06,
+  936.8
+ ],
+ "split": null,
+ "framed": false,
+ "clean_margins": true,
+ "pages": [
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    14.4,
+    6.4,
+    641.4,
+    943.2
+   ],
+   "move": [
+    0,
+    -10.6
+   ],
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    0.0,
+    6.4,
+    627.1,
+    943.2
+   ],
+   "move": [
+    5.1,
+    -8.0
+   ],
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    20.9,
+    6.4,
+    648.0,
+    943.2
+   ],
+   "move": [
+    -6.4,
+    -16.4
+   ],
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    20.9,
+    6.4,
+    648.0,
+    943.2
+   ],
+   "move": [
+    -9.0,
+    -1.5
+   ],
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    20.9,
+    6.4,
+    648.0,
+    943.2
+   ],
+   "move": [
+    -14.2,
+    -13.1
+   ],
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    0.0,
+    6.4,
+    627.1,
+    943.2
+   ],
+   "move": [
+    19.3,
+    -4.1
+   ],
+   "whole": false
+  }
+ ]
+}

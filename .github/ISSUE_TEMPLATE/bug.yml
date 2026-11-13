@@ -1,0 +1,13 @@
+name: Bug or crash
+description: an error message, a failed install, a wrong command
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Command and output
+      render: shell
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: OS, Python and safha versions

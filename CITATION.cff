@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use safha in research, please cite it as below."
+title: "safha: lossless crop, deskew and split for scanned book PDFs"
+abstract: >-
+  A tool that crops, levels and splits scanned book PDFs without re-encoding their page images: one box size per book
+  placed on each page's text, deskew by drawing matrices accepted only when independent measures agree, and pages whose
+  lines lie at two angles left as scanned.
+authors:
+  - family-names: Benjelloun
+    given-names: Khalid
+version: 0.1.0
+date-released: 2026-11-13
+license: MIT
+repository-code: "https://github.com/kmbenjel/safha"
+url: "https://warraq.benjelloun.dev/safha/"
+keywords: [pdf, scanned books, deskew, crop, lossless, digital libraries, e-readers, Arabic]

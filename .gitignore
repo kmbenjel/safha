@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+safha-demo/
+bench/work/
+*.safha.pdf
+*.recipe.json
+*.sheet.jpg

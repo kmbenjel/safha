@@ -1,0 +1,17 @@
+name: A page came out wrong
+description: a cut letter, a missed or wrong turn, a box off the text
+labels: [method]
+body:
+  - type: textarea
+    attributes:
+      label: What is wrong, and on which page
+      description: Attach `safha sheet book.pdf --pages N -o page.jpg`. Only public-domain or your own scans, please.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: safha version and profile
+      placeholder: safha 0.1.0, --profile warraq
+  - type: input
+    attributes:
+      label: Link to the book (if public domain)

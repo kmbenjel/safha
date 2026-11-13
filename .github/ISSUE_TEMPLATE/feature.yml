@@ -1,0 +1,9 @@
+name: Feature request
+description: something safha could do (images are never re-encoded, so ideas must keep that)
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: What would you like, and for which books?
+    validations:
+      required: true

@@ -1,0 +1,53 @@
+[
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "safha",
+  "seconds": 27.7,
+  "pages_out": 40,
+  "bytes_out": 3274314,
+  "filters_out": {
+   "JPXDecode": 80
+  },
+  "kept_streams": 1.0,
+  "place_out": {
+   "sizes": 19,
+   "offcentre_median": 0.023,
+   "sway_iqr": 0.0513,
+   "text_width_share": 0.914
+  },
+  "psnr_level_pages": 99.0
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "safha-reader",
+  "seconds": 28.0,
+  "pages_out": 40,
+  "bytes_out": 3274314,
+  "filters_out": {
+   "JPXDecode": 80
+  },
+  "kept_streams": 1.0,
+  "place_out": {
+   "sizes": 19,
+   "offcentre_median": 0.023,
+   "sway_iqr": 0.0513,
+   "text_width_share": 0.914
+  },
+  "psnr_level_pages": 99.0
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "input",
+  "pages": 40,
+  "bytes_in": 3262156,
+  "filters_in": {
+   "JPXDecode": 80
+  },
+  "place_in": {
+   "sizes": 19,
+   "offcentre_median": 0.0275,
+   "sway_iqr": 0.0557,
+   "text_width_share": 0.835
+  }
+ }
+]

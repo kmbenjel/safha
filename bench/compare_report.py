@@ -23,6 +23,11 @@ def codecs(f: dict | None) -> str:
 
 
 print("# Head-to-head on the same public-domain pages\n")
+print("Each book: a 40-page excerpt copied object for object from the Internet Archive scan. Size: output / input. "
+      "Off-centre: median distance of the text block's centre from the page's centre; sway: its interquartile range "
+      "from page to page (shares of the page width; lower is steadier). Text width: the text block's median share of "
+      "the page width (higher is larger text on screen). safha runs with its default profile (crops when it pays) and "
+      "with `--profile reader` (always crops).\n")
 for book, base in inputs.items():
     if book.startswith("truth"):
         continue
@@ -30,21 +35,23 @@ for book, base in inputs.items():
     print(f"## {book} ({base['pages']} pages, {base['bytes_in'] / 1e6:.2f} MB, {codecs(base['filters_in'])})\n")
     print(f"Input: {pi.get('sizes')} page sizes, text off-centre {pi.get('offcentre_median', 0) * 100:.1f} % (median), "
           f"sways {pi.get('sway_iqr', 0) * 100:.1f} % (IQR), text {pi.get('text_width_share', 0) * 100:.0f} % of the width\n")
-    print("| tool | time s | size | streams kept | codecs out | PSNR level pages | page sizes | off-centre | sway | text width |")
-    print("|---|---:|---:|---:|---|---:|---:|---:|---:|---:|")
+    print("| tool | time s | size | image streams kept byte for byte | codecs out | page sizes | text off-centre | sway | text width |")
+    print("|---|---:|---:|---:|---|---:|---:|---:|---:|")
     for t in tools:
         r = next((x for x in rows if x["book"] == book and x["tool"] == t), None)
         if r is None:
             continue
         if "error" in r:
-            print(f"| {t} | failed | | | | | | | | |")
+            print(f"| {t} | failed | | | | | | | |")
             continue
         po = r.get("place_out") or {}
-        ps = r.get("psnr_level_pages")
-        pss = "n/a" if ps is None else ("identical" if ps >= 99 else f"{ps:.1f} dB")
+
+        def pct(k: str, nd: int = 1) -> str:
+            return f"{po[k] * 100:.{nd}f} %" if k in po else "no text found"
+
         print(f"| {t} | {r['seconds']:.1f} | {r['bytes_out'] / base['bytes_in'] * 100:.0f} % | {r['kept_streams'] * 100:.0f} % | "
-              f"{codecs(r.get('filters_out'))} | {pss} | {po.get('sizes', '')} | {po.get('offcentre_median', 0) * 100:.1f} % | "
-              f"{po.get('sway_iqr', 0) * 100:.1f} % | {po.get('text_width_share', 0) * 100:.0f} % |")
+              f"{codecs(r.get('filters_out'))} | {po.get('sizes', '')} | {pct('offcentre_median')} | {pct('sway_iqr')} | "
+              f"{pct('text_width_share', 0)} |")
     print()
 truth = [r for r in rows if r["book"].startswith("truth") and r["tool"] != "input"]
 if truth:

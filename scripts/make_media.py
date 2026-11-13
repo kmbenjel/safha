@@ -94,8 +94,10 @@ def deskew_gif(book: str, out: str, H: int = 560) -> None:
         return
     i = turned[0]["n"] - 1
     pr = Pair(book, rec)
-    before, after = pr.images(i, px=int(H * 0.68))
+    before, after = pr.images(i, px=600)
     pr.close()
+    fit = lambda im: im.resize((max(1, int(im.width * H / im.height)), H), Image.LANCZOS)  # whole page, never cut
+    before, after = fit(before), fit(after)
     W = max(before.width, after.width) + 40
 
     def frame(img: Image.Image, title: str) -> Image.Image:

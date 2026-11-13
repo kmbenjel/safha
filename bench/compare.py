@@ -217,9 +217,9 @@ def main() -> None:
     only = os.environ.get("ONLY_TOOLS")
     tools = only.split(",") if only else TOOLS
     truth = os.path.join(work, "truth-warped-tilted.pdf")
-    kinds = truth_book(truth)
+    kinds = truth_book(truth) if not os.environ.get("NO_TRUTH") else []
     rows = []
-    for src in books + [truth]:
+    for src in books + ([truth] if kinds else []):
         name = os.path.basename(src)
         sd = pymupdf.open(src)
         lv = level_pages(src) if src != truth else []

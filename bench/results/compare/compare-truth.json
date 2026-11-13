@@ -1,0 +1,103 @@
+[
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "safha",
+  "seconds": 3.2,
+  "pages_out": 6,
+  "bytes_out": 728445,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 1.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "0/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "safha-reader",
+  "seconds": 3.7,
+  "pages_out": 6,
+  "bytes_out": 728449,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 1.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "0/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "pdfCropMargins",
+  "seconds": 0.3,
+  "pages_out": 6,
+  "bytes_out": 726872,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 1.0,
+  "tilted_levelled": "0/3",
+  "warped_wrongly_turned": "0/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "briss",
+  "seconds": 2.0,
+  "pages_out": 6,
+  "bytes_out": 726118,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 1.0,
+  "tilted_levelled": "0/3",
+  "warped_wrongly_turned": "0/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "k2pdfopt",
+  "seconds": 28.2,
+  "pages_out": 10,
+  "bytes_out": 1094454,
+  "filters_out": {
+   "FlateDecode": 10
+  },
+  "kept_streams": 0.0,
+  "tilted_levelled": "n/a (pages reflowed)",
+  "warped_wrongly_turned": "n/a (pages reflowed)"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "unpaper",
+  "seconds": 7.5,
+  "pages_out": 6,
+  "bytes_out": 1079656,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 0.0,
+  "tilted_levelled": "0/3",
+  "warped_wrongly_turned": "2/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "ocrmypdf",
+  "seconds": 4.5,
+  "pages_out": 6,
+  "bytes_out": 2251826,
+  "filters_out": {
+   "FlateDecode": 6
+  },
+  "kept_streams": 0.0,
+  "tilted_levelled": "3/3",
+  "warped_wrongly_turned": "3/3"
+ },
+ {
+  "book": "truth-warped-tilted.pdf",
+  "tool": "input",
+  "pages": 6,
+  "bytes_in": 726420,
+  "filters_in": {
+   "FlateDecode": 6
+  },
+  "place_in": null
+ }
+]

@@ -1,0 +1,658 @@
+{
+ "profile": "warraq",
+ "wall_s": 1585.4,
+ "jobs": 3,
+ "book_jobs": 4,
+ "cpus": 32,
+ "rows": [
+  {
+   "book": "almuqaddimah00ibnk.pdf",
+   "bytes_in": 46711618,
+   "pages_in": 528,
+   "filters": {
+    "JPXDecode": 1056
+   },
+   "plan_s": 422.24,
+   "mode": "level",
+   "why": "113 pages do not fit one box",
+   "reasons": [
+    "1 tilted pages",
+    "text sways 2.9 %"
+   ],
+   "pages": 528,
+   "text": 524,
+   "turned": 1,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 0,
+   "whole": 113,
+   "split": 0,
+   "gain": 1.0,
+   "size": [
+    403.9,
+    625.8
+   ],
+   "apply_s": 0.59,
+   "bytes_out": 46880408,
+   "filters_out": {
+    "JPXDecode": 1056
+   },
+   "sizes_out": 202,
+   "seconds": 422.92,
+   "pages_per_s": 1.25
+  },
+  {
+   "book": "arabicmanuscript28loui.pdf",
+   "bytes_in": 42016731,
+   "pages_in": 113,
+   "filters": {
+    "JPXDecode": 226
+   },
+   "plan_s": 417.11,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "text 26 % larger",
+    "2 tilted pages",
+    "scanner bands",
+    "text off-centre 13.4 %",
+    "text sways 26.8 %"
+   ],
+   "pages": 209,
+   "text": 205,
+   "turned": 2,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 17,
+   "whole": 3,
+   "split": 96,
+   "gain": 1.262,
+   "size": [
+    667.24,
+    1049.17
+   ],
+   "apply_s": 0.93,
+   "bytes_out": 42494068,
+   "filters_out": {
+    "JPXDecode": 226
+   },
+   "sizes_out": 1,
+   "seconds": 418.1,
+   "pages_per_s": 0.5
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "bytes_in": 29211722,
+   "pages_in": 112,
+   "filters": {
+    "JPXDecode": 224
+   },
+   "plan_s": 673.18,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "text 17 % larger",
+    "72 tilted pages",
+    "scanner bands",
+    "text off-centre 7.7 %",
+    "text sways 7.9 %"
+   ],
+   "pages": 211,
+   "text": 200,
+   "turned": 72,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 57,
+   "whole": 5,
+   "split": 99,
+   "gain": 1.172,
+   "size": [
+    748.28,
+    1084.99
+   ],
+   "apply_s": 1.02,
+   "bytes_out": 29816591,
+   "filters_out": {
+    "JPXDecode": 224
+   },
+   "sizes_out": 1,
+   "seconds": 674.27,
+   "pages_per_s": 0.31
+  },
+  {
+   "book": "arabicproverbsor00burc.pdf",
+   "bytes_in": 13623263,
+   "pages_in": 300,
+   "filters": {
+    "JPXDecode": 600
+   },
+   "plan_s": 216.66,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "27 tilted pages",
+    "text off-centre 3.1 %",
+    "text sways 6.3 %"
+   ],
+   "pages": 300,
+   "text": 293,
+   "turned": 27,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 1,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.148,
+   "size": [
+    303.23,
+    532.22
+   ],
+   "apply_s": 0.45,
+   "bytes_out": 13712966,
+   "filters_out": {
+    "JPXDecode": 600
+   },
+   "sizes_out": 1,
+   "seconds": 217.19,
+   "pages_per_s": 1.38
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "bytes_in": 32285349,
+   "pages_in": 492,
+   "filters": {
+    "JPXDecode": 983
+   },
+   "plan_s": 535.71,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "106 tilted pages",
+    "text sways 2.2 %",
+    "stains on 25 pages"
+   ],
+   "pages": 492,
+   "text": 480,
+   "turned": 106,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 0,
+   "whole": 1,
+   "split": 0,
+   "gain": 1.096,
+   "size": [
+    384.86,
+    630.38
+   ],
+   "apply_s": 0.71,
+   "bytes_out": 32446794,
+   "filters_out": {
+    "JPXDecode": 983
+   },
+   "sizes_out": 1,
+   "seconds": 536.51,
+   "pages_per_s": 0.92
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "bytes_in": 27834166,
+   "pages_in": 974,
+   "filters": {
+    "JPXDecode": 9,
+    "JBIG2Decode": 968
+   },
+   "plan_s": 369.44,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "189 tilted pages",
+    "text off-centre 3.3 %",
+    "text sways 6.7 %"
+   ],
+   "pages": 974,
+   "text": 966,
+   "turned": 189,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 14,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.068,
+   "size": [
+    371.72,
+    536.08
+   ],
+   "apply_s": 1.96,
+   "bytes_out": 28139283,
+   "filters_out": {
+    "JPXDecode": 9,
+    "JBIG2Decode": 968
+   },
+   "sizes_out": 1,
+   "seconds": 371.61,
+   "pages_per_s": 2.62
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "bytes_in": 60231741,
+   "pages_in": 458,
+   "filters": {
+    "CCITTFaxDecode": 458
+   },
+   "plan_s": 149.78,
+   "mode": "level",
+   "why": null,
+   "reasons": [
+    "38 tilted pages"
+   ],
+   "pages": 458,
+   "text": 435,
+   "turned": 38,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 50,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.0,
+   "size": [
+    433.8,
+    663.84
+   ],
+   "apply_s": 1.06,
+   "bytes_out": 60247494,
+   "filters_out": {
+    "CCITTFaxDecode": 458
+   },
+   "sizes_out": 1,
+   "seconds": 150.9,
+   "pages_per_s": 3.04
+  },
+  {
+   "book": "in.ernet.dli.2015.262150.pdf",
+   "bytes_in": 18997790,
+   "pages_in": 278,
+   "filters": {
+    "CCITTFaxDecode": 278
+   },
+   "plan_s": 113.22,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "text off-centre 2.4 %",
+    "text sways 4.9 %",
+    "stains on 16 pages"
+   ],
+   "pages": 278,
+   "text": 277,
+   "turned": 0,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.144,
+   "size": [
+    176.15,
+    261.94
+   ],
+   "apply_s": 0.41,
+   "bytes_out": 19066136,
+   "filters_out": {
+    "CCITTFaxDecode": 278
+   },
+   "sizes_out": 2,
+   "seconds": 113.68,
+   "pages_per_s": 2.45
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "bytes_in": 4653654,
+   "pages_in": 114,
+   "filters": {
+    "CCITTFaxDecode": 114
+   },
+   "plan_s": 30.99,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "22 tilted pages",
+    "stains on 12 pages"
+   ],
+   "pages": 114,
+   "text": 110,
+   "turned": 22,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 1,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.113,
+   "size": [
+    333.28,
+    523.26
+   ],
+   "apply_s": 0.17,
+   "bytes_out": 4684914,
+   "filters_out": {
+    "CCITTFaxDecode": 114
+   },
+   "sizes_out": 1,
+   "seconds": 31.18,
+   "pages_per_s": 3.66
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "bytes_in": 37804120,
+   "pages_in": 976,
+   "filters": {
+    "CCITTFaxDecode": 976
+   },
+   "plan_s": 345.95,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "125 tilted pages",
+    "text off-centre 2.6 %",
+    "text sways 5.0 %"
+   ],
+   "pages": 976,
+   "text": 971,
+   "turned": 125,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 7,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.046,
+   "size": [
+    355.05,
+    543.16
+   ],
+   "apply_s": 1.48,
+   "bytes_out": 38166160,
+   "filters_out": {
+    "CCITTFaxDecode": 976
+   },
+   "sizes_out": 2,
+   "seconds": 347.54,
+   "pages_per_s": 2.81
+  },
+  {
+   "book": "in.ernet.dli.2015.86278.pdf",
+   "bytes_in": 18312555,
+   "pages_in": 402,
+   "filters": {
+    "CCITTFaxDecode": 402
+   },
+   "plan_s": 68.02,
+   "mode": "level",
+   "why": null,
+   "reasons": [
+    "18 tilted pages"
+   ],
+   "pages": 402,
+   "text": 390,
+   "turned": 18,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.139,
+   "size": [
+    291.87,
+    450.1
+   ],
+   "apply_s": 0.55,
+   "bytes_out": 18320190,
+   "filters_out": {
+    "CCITTFaxDecode": 402
+   },
+   "sizes_out": 1,
+   "seconds": 68.67,
+   "pages_per_s": 5.85
+  },
+  {
+   "book": "kitabalzabur00barguoft.pdf",
+   "bytes_in": 20584152,
+   "pages_in": 322,
+   "filters": {
+    "JPXDecode": 637
+   },
+   "plan_s": 303.46,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "49 tilted pages",
+    "text off-centre 6.2 %",
+    "text sways 12.5 %"
+   ],
+   "pages": 322,
+   "text": 309,
+   "turned": 49,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 1,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.084,
+   "size": [
+    311.01,
+    470.75
+   ],
+   "apply_s": 0.45,
+   "bytes_out": 20738868,
+   "filters_out": {
+    "JPXDecode": 637
+   },
+   "sizes_out": 1,
+   "seconds": 303.97,
+   "pages_per_s": 1.06
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "bytes_in": 35356536,
+   "pages_in": 522,
+   "filters": {
+    "JPXDecode": 1044
+   },
+   "plan_s": 573.12,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "text 23 % larger",
+    "67 tilted pages",
+    "text sways 3.7 %"
+   ],
+   "pages": 522,
+   "text": 516,
+   "turned": 67,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 4,
+   "unsure": 0,
+   "whole": 2,
+   "split": 0,
+   "gain": 1.226,
+   "size": [
+    325.96,
+    576.23
+   ],
+   "apply_s": 0.68,
+   "bytes_out": 35602744,
+   "filters_out": {
+    "JPXDecode": 1044
+   },
+   "sizes_out": 1,
+   "seconds": 573.89,
+   "pages_per_s": 0.91
+  },
+  {
+   "book": "majmaalmasarrt00khrsuoft.pdf",
+   "bytes_in": 29732144,
+   "pages_in": 712,
+   "filters": {
+    "JPXDecode": 1424
+   },
+   "plan_s": 526.22,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "38 tilted pages",
+    "text sways 3.2 %"
+   ],
+   "pages": 712,
+   "text": 625,
+   "turned": 38,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 4,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.0,
+   "size": [
+    336.96,
+    555.58
+   ],
+   "apply_s": 0.84,
+   "bytes_out": 29971817,
+   "filters_out": {
+    "JPXDecode": 1424
+   },
+   "sizes_out": 1,
+   "seconds": 527.19,
+   "pages_per_s": 1.35
+  },
+  {
+   "book": "persianmedicalma33loui.pdf",
+   "bytes_in": 34556358,
+   "pages_in": 96,
+   "filters": {
+    "JPXDecode": 192
+   },
+   "plan_s": 313.26,
+   "mode": "level",
+   "why": "18 pages do not fit one box",
+   "reasons": [
+    "text 18 % larger",
+    "1 tilted pages",
+    "scanner bands",
+    "text off-centre 9.0 %",
+    "text sways 21.9 %",
+    "stains on 21 pages"
+   ],
+   "pages": 174,
+   "text": 170,
+   "turned": 1,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 0,
+   "unsure": 1,
+   "whole": 18,
+   "split": 78,
+   "gain": 1.181,
+   "size": [
+    753.39,
+    1297.9
+   ],
+   "apply_s": 0.45,
+   "bytes_out": 34700784,
+   "filters_out": {
+    "JPXDecode": 192
+   },
+   "sizes_out": 167,
+   "seconds": 313.77,
+   "pages_per_s": 0.55
+  },
+  {
+   "book": "taghrbatbanhilla00bayruoft.pdf",
+   "bytes_in": 30263581,
+   "pages_in": 772,
+   "filters": {
+    "JPXDecode": 1544
+   },
+   "plan_s": 487.21,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "67 tilted pages",
+    "text off-centre 2.9 %",
+    "text sways 5.8 %"
+   ],
+   "pages": 772,
+   "text": 764,
+   "turned": 67,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 1,
+   "unsure": 0,
+   "whole": 33,
+   "split": 0,
+   "gain": 1.0,
+   "size": [
+    335.5,
+    563.76
+   ],
+   "apply_s": 0.83,
+   "bytes_out": 30536993,
+   "filters_out": {
+    "JPXDecode": 1544
+   },
+   "sizes_out": 1,
+   "seconds": 488.17,
+   "pages_per_s": 1.58
+  },
+  {
+   "book": "tarkhalrusulwaal01abaruoft.pdf",
+   "bytes_in": 22395702,
+   "pages_in": 554,
+   "filters": {
+    "JPXDecode": 1108
+   },
+   "plan_s": 267.3,
+   "mode": "crop",
+   "why": null,
+   "reasons": [
+    "text 18 % larger",
+    "41 tilted pages",
+    "text off-centre 3.2 %",
+    "text sways 5.9 %"
+   ],
+   "pages": 554,
+   "text": 541,
+   "turned": 41,
+   "sheared": 0,
+   "frame_turn": 0,
+   "two_angles": 2,
+   "unsure": 0,
+   "whole": 0,
+   "split": 0,
+   "gain": 1.175,
+   "size": [
+    311.03,
+    526.84
+   ],
+   "apply_s": 0.54,
+   "bytes_out": 22587974,
+   "filters_out": {
+    "JPXDecode": 1108
+   },
+   "sizes_out": 1,
+   "seconds": 267.93,
+   "pages_per_s": 2.07
+  }
+ ]
+}

@@ -1,0 +1,104 @@
+[
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "pdfCropMargins",
+  "seconds": 67.8,
+  "pages_out": 40,
+  "bytes_out": 3263653,
+  "filters_out": {
+   "JPXDecode": 80
+  },
+  "kept_streams": 1.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.027,
+   "sway_iqr": 0.039,
+   "text_width_share": 0.812
+  },
+  "psnr_level_pages": 99.0
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "briss",
+  "seconds": 6.1,
+  "pages_out": 40,
+  "bytes_out": 3258941,
+  "filters_out": {
+   "JPXDecode": 80
+  },
+  "kept_streams": 1.0,
+  "place_out": {
+   "sizes": 1
+  },
+  "psnr_level_pages": 99.0
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "k2pdfopt",
+  "seconds": 500.8,
+  "pages_out": 46,
+  "bytes_out": 8493993,
+  "filters_out": {
+   "FlateDecode": 46
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.014,
+   "sway_iqr": 0.03,
+   "text_width_share": 0.848
+  },
+  "psnr_level_pages": null
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "unpaper",
+  "seconds": 323.6,
+  "pages_out": 40,
+  "bytes_out": 25542967,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.028,
+   "sway_iqr": 0.029,
+   "text_width_share": 0.774
+  },
+  "psnr_level_pages": null
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "ocrmypdf",
+  "seconds": 137.0,
+  "pages_out": 40,
+  "bytes_out": 213704417,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 19,
+   "offcentre_median": 0.0285,
+   "sway_iqr": 0.0565,
+   "text_width_share": 0.832
+  },
+  "psnr_level_pages": 8.42
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "pages": 40,
+  "bytes_in": 3262156,
+  "filters_in": {
+   "JPXDecode": 80
+  },
+  "place_in": {
+   "sizes": 19,
+   "offcentre_median": 0.0275,
+   "sway_iqr": 0.0557,
+   "text_width_share": 0.835
+  },
+  "tool": "input"
+ }
+]

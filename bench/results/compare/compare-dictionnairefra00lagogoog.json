@@ -2,7 +2,7 @@
  {
   "book": "dictionnairefra00lagogoog.pdf",
   "tool": "safha",
-  "seconds": 15.7,
+  "seconds": 12.8,
   "pages_out": 40,
   "bytes_out": 1199351,
   "filters_out": {
@@ -71,7 +71,7 @@
  {
   "book": "dictionnairefra00lagogoog.pdf",
   "tool": "safha-reader",
-  "seconds": 13.1,
+  "seconds": 13.0,
   "pages_out": 40,
   "bytes_out": 1196082,
   "filters_out": {

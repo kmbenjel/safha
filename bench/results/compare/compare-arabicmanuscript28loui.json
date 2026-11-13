@@ -2,7 +2,7 @@
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "safha",
-  "seconds": 155.1,
+  "seconds": 162.2,
   "pages_out": 79,
   "bytes_out": 13321895,
   "filters_out": {
@@ -20,7 +20,7 @@
  {
   "book": "arabicmanuscript28loui.pdf",
   "tool": "safha-reader",
-  "seconds": 131.4,
+  "seconds": 162.8,
   "pages_out": 79,
   "bytes_out": 13319523,
   "filters_out": {

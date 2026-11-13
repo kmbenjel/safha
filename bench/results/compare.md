@@ -29,7 +29,7 @@ Input: 1 page sizes, text off-centre 1.3 % (median), sways 2.8 % (IQR), text 76 
 | tool | time s | size | image streams kept byte for byte | codecs out | pages | page sizes | text off-centre | sway | text width |
 |---|---:|---:|---:|---|---:|---:|---:|---:|---:|
 | safha | 39 | 100 % | 100 % | JPX | 40 | 1 | 1.3 % | 1.6 % | 81 % |
-| safha `--profile reader` | 39 | 100 % | 100 % | JPX | 40 | 1 | 0.5 % | 1.1 % | 83 % |
+| safha `--profile reader` | 40 | 100 % | 100 % | JPX | 40 | 1 | 0.5 % | 1.1 % | 83 % |
 | pdfCropMargins `-u -s` | 27 | 100 % | 100 % | JPX | 40 | 1 | 1.4 % | 2.8 % | 78 % |
 | Briss | 2 | 100 % | 100 % | JPX | 40 | 1 | 15.8 % | 1.4 % | 55 % |
 | k2pdfopt (default: reflow) | 248 | 326 % | 0 % | Flate | 88 | 1 | 0.5 % | 0.7 % | 98 % |
@@ -46,7 +46,7 @@ Input: 1 page sizes, text off-centre 0.6 % (median), sways 0.9 % (IQR), text 79 
 
 | tool | time s | size | image streams kept byte for byte | codecs out | pages | page sizes | text off-centre | sway | text width |
 |---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| safha | 11 | 101 % | 100 % | CCITTFax | 40 | 1 | 0.1 % | 0.1 % | 88 % |
+| safha | 12 | 101 % | 100 % | CCITTFax | 40 | 1 | 0.1 % | 0.1 % | 88 % |
 | safha `--profile reader` | 12 | 101 % | 100 % | CCITTFax | 40 | 1 | 0.0 % | 0.1 % | 91 % |
 | pdfCropMargins `-u -s` | 1 | 100 % | 100 % | CCITTFax | 40 | 1 | 0.7 % | 1.2 % | 95 % |
 | Briss | 6 | 100 % | 100 % | CCITTFax | 40 | 2 | 0.6 % | 1.2 % | 94 % |
@@ -64,8 +64,8 @@ Input: 18 page sizes, text off-centre 0.7 % (median), sways 1.1 % (IQR), text 67
 
 | tool | time s | size | image streams kept byte for byte | codecs out | pages | page sizes | text off-centre | sway | text width |
 |---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| safha | 155 | 102 % | 100 % | JPX | 79 | 1 | 0.3 % | 0.7 % | 79 % |
-| safha `--profile reader` | 131 | 102 % | 100 % | JPX | 79 | 1 | 0.2 % | 0.5 % | 82 % |
+| safha | 162 | 102 % | 100 % | JPX | 79 | 1 | 0.3 % | 0.7 % | 79 % |
+| safha `--profile reader` | 163 | 102 % | 100 % | JPX | 79 | 1 | 0.2 % | 0.5 % | 82 % |
 | pdfCropMargins `-u -s` | 48 | 100 % | 100 % | JPX | 40 | 1 | 3.1 % | 1.4 % | 63 % |
 | Briss | 5 | 100 % | 100 % | JPX | 40 | 1 | 23.1 % | 1.3 % | 54 % |
 | k2pdfopt (default: reflow) | 1012 | 25 % | 0 % | Flate | 23 | 1 | 1.9 % | 0.0 % | 73 % |
@@ -82,7 +82,7 @@ Input: 1 page sizes, text off-centre 3.6 % (median), sways 7.0 % (IQR), text 81 
 
 | tool | time s | size | image streams kept byte for byte | codecs out | pages | page sizes | text off-centre | sway | text width |
 |---|---:|---:|---:|---|---:|---:|---:|---:|---:|
-| safha | 16 | 101 % | 100 % | JBIG2 | 40 | 1 | 0.1 % | 0.1 % | 87 % |
+| safha | 13 | 101 % | 100 % | JBIG2 | 40 | 1 | 0.1 % | 0.1 % | 87 % |
 | safha `--profile reader` | 13 | 101 % | 100 % | JBIG2 | 40 | 1 | 0.1 % | 0.1 % | 90 % |
 | pdfCropMargins `-u -s` | 2 | 100 % | 100 % | JBIG2 | 40 | 1 | 3.7 % | 7.1 % | 82 % |
 | Briss | 13 | 100 % | 100 % | JBIG2 | 40 | 2 | 1.3 % | 2.6 % | 90 % |

@@ -2,9 +2,9 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "safha",
-  "seconds": 10.7,
+  "seconds": 11.5,
   "pages_out": 40,
-  "bytes_out": 1655991,
+  "bytes_out": 1656218,
   "filters_out": {
    "CCITTFaxDecode": 40
   },
@@ -22,7 +22,7 @@
   "tool": "safha-reader",
   "seconds": 11.8,
   "pages_out": 40,
-  "bytes_out": 1656209,
+  "bytes_out": 1656436,
   "filters_out": {
    "CCITTFaxDecode": 40
   },

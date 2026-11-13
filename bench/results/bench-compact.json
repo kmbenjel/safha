@@ -1,8 +1,8 @@
 {
  "profile": "warraq",
- "wall_s": 1593.7,
+ "wall_s": 1535.8,
  "jobs": 3,
- "book_jobs": 4,
+ "book_jobs": 5,
  "cpus": 32,
  "rows": [
   {
@@ -12,19 +12,19 @@
    "filters": {
     "JPXDecode": 1056
    },
-   "plan_s": 436.0,
+   "plan_s": 557.65,
    "mode": "level",
    "why": "113 pages do not fit one box",
    "reasons": [
-    "1 tilted pages",
+    "2 tilted pages",
     "text sways 2.9 %"
    ],
    "pages": 528,
    "text": 524,
-   "turned": 1,
+   "turned": 2,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 0,
+   "two_angles": 1,
    "unsure": 0,
    "whole": 113,
    "split": 0,
@@ -33,14 +33,14 @@
     403.9,
     625.8
    ],
-   "apply_s": 1.01,
-   "bytes_out": 46515489,
+   "apply_s": 1.1,
+   "bytes_out": 46515064,
    "filters_out": {
     "JPXDecode": 1056
    },
-   "sizes_out": 202,
-   "seconds": 437.18,
-   "pages_per_s": 1.21
+   "sizes_out": 282,
+   "seconds": 558.88,
+   "pages_per_s": 0.94
   },
   {
    "book": "arabicmanuscript28loui.pdf",
@@ -49,7 +49,7 @@
    "filters": {
     "JPXDecode": 226
    },
-   "plan_s": 443.79,
+   "plan_s": 551.77,
    "mode": "crop",
    "why": null,
    "reasons": [
@@ -66,21 +66,21 @@
    "frame_turn": 0,
    "two_angles": 0,
    "unsure": 17,
-   "whole": 3,
+   "whole": 7,
    "split": 96,
    "gain": 1.262,
    "size": [
     667.24,
     1049.17
    ],
-   "apply_s": 0.92,
-   "bytes_out": 42419032,
+   "apply_s": 1.0,
+   "bytes_out": 42419739,
    "filters_out": {
     "JPXDecode": 226
    },
    "sizes_out": 1,
-   "seconds": 444.78,
-   "pages_per_s": 0.47
+   "seconds": 552.84,
+   "pages_per_s": 0.38
   },
   {
    "book": "arabicmanuscript33loui.pdf",
@@ -89,23 +89,23 @@
    "filters": {
     "JPXDecode": 224
    },
-   "plan_s": 652.21,
+   "plan_s": 830.0,
    "mode": "crop",
    "why": null,
    "reasons": [
     "text 17 % larger",
-    "72 tilted pages",
+    "68 tilted pages",
     "scanner bands",
     "text off-centre 7.7 %",
-    "text sways 7.9 %"
+    "text sways 6.6 %"
    ],
    "pages": 211,
    "text": 200,
-   "turned": 72,
+   "turned": 68,
    "sheared": 0,
    "frame_turn": 0,
    "two_angles": 0,
-   "unsure": 57,
+   "unsure": 53,
    "whole": 5,
    "split": 99,
    "gain": 1.172,
@@ -113,14 +113,14 @@
     748.28,
     1084.99
    ],
-   "apply_s": 1.03,
-   "bytes_out": 29746271,
+   "apply_s": 1.06,
+   "bytes_out": 29744889,
    "filters_out": {
     "JPXDecode": 224
    },
    "sizes_out": 1,
-   "seconds": 653.31,
-   "pages_per_s": 0.32
+   "seconds": 831.12,
+   "pages_per_s": 0.25
   },
   {
    "book": "arabicproverbsor00burc.pdf",
@@ -129,36 +129,37 @@
    "filters": {
     "JPXDecode": 600
    },
-   "plan_s": 227.89,
+   "plan_s": 283.47,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "27 tilted pages",
+    "text 15 % larger",
+    "20 tilted pages",
     "text off-centre 3.1 %",
     "text sways 6.3 %"
    ],
    "pages": 300,
    "text": 293,
-   "turned": 27,
+   "turned": 20,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 1,
+   "two_angles": 0,
    "unsure": 0,
    "whole": 0,
    "split": 0,
-   "gain": 1.148,
+   "gain": 1.151,
    "size": [
-    303.23,
-    532.22
+    302.45,
+    532.13
    ],
-   "apply_s": 0.32,
-   "bytes_out": 13590267,
+   "apply_s": 0.47,
+   "bytes_out": 13588646,
    "filters_out": {
     "JPXDecode": 600
    },
-   "sizes_out": 1,
-   "seconds": 228.26,
-   "pages_per_s": 1.31
+   "sizes_out": 2,
+   "seconds": 284.03,
+   "pages_per_s": 1.06
   },
   {
    "book": "chronologyofanci00biru.pdf",
@@ -167,21 +168,21 @@
    "filters": {
     "JPXDecode": 983
    },
-   "plan_s": 538.72,
+   "plan_s": 687.71,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "106 tilted pages",
+    "98 tilted pages",
     "text sways 2.2 %",
     "stains on 25 pages"
    ],
    "pages": 492,
    "text": 480,
-   "turned": 106,
+   "turned": 98,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 0,
-   "unsure": 0,
+   "two_angles": 5,
+   "unsure": 3,
    "whole": 1,
    "split": 0,
    "gain": 1.096,
@@ -189,14 +190,14 @@
     384.86,
     630.38
    ],
-   "apply_s": 0.65,
-   "bytes_out": 32245146,
+   "apply_s": 0.94,
+   "bytes_out": 32243293,
    "filters_out": {
     "JPXDecode": 983
    },
    "sizes_out": 1,
-   "seconds": 539.45,
-   "pages_per_s": 0.91
+   "seconds": 688.77,
+   "pages_per_s": 0.71
   },
   {
    "book": "dictionnairefra00lagogoog.pdf",
@@ -206,37 +207,37 @@
     "JPXDecode": 9,
     "JBIG2Decode": 968
    },
-   "plan_s": 361.31,
+   "plan_s": 556.37,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "189 tilted pages",
+    "261 tilted pages",
     "text off-centre 3.3 %",
-    "text sways 6.7 %"
+    "text sways 6.8 %"
    ],
    "pages": 974,
    "text": 966,
-   "turned": 189,
+   "turned": 261,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 14,
-   "unsure": 0,
+   "two_angles": 42,
+   "unsure": 51,
    "whole": 0,
    "split": 0,
-   "gain": 1.068,
+   "gain": 1.073,
    "size": [
-    371.72,
-    536.08
+    369.94,
+    535.89
    ],
-   "apply_s": 2.22,
-   "bytes_out": 27953859,
+   "apply_s": 2.07,
+   "bytes_out": 27946180,
    "filters_out": {
     "JPXDecode": 9,
     "JBIG2Decode": 968
    },
    "sizes_out": 1,
-   "seconds": 363.75,
-   "pages_per_s": 2.68
+   "seconds": 558.64,
+   "pages_per_s": 1.74
   },
   {
    "book": "in.ernet.dli.2015.207418.pdf",
@@ -245,19 +246,19 @@
    "filters": {
     "CCITTFaxDecode": 458
    },
-   "plan_s": 148.15,
+   "plan_s": 181.15,
    "mode": "level",
    "why": null,
    "reasons": [
-    "38 tilted pages"
+    "29 tilted pages"
    ],
    "pages": 458,
    "text": 435,
-   "turned": 38,
+   "turned": 29,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 50,
-   "unsure": 0,
+   "two_angles": 45,
+   "unsure": 4,
    "whole": 0,
    "split": 0,
    "gain": 1.0,
@@ -265,14 +266,14 @@
     433.8,
     663.84
    ],
-   "apply_s": 1.85,
-   "bytes_out": 60212280,
+   "apply_s": 2.22,
+   "bytes_out": 60210194,
    "filters_out": {
     "CCITTFaxDecode": 458
    },
    "sizes_out": 1,
-   "seconds": 150.11,
-   "pages_per_s": 3.05
+   "seconds": 183.45,
+   "pages_per_s": 2.5
   },
   {
    "book": "in.ernet.dli.2015.262150.pdf",
@@ -281,7 +282,7 @@
    "filters": {
     "CCITTFaxDecode": 278
    },
-   "plan_s": 131.77,
+   "plan_s": 162.96,
    "mode": "crop",
    "why": null,
    "reasons": [
@@ -303,14 +304,14 @@
     176.15,
     261.94
    ],
-   "apply_s": 0.46,
+   "apply_s": 0.6,
    "bytes_out": 18973193,
    "filters_out": {
     "CCITTFaxDecode": 278
    },
    "sizes_out": 2,
-   "seconds": 132.29,
-   "pages_per_s": 2.1
+   "seconds": 163.62,
+   "pages_per_s": 1.7
   },
   {
    "book": "in.ernet.dli.2015.361017.pdf",
@@ -319,35 +320,35 @@
    "filters": {
     "CCITTFaxDecode": 114
    },
-   "plan_s": 29.95,
+   "plan_s": 38.13,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "22 tilted pages",
+    "16 tilted pages",
     "stains on 12 pages"
    ],
    "pages": 114,
    "text": 110,
-   "turned": 22,
+   "turned": 16,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 1,
-   "unsure": 0,
+   "two_angles": 6,
+   "unsure": 1,
    "whole": 0,
    "split": 0,
-   "gain": 1.113,
+   "gain": 1.116,
    "size": [
-    333.28,
-    523.26
+    332.45,
+    523.17
    ],
-   "apply_s": 0.16,
-   "bytes_out": 4647242,
+   "apply_s": 0.19,
+   "bytes_out": 4645939,
    "filters_out": {
     "CCITTFaxDecode": 114
    },
-   "sizes_out": 1,
-   "seconds": 30.13,
-   "pages_per_s": 3.78
+   "sizes_out": 2,
+   "seconds": 38.34,
+   "pages_per_s": 2.97
   },
   {
    "book": "in.ernet.dli.2015.70512.pdf",
@@ -356,36 +357,36 @@
    "filters": {
     "CCITTFaxDecode": 976
    },
-   "plan_s": 339.73,
+   "plan_s": 491.06,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "125 tilted pages",
-    "text off-centre 2.6 %",
+    "285 tilted pages",
+    "text off-centre 2.5 %",
     "text sways 5.0 %"
    ],
    "pages": 976,
    "text": 971,
-   "turned": 125,
+   "turned": 285,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 7,
-   "unsure": 0,
+   "two_angles": 39,
+   "unsure": 7,
    "whole": 0,
    "split": 0,
-   "gain": 1.046,
+   "gain": 1.048,
    "size": [
-    355.05,
-    543.16
+    354.25,
+    542.96
    ],
-   "apply_s": 2.52,
-   "bytes_out": 37940663,
+   "apply_s": 2.61,
+   "bytes_out": 37949570,
    "filters_out": {
     "CCITTFaxDecode": 976
    },
-   "sizes_out": 2,
-   "seconds": 342.42,
-   "pages_per_s": 2.85
+   "sizes_out": 1,
+   "seconds": 493.88,
+   "pages_per_s": 1.98
   },
   {
    "book": "in.ernet.dli.2015.86278.pdf",
@@ -394,7 +395,7 @@
    "filters": {
     "CCITTFaxDecode": 402
    },
-   "plan_s": 57.43,
+   "plan_s": 82.85,
    "mode": "level",
    "why": null,
    "reasons": [
@@ -405,7 +406,7 @@
    "turned": 18,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 0,
+   "two_angles": 1,
    "unsure": 0,
    "whole": 0,
    "split": 0,
@@ -414,14 +415,14 @@
     291.87,
     450.1
    ],
-   "apply_s": 0.56,
+   "apply_s": 0.8,
    "bytes_out": 18291926,
    "filters_out": {
     "CCITTFaxDecode": 402
    },
    "sizes_out": 1,
-   "seconds": 58.04,
-   "pages_per_s": 6.93
+   "seconds": 83.75,
+   "pages_per_s": 4.8
   },
   {
    "book": "kitabalzabur00barguoft.pdf",
@@ -430,17 +431,17 @@
    "filters": {
     "JPXDecode": 637
    },
-   "plan_s": 297.56,
+   "plan_s": 370.89,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "49 tilted pages",
+    "40 tilted pages",
     "text off-centre 6.2 %",
     "text sways 12.5 %"
    ],
    "pages": 322,
    "text": 309,
-   "turned": 49,
+   "turned": 40,
    "sheared": 0,
    "frame_turn": 0,
    "two_angles": 1,
@@ -452,14 +453,14 @@
     311.01,
     470.75
    ],
-   "apply_s": 0.47,
-   "bytes_out": 20607911,
+   "apply_s": 0.71,
+   "bytes_out": 20607774,
    "filters_out": {
     "JPXDecode": 637
    },
    "sizes_out": 1,
-   "seconds": 298.08,
-   "pages_per_s": 1.08
+   "seconds": 371.68,
+   "pages_per_s": 0.87
   },
   {
    "book": "kitbalmawiwaalit01maqruoft.pdf",
@@ -468,36 +469,36 @@
    "filters": {
     "JPXDecode": 1044
    },
-   "plan_s": 574.72,
+   "plan_s": 559.9,
    "mode": "crop",
    "why": null,
    "reasons": [
     "text 23 % larger",
-    "67 tilted pages",
+    "54 tilted pages",
     "text sways 3.7 %"
    ],
    "pages": 522,
    "text": 516,
-   "turned": 67,
+   "turned": 54,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 4,
+   "two_angles": 7,
    "unsure": 0,
-   "whole": 2,
+   "whole": 12,
    "split": 0,
    "gain": 1.226,
    "size": [
     325.96,
-    576.23
+    577.03
    ],
-   "apply_s": 0.86,
-   "bytes_out": 35230170,
+   "apply_s": 0.82,
+   "bytes_out": 35231939,
    "filters_out": {
     "JPXDecode": 1044
    },
    "sizes_out": 1,
-   "seconds": 575.67,
-   "pages_per_s": 0.91
+   "seconds": 560.8,
+   "pages_per_s": 0.93
   },
   {
    "book": "majmaalmasarrt00khrsuoft.pdf",
@@ -506,19 +507,19 @@
    "filters": {
     "JPXDecode": 1424
    },
-   "plan_s": 539.57,
+   "plan_s": 516.67,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "38 tilted pages",
+    "31 tilted pages",
     "text sways 3.2 %"
    ],
    "pages": 712,
    "text": 625,
-   "turned": 38,
+   "turned": 31,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 4,
+   "two_angles": 2,
    "unsure": 0,
    "whole": 0,
    "split": 0,
@@ -527,14 +528,14 @@
     336.96,
     555.58
    ],
-   "apply_s": 1.68,
-   "bytes_out": 29466653,
+   "apply_s": 1.09,
+   "bytes_out": 29465047,
    "filters_out": {
     "JPXDecode": 1424
    },
    "sizes_out": 1,
-   "seconds": 541.47,
-   "pages_per_s": 1.31
+   "seconds": 517.88,
+   "pages_per_s": 1.37
   },
   {
    "book": "persianmedicalma33loui.pdf",
@@ -543,7 +544,7 @@
    "filters": {
     "JPXDecode": 192
    },
-   "plan_s": 309.5,
+   "plan_s": 290.93,
    "mode": "level",
    "why": "18 pages do not fit one box",
    "reasons": [
@@ -568,14 +569,14 @@
     753.39,
     1297.9
    ],
-   "apply_s": 0.5,
-   "bytes_out": 34641638,
+   "apply_s": 0.48,
+   "bytes_out": 34641622,
    "filters_out": {
     "JPXDecode": 192
    },
    "sizes_out": 167,
-   "seconds": 310.06,
-   "pages_per_s": 0.56
+   "seconds": 291.45,
+   "pages_per_s": 0.6
   },
   {
    "book": "taghrbatbanhilla00bayruoft.pdf",
@@ -584,17 +585,17 @@
    "filters": {
     "JPXDecode": 1544
    },
-   "plan_s": 496.72,
+   "plan_s": 426.03,
    "mode": "crop",
    "why": null,
    "reasons": [
-    "67 tilted pages",
-    "text off-centre 2.9 %",
-    "text sways 5.8 %"
+    "57 tilted pages",
+    "text off-centre 2.8 %",
+    "text sways 5.7 %"
    ],
    "pages": 772,
    "text": 764,
-   "turned": 67,
+   "turned": 57,
    "sheared": 0,
    "frame_turn": 0,
    "two_angles": 1,
@@ -606,14 +607,14 @@
     335.5,
     563.76
    ],
-   "apply_s": 1.04,
-   "bytes_out": 29988271,
+   "apply_s": 1.11,
+   "bytes_out": 29985978,
    "filters_out": {
     "JPXDecode": 1544
    },
    "sizes_out": 1,
-   "seconds": 497.88,
-   "pages_per_s": 1.55
+   "seconds": 427.26,
+   "pages_per_s": 1.81
   },
   {
    "book": "tarkhalrusulwaal01abaruoft.pdf",
@@ -622,21 +623,21 @@
    "filters": {
     "JPXDecode": 1108
    },
-   "plan_s": 256.54,
+   "plan_s": 324.34,
    "mode": "crop",
    "why": null,
    "reasons": [
     "text 18 % larger",
-    "41 tilted pages",
+    "40 tilted pages",
     "text off-centre 3.2 %",
     "text sways 5.9 %"
    ],
    "pages": 554,
    "text": 541,
-   "turned": 41,
+   "turned": 40,
    "sheared": 0,
    "frame_turn": 0,
-   "two_angles": 2,
+   "two_angles": 1,
    "unsure": 0,
    "whole": 0,
    "split": 0,
@@ -645,14 +646,14 @@
     311.03,
     526.84
    ],
-   "apply_s": 0.65,
-   "bytes_out": 22193339,
+   "apply_s": 0.67,
+   "bytes_out": 22193108,
    "filters_out": {
     "JPXDecode": 1108
    },
    "sizes_out": 1,
-   "seconds": 257.29,
-   "pages_per_s": 2.15
+   "seconds": 325.09,
+   "pages_per_s": 1.7
   }
  ]
 }

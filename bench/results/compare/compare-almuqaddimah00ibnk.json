@@ -2,7 +2,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "safha",
-  "seconds": 27.0,
+  "seconds": 27.2,
   "pages_out": 40,
   "bytes_out": 3262156,
   "filters_out": {
@@ -20,7 +20,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "safha-reader",
-  "seconds": 27.1,
+  "seconds": 27.3,
   "pages_out": 40,
   "bytes_out": 3262156,
   "filters_out": {

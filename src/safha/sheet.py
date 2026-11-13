@@ -19,6 +19,8 @@ from .geometry import inside
 from .pdf import back_to_scan, open_book
 
 WHY = {"turned": "turned level", "found_in_check": "tilt found by the second look", "frame_turn": "squared by its frame",
+       "by_columns": "two columns: turned by the column rule or the columns' edges",
+       "tilt_disputed": "the witnesses of the tilt disagree: left as scanned",
        "frame_shear": "sheared print levelled", "two_angles": "lines at two angles: left as scanned",
        "unsure_tilt": "tilt not confirmed: left as scanned", "untreated_tilt": "tilt seen, no safe turn",
        "whole": "content wider than the box: shown whole", "own_centre": "odd page centred on its own content",

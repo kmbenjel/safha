@@ -15,7 +15,10 @@ from collections.abc import Callable
 from concurrent.futures import ProcessPoolExecutor
 from typing import Any
 
+import numpy as np
 import pymupdf
+from scipy import ndimage
+from scipy.sparse.csgraph import connected_components
 
 from . import __version__
 from .decide import decide
@@ -84,11 +87,109 @@ def _near(b: list, regions: list) -> bool:
     return any(b[0] < r[2] + 3 and b[2] > r[0] - 3 and b[1] < r[3] + 3 and b[3] > r[1] - 3 for r in regions)
 
 
+def cut_print(mk: dict, c: list, p: dict) -> list:
+    """NO LINE OF PRINT IS CUT, whatever the first look took its letters for. Read on the page image itself (every ink
+    mark around the box's edge and outside it, not the first look's sorting of them into content, edge and dust):
+
+    * a letter-sized mark the box's edge runs through;
+    * the letters of a row that starts inside the box and goes on beyond its edge (the end of a marginal note, of a
+      line that reaches the scan's edge): each no more than 2.5 % of the width from the one before, on the same row;
+    * a whole row of print above or below the box, within its columns (a running head, a last line): six letter-sized
+      marks or more over 12 % of the width.
+
+    Left out: marks lighter than the page's letters (a grey smudge, show-through); what stands on a stain or a scan
+    line the first look named, in a scanner band or an edge shadow, on the sheet's very edge or in one of its corners
+    (a scanner's mark); and, in the sheet's outer strip, thin strokes (the pieces of an edge line) and solid blots.
+    -> the boxes (pt) the box must still take in"""
+    a, z, paper = mk.get("img"), mk.get("z"), mk.get("paper")
+    if a is None or not z or not paper or paper < 110:
+        return []
+    w, h = p["w"], p["h"]
+    H, W = a.shape
+    ink = a < paper - 50
+    # only the ring around the box's edge and what lies outside it is read: 5 % of the page inside the edge
+    ix0, iy0 = int((c[0] + 0.05 * w) * z), int((c[1] + 0.04 * h) * z)
+    ix1, iy1 = int((c[2] - 0.05 * w) * z), int((c[3] - 0.04 * h) * z)
+    if ix1 > ix0 and iy1 > iy0:
+        ink = ink.copy()
+        ink[max(0, iy0):max(0, iy1), max(0, ix0):max(0, ix1)] = False
+    lab, n = ndimage.label(ink, structure=np.ones((3, 3), bool))
+    if n == 0 or n > 20000:
+        return []
+    al = p.get("allowed") or [0.0, 0.0, w, h]
+    # (only a side that has a band or a shadow bounds the page: there a mark whose centre lies beyond it is no print)
+    al = [al[0] if al[0] > 0.5 else -1e9, al[1] if al[1] > 0.5 else -1e9, al[2] if al[2] < w - 0.5 else 1e9,
+          al[3] if al[3] < h - 0.5 else 1e9]
+    known = (p.get("blots") or []) + (p.get("lines") or []) + (p.get("rules_dropped") or [])
+    area = np.bincount(lab.ravel(), minlength=n + 1)
+    L: list[list[float]] = []
+    ids: list[int] = []
+    for k, sl in enumerate(ndimage.find_objects(lab), 1):
+        b = [sl[1].start / z, sl[0].start / z, sl[1].stop / z, sl[0].stop / z]
+        bw, bh = b[2] - b[0], b[3] - b[1]
+        if area[k] < 8 or sl[1].start <= 1 or sl[0].start <= 1 or sl[1].stop >= W - 1 or sl[0].stop >= H - 1:
+            continue  # a grain, or a mark on the sheet's very edge
+        if thin_line(b, w, h) or not printlike(b, w, h, z) or bh > 0.06 * h or bw > 0.25 * w \
+                or not (bh >= 0.004 * h or bw >= 0.008 * w) or area[k] > 0.95 * (sl[1].stop - sl[1].start) * (sl[0].stop - sl[0].start):
+            continue
+        bx, by = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+        if not (al[0] <= bx <= al[2] and al[1] <= by <= al[3]):
+            continue  # in a scanner band or an edge shadow
+        side = b[0] <= 0.03 * w or b[2] >= 0.97 * w
+        end = b[1] <= 0.03 * h or b[3] >= 0.97 * h
+        if (side or end) and min(bw, bh) <= 0.01 * w and max(bw, bh) >= 3 * min(bw, bh):
+            continue  # a thin stroke in the sheet's outer 3 %: a piece of an edge line
+        if (b[0] <= 0.04 * w or b[2] >= 0.96 * w) and (b[1] <= 0.04 * h or b[3] >= 0.96 * h) \
+                and (b[0] <= 0.02 * w or b[2] >= 0.98 * w or b[1] <= 0.02 * h or b[3] >= 0.98 * h) \
+                and min(bw, bh) <= 0.05 * w and max(bw, bh) <= 0.10 * w:
+            continue  # a small mark at the sheet's border in one of its corners: a scanner's mark
+        fill = area[k] / ((sl[1].stop - sl[1].start) * (sl[0].stop - sl[0].start))
+        if fill >= 0.7 and (b[2] <= 0.04 * w or b[0] >= 0.96 * w or b[3] <= 0.04 * h or b[1] >= 0.96 * h):
+            continue  # a solid mark wholly in the sheet's outer 4 %: a scanner's blot, a piece of a band
+        if _near(b, known):
+            continue
+        L.append(b)
+        ids.append(k)
+    if not L or len(L) > 6000:
+        return []
+    B = np.array(L)
+    # print is as dark as the page's letters: a grey smudge, a shadow's fringe, show-through are not held
+    dark = np.asarray(ndimage.median(a, lab, index=ids))
+    as_print = dark <= float(np.percentile(dark, 75)) + 15
+    B = B[as_print]
+    if len(B) == 0:
+        return []
+    inn = (B[:, 0] >= c[0] - 1) & (B[:, 1] >= c[1] - 1) & (B[:, 2] <= c[2] + 1) & (B[:, 3] <= c[3] + 1)
+    across = ~inn & (B[:, 0] < c[2] - 1) & (B[:, 2] > c[0] + 1) & (B[:, 1] < c[3] - 1) & (B[:, 3] > c[1] + 1)
+    need = np.zeros(len(B), bool)
+    # rows: marks side by side (their heights overlapping by 40 % of the smaller) no more than 2.5 % of the width apart
+    hh = B[:, 3] - B[:, 1]
+    ov = np.minimum(B[:, None, 3], B[None, :, 3]) - np.maximum(B[:, None, 1], B[None, :, 1])
+    gap = np.maximum(B[:, None, 0], B[None, :, 0]) - np.minimum(B[:, None, 2], B[None, :, 2])
+    adj = (ov >= 0.4 * np.minimum(hh[:, None], hh[None, :])) & (gap <= 0.025 * w)
+    k_, row = connected_components(adj, directed=False)
+    for r in range(k_):
+        sel = row == r
+        if sel.sum() < 2:
+            if (across & sel).any():
+                need |= sel                         # a lone mark cut by the edge
+            continue
+        if (inn & sel).any() or (across & sel).any():
+            need |= sel & ~inn                      # a row that starts inside the box and goes on beyond its edge
+        elif sel.sum() >= 6 and B[sel, 2].max() - B[sel, 0].min() >= 0.12 * w \
+                and (B[sel, 3].max() <= c[1] + 1 or B[sel, 1].min() >= c[3] - 1):
+            cx = (B[sel, 0] + B[sel, 2]) / 2
+            if ((cx >= c[0] - 0.02 * w) & (cx <= c[2] + 0.02 * w)).mean() >= 0.8:
+                need |= sel                         # a whole row of print above or below the box, in its columns
+    return [list(map(float, b)) for b in B[need]]
+
+
 def check_page(doc: pymupdf.Document, i: int, p: dict, rec: dict, prof: Profile) -> None:
     """SECOND LOOK AT THE BOX, on the page as the reader will see it, at prof.check_px: every content mark outside the box
     must lie on something the first look left out on purpose (a stain, edge noise, a scan line); otherwise the box slides
     (<= 2 % of the page) to take it in, or grows with the same proportions (a book with clean margins), or the page stays
-    whole. Nothing of the text may be cut."""
+    whole. Then the page image itself is read around the box's edge (``cut_print``): no line of print may be cut,
+    whatever the first look took its letters for."""
     if not p.get("crop") or p["kind"] != "text":
         return
     lk = Looker(doc, i)
@@ -97,6 +198,82 @@ def check_page(doc: pymupdf.Document, i: int, p: dict, rec: dict, prof: Profile)
         mk = lk.look(q, prof.check_px)
     finally:
         lk.close()
+    _check_box(p, rec, mk)
+    if p.get("crop"):
+        _hold_print(p, rec, mk)
+    if p.get("crop") and rec.get("size"):
+        # a page smaller than the book's box is drawn a little larger, the strips this leaves out read here: if they
+        # hold print, the page is shown at its own size on blank paper instead
+        W, H = rec["size"]
+        fr = _frame_page(p, i, len(rec["pages"]), W, H, rec.get("margin_pt") or 0.0, prof)
+        if fr.get("scale", 1.0) > 1.0001 and cut_print(mk, fr["show"], p):
+            p["no_magnify"] = True
+
+
+def _hold_print(p: dict, rec: dict, mk: dict) -> None:
+    """the box takes in the print it would cut (``cut_print``): it slides (<= 2 % of the page, losing nothing it held), or
+    grows with the same proportions (a book with clean margins), or the page stays whole"""
+    w, h = p["w"], p["h"]
+    flags: list[str] = p["flags"]
+
+    def fits(nb: list) -> bool:
+        return nb[0] >= -0.5 and nb[1] >= -0.5 and nb[2] <= w + 0.5 and nb[3] <= h + 0.5
+
+    def clip(nb: list) -> list:
+        return [round(max(0, nb[0]), 2), round(max(0, nb[1]), 2), round(min(w, nb[2]), 2), round(min(h, nb[3]), 2)]
+
+    hold = p.get("box")
+    cut: list = []
+    for _ in range(3):
+        c = p["crop"]
+        cut = cut_print(mk, c, p)
+        if not cut:
+            return
+        ob = union(cut)
+        dx = ob[0] - c[0] if ob[0] < c[0] else (ob[2] - c[2] if ob[2] > c[2] else 0)
+        dy = ob[1] - c[1] if ob[1] < c[1] else (ob[3] - c[3] if ob[3] > c[3] else 0)
+        nb = [c[0] + dx, c[1] + dy, c[2] + dx, c[3] + dy]
+        if abs(dx) <= 0.02 * w and abs(dy) <= 0.02 * h and fits(nb) and inside(ob, nb, 1.0) \
+                and (hold is None or inside(hold, nb, 1.0)):
+            p["crop"] = clip(nb)
+        elif rec.get("clean_margins"):
+            u = union([ob] + ([hold] if hold else []))
+            cw, ch = c[2] - c[0], c[3] - c[1]
+            mg = 0.5 * (rec.get("margin_pt") or 0.0)
+            sc = max(1.0, (u[2] - u[0] + 2 * mg) / cw, (u[3] - u[1] + 2 * mg) / ch)
+            smax = min(w / cw, h / ch)
+            if sc > smax:
+                sc = max(1.0, smax, (u[2] - u[0]) / cw, (u[3] - u[1]) / ch)
+            x2, y2 = (u[0] + u[2]) / 2, (u[1] + u[3]) / 2
+            nb = [x2 - cw * sc / 2, y2 - ch * sc / 2, x2 + cw * sc / 2, y2 + ch * sc / 2]
+            sx = -nb[0] if nb[0] < 0 else (w - nb[2] if nb[2] > w else 0)
+            sy = -nb[1] if nb[1] < 0 else (h - nb[3] if nb[3] > h else 0)
+            nb = [nb[0] + sx, nb[1] + sy, nb[2] + sx, nb[3] + sy]
+            if not (fits(nb) and inside(u, nb, 1.0)):
+                break
+            p["crop"] = clip(nb)
+            if sc > 1.0001:
+                p["enlarged"] = round(max(sc, p.get("enlarged", 1.0)), 3)
+        else:
+            break
+        if "check_moved" not in flags:
+            flags.append("check_moved")
+        if "print_held" not in flags:
+            flags.append("print_held")
+    else:
+        cut = cut_print(mk, p["crop"], p)
+        if not cut:
+            return
+    p["crop"] = None
+    p["need"] = union(cut + [b for b in (p.get("need"), hold) if b])
+    if "whole" not in flags:
+        flags.append("whole")
+    if "print_held" not in flags:
+        flags.append("print_held")
+
+
+def _check_box(p: dict, rec: dict, mk: dict) -> None:
+    """the first look's content marks against the box (see ``check_page``)"""
     w, h, z = p["w"], p["h"], mk["z"]
     c = p["crop"]
     pts = [b for b in mk.get("parts") or [] if printlike(b, w, h, z)]
@@ -199,73 +376,81 @@ def check_page(doc: pymupdf.Document, i: int, p: dict, rec: dict, prof: Profile)
 
 # -- one page size for the whole book ------------------------------------------------------------------------------------
 
+def _frame_page(p: dict, k_: int, n_: int, W: float, H: float, m: float, prof: Profile) -> dict:
+    """one page's place in the book's page size (``frames``) -> {show, scale[, bands]} or {fit_whole}"""
+    A = W / H
+    pw, ph = p["w"], p["h"]
+    c = p.get("crop")
+    if p["kind"] == "rotated":
+        return {"fit_whole": True}
+    own_cover = (k_ < 2 or k_ >= n_ - 4) and p["kind"] in ("cover", "picture")
+    if own_cover and not c:
+        c = [0.0, 0.0, pw, ph]
+    if (p["kind"] == "cover" and c) or own_cover:  # a cover fills the frame, cut to the book's proportions (<= 8 %)
+        cw, chh = c[2] - c[0], c[3] - c[1]
+        if cw / chh > A and (cw - chh * A) / cw <= 0.08:
+            d = (cw - chh * A) / 2
+            c = [c[0] + d, c[1], c[2] - d, c[3]]
+        elif cw / chh < A and (chh - cw / A) / chh <= 0.08:
+            d = (chh - cw / A) / 2
+            c = [c[0], c[1] + d, c[2], c[3] - d]
+    if c and abs(c[2] - c[0] - W) <= 1.0 and abs(c[3] - c[1] - H) <= 1.0:
+        x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
+    else:
+        if c:
+            N = c
+        elif p["kind"] in ("picture", "blank"):
+            N = [0.0, 0.0, pw, ph]
+        else:
+            parts = [b for b in (p.get("box"), p.get("content_box"), p.get("need")) if b]
+            N = union(parts) if parts else [0.0, 0.0, pw, ph]
+            N = [max(0.0, N[0] - m), max(0.0, N[1] - m), min(pw, N[2] + m), min(ph, N[3] + m)]
+        nw, nh = max(N[2] - N[0], 1.0), max(N[3] - N[1], 1.0)
+        rw, rh = (nw, nw / A) if nw / nh > A else (nh * A, nh)
+        if rw < W and p["kind"] != "cover" and not own_cover:
+            rw, rh = W, H
+        x, y = (N[0] + N[2]) / 2, (N[1] + N[3]) / 2
+        # beyond the page: rather up to 5 % larger, if all it holds still fits (and the second look found no print
+        # in the strips this leaves out: ``no_magnify``)
+        if (rw > pw + 0.5 or rh > ph + 0.5) and not p.get("no_magnify"):
+            fw_ = min(pw, ph * A)
+            fh_ = fw_ / A
+            if W / fw_ <= prof.magnify_max:
+                fx, fy = min(max(x, fw_ / 2), pw - fw_ / 2), min(max(y, fh_ / 2), ph - fh_ / 2)
+                F = [fx - fw_ / 2, fy - fh_ / 2, fx + fw_ / 2, fy + fh_ / 2]
+                if all(inside(b, F, 1.0) for b in (p.get("box"), p.get("need")) if b):
+                    x, y, rw, rh = fx, fy, fw_, fh_
+    if rw <= pw:
+        x = min(max(x, rw / 2), pw - rw / 2)
+    if rh <= ph:
+        y = min(max(y, rh / 2), ph - rh / 2)
+    out: dict[str, Any] = {"show": [round(v, 3) for v in (x - rw / 2, y - rh / 2, x + rw / 2, y + rh / 2)],
+                           "scale": round(W / rw, 6)}
+    if rw > pw + 0.01 or rh > ph + 0.01:
+        out["bands"] = True
+    return out
+
+
 def frames(rec: dict, prof: Profile) -> dict:
     """ONE PAGE SIZE FOR THE WHOLE BOOK: every page shown in a box of exactly the book's size W x H -- ``show`` (the part of
     the page shown, in the reader's frame) and ``scale`` (W / its width). A page whose needed part is larger (a page no box
     holds, a plate, a cover) shows that part whole, drawn smaller; a page smaller than the box is drawn up to 5 % larger
     when all it holds still fits, else on blank paper beyond its own edge (``bands``)."""
     W, H = rec["size"]
-    A = W / H
     m = rec.get("margin_pt") or 0.0
     n_ = len(rec["pages"])
     for k_, p in enumerate(rec["pages"]):
         for k in ("show", "scale", "bands", "fit_whole"):
             p.pop(k, None)
-        pw, ph = p["w"], p["h"]
-        c = p.get("crop")
-        if p["kind"] == "rotated":
-            p["fit_whole"] = True
-            continue
-        own_cover = (k_ < 2 or k_ >= n_ - 4) and p["kind"] in ("cover", "picture")
-        if own_cover and not c:
-            c = [0.0, 0.0, pw, ph]
-        if (p["kind"] == "cover" and c) or own_cover:  # a cover fills the frame, cut to the book's proportions (<= 8 %)
-            cw, chh = c[2] - c[0], c[3] - c[1]
-            if cw / chh > A and (cw - chh * A) / cw <= 0.08:
-                d = (cw - chh * A) / 2
-                c = [c[0] + d, c[1], c[2] - d, c[3]]
-            elif cw / chh < A and (chh - cw / A) / chh <= 0.08:
-                d = (chh - cw / A) / 2
-                c = [c[0], c[1] + d, c[2], c[3] - d]
-        if c and abs(c[2] - c[0] - W) <= 1.0 and abs(c[3] - c[1] - H) <= 1.0:
-            x, y, rw, rh = (c[0] + c[2]) / 2, (c[1] + c[3]) / 2, W, H
-        else:
-            if c:
-                N = c
-            elif p["kind"] in ("picture", "blank"):
-                N = [0.0, 0.0, pw, ph]
-            else:
-                parts = [b for b in (p.get("box"), p.get("content_box"), p.get("need")) if b]
-                N = union(parts) if parts else [0.0, 0.0, pw, ph]
-                N = [max(0.0, N[0] - m), max(0.0, N[1] - m), min(pw, N[2] + m), min(ph, N[3] + m)]
-            nw, nh = max(N[2] - N[0], 1.0), max(N[3] - N[1], 1.0)
-            rw, rh = (nw, nw / A) if nw / nh > A else (nh * A, nh)
-            if rw < W and p["kind"] != "cover" and not own_cover:
-                rw, rh = W, H
-            x, y = (N[0] + N[2]) / 2, (N[1] + N[3]) / 2
-            if rw > pw + 0.5 or rh > ph + 0.5:  # beyond the page: rather up to 5 % larger, if all it holds still fits
-                fw_ = min(pw, ph * A)
-                fh_ = fw_ / A
-                if W / fw_ <= prof.magnify_max:
-                    fx, fy = min(max(x, fw_ / 2), pw - fw_ / 2), min(max(y, fh_ / 2), ph - fh_ / 2)
-                    F = [fx - fw_ / 2, fy - fh_ / 2, fx + fw_ / 2, fy + fh_ / 2]
-                    if all(inside(b, F, 1.0) for b in (p.get("box"), p.get("need")) if b):
-                        x, y, rw, rh = fx, fy, fw_, fh_
-        if rw <= pw:
-            x = min(max(x, rw / 2), pw - rw / 2)
-        if rh <= ph:
-            y = min(max(y, rh / 2), ph - rh / 2)
-        p["show"] = [round(v, 3) for v in (x - rw / 2, y - rh / 2, x + rw / 2, y + rh / 2)]
-        p["scale"] = round(W / rw, 6)
-        if rw > pw + 0.01 or rh > ph + 0.01:
-            p["bands"] = True
+        p.update(_frame_page(p, k_, n_, W, H, m, prof))
     return rec
 
 
 def level_only(rec: dict) -> dict:
     """LEVEL ONLY: a good scan whose only flaw is tilted pages (or whose pages no one box holds): the tilted pages are
     turned and nothing else changes. On white paper a turned page's bare corners do not show; on grey or coloured paper
-    every page loses the same thin strip, just enough to hide them."""
+    every page loses the same thin strip, just enough to hide them, and never more than the page's own margin (the strip
+    stops a point short of what the page holds)."""
     pages = rec["pages"]
     rec["decision"] = "level"
     turned = [p for p in pages if p.get("skew") or p.get("shear")]
@@ -277,13 +462,20 @@ def level_only(rec: dict) -> dict:
     white = not paper or paper[len(paper) // 2] >= 250
     t = math.sin(math.radians(max(abs(p.get("skew") or 0) + abs(p.get("shear") or 0) for p in turned)))
     for p in pages:
+        mv = p.get("move") or [0, 0]  # (a page decide() moved holds its boxes in the moved frame: nothing moves here)
         for k in ("show", "scale", "bands", "move", "enlarged"):
             p.pop(k, None)
         if white or p["kind"] == "rotated":
             p["crop"] = None
             continue
         tx, ty = p["h"] / 2 * t + 1, p["w"] / 2 * t + 1
-        p["crop"] = [round(tx, 2), round(ty, 2), round(p["w"] - tx, 2), round(p["h"] - ty, 2)]
+        c = [tx, ty, p["w"] - tx, p["h"] - ty]
+        held = [b for b in (p.get("content_box"), p.get("box")) if b]
+        if held and p["kind"] == "text":  # the strip never reaches into what the page holds
+            b = union(held + [[v[0] - mv[0], v[1] - mv[1], v[2] - mv[0], v[3] - mv[1]] for v in held])
+            c = [min(c[0], max(0.0, b[0] - 1)), min(c[1], max(0.0, b[1] - 1)), max(c[2], min(p["w"], b[2] + 1)),
+                 max(c[3], min(p["h"], b[3] + 1))]
+        p["crop"] = [round(v, 2) for v in c]
     rec["level_trim"] = None if white else round(t, 5)
     return rec
 
@@ -340,8 +532,8 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
     return finish(rec, path, prof, split, direction, n0, drop, time.time() - t0)
 
 
-SUMMARY_FLAGS = ("found_in_check", "frame_turn", "frame_shear", "two_angles", "unsure_tilt", "untreated_tilt",
-                 "tilt_disputed", "curved", "whole", "own_centre", "dodged", "check_moved", "level_by_tracks")
+SUMMARY_FLAGS = ("found_in_check", "by_columns", "frame_turn", "frame_shear", "two_angles", "unsure_tilt", "untreated_tilt",
+                 "tilt_disputed", "curved", "whole", "own_centre", "dodged", "check_moved", "print_held", "level_by_tracks")
 
 
 def finish(rec: dict, path: str, prof: Profile, split: dict, direction: str, n0: int, drop: list[int] | None,

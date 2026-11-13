@@ -208,7 +208,8 @@ def column_rule(m: np.ndarray) -> tuple[int, float | None] | None:
     page's own standard of upright. In the ink mask ``m``: the strokes that run 3 % of the page's height or more without
     a break (no letter does), between 28 % and 72 % of the width; the tallest piece and the pieces standing within
     1.2 % of the width of it (a rule often prints broken), when together they cover half the height of the page's ink or
-    more. The rule is followed row by row (rows where a letter touches it left out; a line that runs through letters
+    more, and no other tall rule stands elsewhere in that middle band (several mean a table). The rule is followed row
+    by row (rows where a letter touches it left out; a line that runs through letters
     on more than 15 % of its rows is a streak or a fold across the text, no rule) and fitted by a line, the rows
     furthest from it dropped twice.
     -> None (no such rule), or (its column at mid-height in px, its lean in degrees: the turn that squares it is its
@@ -238,6 +239,10 @@ def column_rule(m: np.ndarray) -> tuple[int, float | None] | None:
     sub = np.isin(lab, near)
     rows = np.nonzero(sub.any(1))[0]
     if len(rows) < 0.5 * th:
+        return None
+    # a second tall rule elsewhere in the middle of the page: a table's grid, not a rule between two columns of text (the
+    # rules of a table are no standard for its rows); such a page is measured like any other
+    if any(k not in near and objs[k - 1][0].stop - objs[k - 1][0].start >= 0.3 * th for k in thin):
         return None
     # a rule stands here: the page is in two columns. Whether it is a standard is another matter
     first = sub.argmax(1)[rows]
@@ -276,43 +281,17 @@ def column_rule(m: np.ndarray) -> tuple[int, float | None] | None:
     return int(x0 + np.polyval(f, (rows[0] + rows[-1]) / 2)), round(lean, 3)
 
 
-def columns_tilt(m: np.ndarray, mt: np.ndarray | None = None) -> list[float | None] | None:
-    """TWO COLUMNS (an index, a dictionary, verse in two hemistichs): the gutter between them fools every whole-page
-    measure, and so do lines whose two ends stand at different heights (a headword and its gloss in another script).
-    Such a page is read by what its print holds upright:
+def columns_tilt(m: np.ndarray) -> list[float | None] | None:
+    """TWO COLUMNS WITH A PRINTED RULE BETWEEN THEM (a dictionary, an index, a journal): lines whose two ends stand at
+    different heights (a headword and its gloss in another script, an entry and its page number) fool every whole-page
+    measure, and the rule is what the print holds upright: its lean (``column_rule``) is the page's tilt.
 
-    * a printed rule between the columns (``column_rule``): its lean is the page's tilt;
-    * else, across a white gutter -- the emptiest column of pixels between 30 % and 70 % of the width (smoothed over 1 %
-      of it), at most 2 % as inked as the fullest column, with at least a fifth of the ink on each side -- each column's
-      own lines' edge (``edge_tilt``): the edge more of its lines stand on (the starts of right-to-left lines on the
-      right, of left-to-right lines on the left).
-
-    ``m`` is the page's content ink (``ink_mask``: a scanner band or a sheet's edge is no column and no edge); ``mt``
-    the same without its thin lines (a scan line beside the text is no edge of it): the rule is sought in ``m``, the
-    gutter and the edges in ``mt``.
-    -> None (not two columns), or [right column, left column] in degrees, the sign of skew_of's angle (None for a column
-    whose edge cannot be read; the rule's lean for both when a rule stands between them, None for both when it is bent)"""
+    ``m`` is the page's content ink (``ink_mask``: a scanner band or a sheet's edge is no rule).
+    -> None (no such rule: the page is measured like any other), or [lean, lean] in degrees, the sign of skew_of's angle
+    (None for both when the rule is bent: no standard). Two columns across a white gutter, with no rule, are not read
+    here: the edges of their lines lean with the setting as often as with the page, and turn nothing on their own."""
     rule = column_rule(m)
-    if rule is not None:
-        return [rule[1], rule[1]]
-    m = m if mt is None else mt
-    H, W = m.shape
-    col = ndimage.uniform_filter1d(m.sum(0).astype(float), max(3, int(0.01 * W)))
-    lo, hi = int(0.30 * W), int(0.70 * W)
-    if hi <= lo or col.max() <= 0:
-        return None
-    x = lo + int(np.argmin(col[lo:hi]))
-    if col[x] > 0.02 * col.max():
-        return None
-    left, right = int(m[:, :x].sum()), int(m[:, x:].sum())
-    if min(left, right) < 0.2 * max(1, left + right):
-        return None
-
-    def read(part: np.ndarray) -> float | None:
-        e = [v for v in edge_tilt(part) if v is not None]
-        return max(e, key=lambda v: v[1])[0] if e else None
-
-    return [read(m[:, x:]), read(m[:, :x])]
+    return None if rule is None else [rule[1], rule[1]]
 
 
 def edges_refuse(m: np.ndarray | None, tilt: float, least: int = 10, turned: np.ndarray | None = None) -> list[float]:

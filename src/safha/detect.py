@@ -78,9 +78,8 @@ class Looker:
             return ink_mask(xy, hw)
 
         mk["ink"] = lambda: once("ink", lambda: ink("xy"))            # print and rules: where a column rule is sought
-        mk["ink_text"] = lambda: once("ink_text", lambda: ink("xy_text"))  # print alone: its edges, its gutter
-        mk["cols"] = lambda: once("cols", lambda: columns_tilt(mk["ink"](), mk["ink_text"]())
-                                  if mk["ink"]() is not None and mk["ink_text"]() is not None else None)
+        mk["ink_text"] = lambda: once("ink_text", lambda: ink("xy_text"))  # print alone: what its edges are read on
+        mk["cols"] = lambda: once("cols", lambda: columns_tilt(mk["ink"]()) if mk["ink"]() is not None else None)
         self.views[key] = mk
         return mk
 
@@ -261,11 +260,10 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
         return bool(e)
 
     mk0 = lk.look(unturned(), px)
-    # TWO COLUMNS: the whole-page measures are not trusted on a page in two columns (an index of short entries, a
-    # dictionary whose headword and gloss stand at different heights in the line, verse: their row profile sharpens at
-    # an angle the lines do not lie at). Each column is read by its own lines' edge; the page is turned only when both
-    # columns show the same clear tilt (>= 0.25 deg, within 0.15 deg of each other) and both edges stand upright once
-    # turned (<= 0.15 deg). Otherwise it stays as scanned and is listed.
+    # TWO COLUMNS WITH A PRINTED RULE BETWEEN THEM: the whole-page measures are not trusted on such a page (a dictionary
+    # whose headword and gloss stand at different heights in the line, an index of short entries: their row profile
+    # sharpens at an angle the lines do not lie at). The rule is the page's upright: the page is turned by its lean
+    # (>= 0.25 deg) when the rule stands upright once turned (<= 0.15 deg), or it stays as scanned and is listed.
     ct = mk0["cols"]() if prof.deskew else None
     if ct is not None:
         had = p.pop("skew", None)
@@ -345,7 +343,8 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
         t0, t1 = mk0["tracks"](), lk.look(p, px)["tracks"]()
         L = lines_read(t0, t1, p["skew"])
         tw = two_angles(L)
-        if tw and print_turn(t0, t1, p["skew"])[0]:
+        # (on a page turned by its column rule the lines have the last word: a rule set askew to its lines turns nothing)
+        if tw and "by_columns" not in flags and print_turn(t0, t1, p["skew"])[0]:
             tw = []
             flags.append("level_by_print")
         if not tw:  # a printed rule the turn makes lean: the print refuses it
@@ -355,7 +354,7 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
             p.pop("after", None)
             m_ = round(round(float(np.median([v[1] for v in L])) / 0.025) * 0.025, 3) if L else 0.0
             L2, m2 = None, None
-            # (a page in two columns is turned by its rule or its columns' edges, or not at all: no second turn by its lines)
+            # (a page with a rule between two columns is turned by that rule or not at all: no second turn by its lines)
             if abs(m_) >= prof.skew_min and "by_columns" not in flags:
                 m2 = lk.look(dict(p, skew=m_), px)
                 L2 = lines_read(t0, m2["tracks"](), m_)

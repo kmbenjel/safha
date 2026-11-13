@@ -96,7 +96,7 @@ def summary_lines(rec: dict) -> list[str]:
                    + ("; the file has no text layer to tell the reading order from: for right-to-left books add --rtl"
                       if rec.get("direction_from") == "default" else ""))
     lab = {"turned": "turned level", "sheared": "sheared level", "frame_turn": "squared by a printed frame",
-           "by_columns": "two columns, turned by a column rule or the columns' edges",
+           "by_columns": "two columns, turned by the printed rule between them",
            "tilt_disputed": "the witnesses of the tilt disagree, left as scanned",
            "two_angles": "lines at two angles, left as scanned", "unsure_tilt": "tilt not confirmed, left as scanned",
            "untreated_tilt": "tilt seen but no safe turn", "whole": "content wider than the box, shown whole",

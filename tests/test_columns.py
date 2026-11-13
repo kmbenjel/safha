@@ -1,4 +1,4 @@
-"""Two columns: the whole-page measures are not trusted; a printed rule or the columns' own edges decide the turn."""
+"""Two columns with a printed rule between them: the whole-page measures are not trusted; the rule decides the turn."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def col_plans(tmp_path_factory, prof):
     cases = {
         "level": [synth.columns(seed=i) for i in range(6)],
         "tilt": [synth.columns(seed=i, tilt=(0.6 if i % 2 else -0.4)) for i in range(6)],
-        "gutter": [synth.columns(seed=i, rule=False, tilt=(0.5 if i == 2 else 0)) for i in range(6)],
+        "gutter": [synth.columns(seed=i, rule=False) for i in range(6)],
         "bent": [synth.columns(seed=i, warp=(0.9 if i == 3 else 0)) for i in range(6)],
     }
     return {k: safha.plan(synth.write(d / f"{k}.pdf", v), prof) for k, v in cases.items()}
@@ -43,10 +43,10 @@ def test_column_rule_decides_the_turn(col_plans):
         assert "by_columns" in p["flags"] and p["columns"]["after"] <= 0.15
 
 
-def test_columns_without_a_rule_are_read_by_their_edges(col_plans):
-    r = col_plans["gutter"]
-    assert [p["n"] for p in r["pages"] if p.get("skew")] == [3]
-    assert abs(r["pages"][2]["skew"] + 0.5) <= 0.1
+def test_level_columns_without_a_rule_are_not_turned(col_plans):
+    r = col_plans["gutter"]  # no rule: measured like any other page, and no page is "turned by its columns"
+    assert not r["summary"]["turned"]
+    assert not any("by_columns" in p["flags"] for p in r["pages"])
 
 
 def test_bent_rule_is_no_standard(col_plans):
@@ -68,10 +68,11 @@ def test_column_rule_in_pieces():
     assert column_rule(ink_of(synth.page(seed=3))) is None  # an ordinary page has none
 
 
-def test_columns_tilt_needs_two_columns():
+def test_columns_tilt_needs_a_rule():
     assert columns_tilt(ink_of(synth.page(seed=4, tilt=0.7))) is None
-    ct = columns_tilt(ink_of(synth.columns(seed=4, rule=False, tilt=0.7)))
-    assert ct is not None and all(v is not None and abs(v - 0.7) <= 0.12 for v in ct)
+    assert columns_tilt(ink_of(synth.columns(seed=4, rule=False, tilt=0.7))) is None  # a gutter alone is no standard
+    ct = columns_tilt(ink_of(synth.columns(seed=4, tilt=0.7)))
+    assert ct is not None and all(v is not None and abs(v - 0.7) <= 0.06 for v in ct)
 
 
 def test_edges_read_and_refuse():

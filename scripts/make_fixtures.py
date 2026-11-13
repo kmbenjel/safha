@@ -29,6 +29,9 @@ BULAQ = ("kitbalmawiwaalit01maqruoft", [100, 101, 102, 103, 104, 105], 900)
 LATIN = ("chronologyofanci00biru", [31, 32, 101, 102, 201, 202], 1500)
 SPREAD = ("arabicmanuscript28loui", [20, 30, 40, 50, 60], 1200)
 CCITT = ("in.ernet.dli.2015.361017", "2015.361017.Tamreen-As.pdf", [18, 19, 20, 21, 30, 31])
+# two columns with a printed rule between them, a headword and its gloss in two scripts on each line (JBIG2, copied
+# object for object): scan pages 437, 87, 341, 52, 230
+DICT = ("dictionnairefra00lagogoog", "dictionnairefra00lagogoog.pdf", [436, 86, 340, 51, 229])
 
 
 def fetch(url: str, cache: str) -> bytes:
@@ -89,6 +92,7 @@ def jbig2_book(item: tuple, cache: str, out: str, dpi: float = 200) -> None:
 
 
 def ccitt_book(item: tuple, cache: str, out: str) -> None:
+    """pages of the item's own PDF copied object for object (its image streams as they are: CCITT G4, JBIG2)"""
     ident, name, pages = item
     data = fetch(f"https://archive.org/download/{ident}/{name}", cache)
     src = pymupdf.open("pdf", data)
@@ -109,6 +113,7 @@ def main() -> None:
     jbig2_book(LATIN, a.cache, os.path.join(FIX, "latin-jbig2.pdf"))
     jpeg_book(SPREAD, a.cache, os.path.join(FIX, "spreads.pdf"), dpi=100, gray=True, quality=50)
     ccitt_book(CCITT, a.cache, os.path.join(FIX, "urdu-ccitt.pdf"))
+    ccitt_book(DICT, a.cache, os.path.join(FIX, "dictionary-rule.pdf"))
     for f in sorted(os.listdir(FIX)):
         if f.endswith(".pdf"):
             d = pymupdf.open(os.path.join(FIX, f))

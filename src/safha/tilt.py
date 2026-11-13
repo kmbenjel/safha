@@ -146,6 +146,208 @@ def baseline_tilt(a: np.ndarray, paper: float, min_lines: int = 6) -> float | No
     return float(np.median(sl))
 
 
+def ink_mask(xy: tuple | None, shape: tuple[int, int] | None = None) -> np.ndarray | None:
+    """the page's content ink (``marks()['xy']``: its print and rules, without scanner bands, sheet edges and stains)
+    as an image"""
+    if xy is None or len(xy[0]) == 0:
+        return None
+    xs, ys = xy
+    m = np.zeros(shape or (int(ys.max()) + 1, int(xs.max()) + 1), bool)
+    m[ys, xs] = True
+    return m
+
+
+def edge_tilt(m: np.ndarray) -> list[tuple[float, int, float] | None]:
+    """THE LINES' EDGE AS A RULER: lines set flush all start (or end) at one edge, and on a level page that edge stands
+    upright. In the ink mask ``m``, line by line (bands of ink rows), the outermost ink on each side; the lines within
+    1.5 % of the width of the median edge are the aligned ones; the lean is the median of the slopes between pairs of
+    them at least 10 % of the page apart. -> [right edge, left edge], each (degrees in the sign of skew_of's angle,
+    aligned lines, spread: the interquartile range of those slopes in degrees -- a flush edge reads under half a degree,
+    a ragged one several) or None when fewer than 6 lines are aligned on that side"""
+    H, W = m.shape
+    prof = ndimage.uniform_filter1d(m.sum(1).astype(float), 3)
+    if prof.max() <= 0:
+        return [None, None]
+    rows = prof >= 0.15 * prof.max()
+    pts = []
+    y = 0
+    while y < H:
+        if rows[y]:
+            y0 = y
+            while y < H and rows[y]:
+                y += 1
+            if y - y0 >= 0.004 * H:
+                cols = np.nonzero(m[y0:y].sum(0) >= 2)[0]
+                if len(cols) >= 5:
+                    pts.append(((y0 + y) / 2, cols[-1], cols[0]))
+        y += 1
+    out: list[tuple[float, int] | None] = []
+    for k in (1, 2):
+        if len(pts) < 6:
+            out.append(None)
+            continue
+        P = np.array(pts, float)
+        xs = P[:, k]
+        keep = P[np.abs(xs - np.median(xs)) <= 0.015 * W]
+        if len(keep) < 6:
+            out.append(None)
+            continue
+        dy = keep[None, :, 0] - keep[:, None, 0]
+        dx = keep[None, :, k] - keep[:, None, k]
+        far = dy > 0.1 * H
+        if not far.any():
+            out.append(None)
+            continue
+        sl = np.degrees(np.arctan(dx[far] / dy[far]))
+        out.append((float(np.median(sl)), len(keep), float(np.subtract(*np.percentile(sl, [75, 25])))))
+    return out
+
+
+def column_rule(m: np.ndarray) -> tuple[int, float | None] | None:
+    """A PRINTED RULE BETWEEN TWO COLUMNS (a dictionary, a journal, a table): the print's straightest line and so the
+    page's own standard of upright. In the ink mask ``m``: the strokes that run 3 % of the page's height or more without
+    a break (no letter does), between 28 % and 72 % of the width; the tallest piece and the pieces standing within
+    1.2 % of the width of it (a rule often prints broken), when together they cover half the height of the page's ink or
+    more. The rule is followed row by row (rows where a letter touches it left out; a line that runs through letters
+    on more than 15 % of its rows is a streak or a fold across the text, no rule) and fitted by a line, the rows
+    furthest from it dropped twice.
+    -> None (no such rule), or (its column at mid-height in px, its lean in degrees: the turn that squares it is its
+    negative). The lean is None when the rule is no standard: bent or in pieces out of line (more than 1.5 px off the
+    fitted line; its upper and lower halves leaning more than 0.6 deg apart, as for a frame's side; the line through
+    both leaning more than 0.15 deg off their mean, as two straight pieces set a little apart do; or one half standing
+    so much straighter than the other that squaring the whole would make it lean more than it does) -- a warped leaf,
+    which no single turn levels, or a rule that cannot say."""
+    H, W = m.shape
+    x0, x1 = int(0.28 * W), int(0.72 * W)
+    L = max(12, int(0.03 * H))
+    v = ndimage.maximum_filter1d(ndimage.minimum_filter1d(m[:, x0:x1].astype(np.uint8), L, axis=0), L, axis=0) > 0
+    if int(v.sum()) < 0.25 * H:
+        return None
+    inked = np.nonzero(m.any(1))[0]
+    if len(inked) < 50:
+        return None
+    th = float(np.percentile(inked, 98) - np.percentile(inked, 2))
+    lab, n = ndimage.label(v, structure=np.ones((3, 3), bool))
+    objs = ndimage.find_objects(lab)
+    thin = [k for k, sl in enumerate(objs, 1) if sl[1].stop - sl[1].start <= 0.06 * W]
+    if not thin:
+        return None
+    seed = max(thin, key=lambda k: objs[k - 1][0].stop - objs[k - 1][0].start)
+    cx = (objs[seed - 1][1].start + objs[seed - 1][1].stop) / 2
+    near = [k for k in thin if abs((objs[k - 1][1].start + objs[k - 1][1].stop) / 2 - cx) <= 0.012 * W]
+    sub = np.isin(lab, near)
+    rows = np.nonzero(sub.any(1))[0]
+    if len(rows) < 0.5 * th:
+        return None
+    # a rule stands here: the page is in two columns. Whether it is a standard is another matter
+    first = sub.argmax(1)[rows]
+    last = sub.shape[1] - 1 - sub[:, ::-1].argmax(1)[rows]
+    wd = last - first + 1
+    # the ink right beside it (3 px each side): a rule between columns stands clear of the letters
+    cs = np.cumsum(np.pad(m[:, x0:x1], ((0, 0), (1, 0))), axis=1)
+    lo, hi = np.maximum(first - 3, 0), np.minimum(last + 4, sub.shape[1])
+    beside = cs[rows, hi] - cs[rows, lo] - wd
+    if (beside > 1).mean() > 0.15:
+        return None  # it runs through the letters on many rows: a streak or a fold across the text, no column rule
+    ok = (wd <= np.median(wd) + 3) & (beside <= 1)
+    rows, xs = rows[ok].astype(float), ((first + last) / 2.0)[ok]
+    at = int(x0 + cx)
+    if len(rows) < 0.4 * th:
+        return at, None
+    f = np.polyfit(rows, xs, 1)
+    for _ in range(2):
+        res = np.abs(xs - np.polyval(f, rows))
+        keep = res <= max(1.0, 2.5 * float(np.median(res)))
+        if keep.sum() < 0.4 * th:
+            return at, None
+        rows, xs = rows[keep], xs[keep]
+        f = np.polyfit(rows, xs, 1)
+    half = rows < (rows[0] + rows[-1]) / 2
+    if float(np.sqrt(((xs - np.polyval(f, rows)) ** 2).mean())) > 1.5 or half.sum() < 15 or (~half).sum() < 15:
+        return at, None
+    t = float(np.degrees(np.arctan(np.polyfit(rows[half], xs[half], 1)[0])))
+    u = float(np.degrees(np.arctan(np.polyfit(rows[~half], xs[~half], 1)[0])))
+    lean = float(np.degrees(np.arctan(f[0])))
+    if abs(t - u) > 0.6 + EPS or abs(lean - (t + u) / 2) > 0.15 + EPS \
+            or any(abs(h - lean) > max(abs(h), 0.15) + EPS for h in (t, u)):
+        # bent; or two pieces set out of line, each standing straighter than the line through both; or squaring the
+        # whole would leave one half leaning more than it does now (the other half's lean moved onto it)
+        return at, None
+    return int(x0 + np.polyval(f, (rows[0] + rows[-1]) / 2)), round(lean, 3)
+
+
+def columns_tilt(m: np.ndarray, mt: np.ndarray | None = None) -> list[float | None] | None:
+    """TWO COLUMNS (an index, a dictionary, verse in two hemistichs): the gutter between them fools every whole-page
+    measure, and so do lines whose two ends stand at different heights (a headword and its gloss in another script).
+    Such a page is read by what its print holds upright:
+
+    * a printed rule between the columns (``column_rule``): its lean is the page's tilt;
+    * else, across a white gutter -- the emptiest column of pixels between 30 % and 70 % of the width (smoothed over 1 %
+      of it), at most 2 % as inked as the fullest column, with at least a fifth of the ink on each side -- each column's
+      own lines' edge (``edge_tilt``): the edge more of its lines stand on (the starts of right-to-left lines on the
+      right, of left-to-right lines on the left).
+
+    ``m`` is the page's content ink (``ink_mask``: a scanner band or a sheet's edge is no column and no edge); ``mt``
+    the same without its thin lines (a scan line beside the text is no edge of it): the rule is sought in ``m``, the
+    gutter and the edges in ``mt``.
+    -> None (not two columns), or [right column, left column] in degrees, the sign of skew_of's angle (None for a column
+    whose edge cannot be read; the rule's lean for both when a rule stands between them, None for both when it is bent)"""
+    rule = column_rule(m)
+    if rule is not None:
+        return [rule[1], rule[1]]
+    m = m if mt is None else mt
+    H, W = m.shape
+    col = ndimage.uniform_filter1d(m.sum(0).astype(float), max(3, int(0.01 * W)))
+    lo, hi = int(0.30 * W), int(0.70 * W)
+    if hi <= lo or col.max() <= 0:
+        return None
+    x = lo + int(np.argmin(col[lo:hi]))
+    if col[x] > 0.02 * col.max():
+        return None
+    left, right = int(m[:, :x].sum()), int(m[:, x:].sum())
+    if min(left, right) < 0.2 * max(1, left + right):
+        return None
+
+    def read(part: np.ndarray) -> float | None:
+        e = [v for v in edge_tilt(part) if v is not None]
+        return max(e, key=lambda v: v[1])[0] if e else None
+
+    return [read(m[:, x:]), read(m[:, :x])]
+
+
+def edges_refuse(m: np.ndarray | None, tilt: float, least: int = 10, turned: np.ndarray | None = None) -> list[float]:
+    """A TURN THE MARGINS REFUSE: the text's own edges (``edge_tilt`` on the page as scanned: lines set flush stand on a
+    straight edge) against the tilt a turn was made for. Each edge at least ``least`` lines stand on, straight enough
+    to be read (the slopes between its lines within one degree of each other, by their interquartile range), is a
+    witness. A witness stands against the turn when it shows less than half of that tilt (it stands upright, or leans the other
+    way) and reads more than 0.3 deg from it; the turn is refused when every witness does. (The row profile of lines whose
+    two ends stand at different heights -- a headword and its gloss in another script, an entry and its page number --
+    sharpens at an angle the page does not lie at; its margins do not lie.) Margins that lean the way of the lines, by
+    half their tilt or more, refuse nothing: the leaf lies askew, whatever the two disagree on. ``turned``: the ink of
+    the page as turned for that tilt; the edges are read there too (a page that lies well off level smears its lines
+    into each other as scanned, and its edges read badly): what they show there, plus the tilt, is what they stood at
+    before the turn, and they must stand against the turn in that reading as well. A view with no witness changes
+    nothing. -> the witnesses' readings as scanned when they refuse, else []"""
+    if m is None:
+        return []
+    s = 1.0 if tilt >= 0 else -1.0
+
+    def against(v: float) -> bool:
+        return v * s < 0.5 * abs(tilt) - EPS and abs(v - tilt) > 0.3 + EPS
+
+    def witnesses(mask: np.ndarray) -> list[float]:
+        return [v[0] for v in edge_tilt(mask) if v is not None and v[1] >= least and v[2] <= 1.0 + EPS]
+
+    e = witnesses(m)
+    if not e or not all(against(v) for v in e):
+        return []
+    if turned is not None:
+        e2 = [v + tilt for v in witnesses(turned)]
+        if e2 and not all(against(v) for v in e2):
+            return []
+    return [round(v, 3) for v in e]
+
+
 def _line_chains(ink: np.ndarray, z: float, strip_pt: float, pitch: int, ref: float) -> list[np.ndarray]:
     """the chains of baseline peaks of one column of a text block: per strip the peaks of the ink-row profile (a parabola
     gives a fraction of a pixel), each linked to the line heading towards it in the next strips (within a fifth of the
@@ -332,6 +534,26 @@ def print_turn(t0: list[Track], t1: list[Track], d: float) -> tuple[bool, list]:
     if LT and float((np.abs(np.diff([v[1] for v in LT])) > 0.3 + EPS).mean()) <= 0.25:
         return False, R
     return True, R
+
+
+def rules_made_to_lean(t0: list[Track], t1: list[Track], d: float) -> list[tuple[float, float, float]]:
+    """A TURN THE PRINT REFUSES: a printed rule across the text (a head rule, a rule over the footnotes, a table's),
+    half the block wide or more, read alike in both views (its angle moved by the turn within 0.15 deg), that the turn
+    leaves beyond 0.35 deg and at least 0.25 deg more tilted than it was. A rule is the print's straightest line: a turn
+    that makes one lean has made a new tilt (a leaf whose head stands level and whose foot does not has no single turn).
+    -> those rules [(y, before, after)]"""
+    out = []
+    for t in t0:
+        if not (_read_well(t) and t[5] and t[2] >= 0.5):
+            continue
+        m_ = [u for u in t1 if _read_well(u) and u[5] and abs(u[0] - t[0]) <= 6]
+        if not m_:
+            continue
+        u = min(m_, key=lambda u: abs(u[0] - t[0]))
+        after = t[1] - d
+        if abs(u[1] - after) <= 0.15 + EPS and abs(after) > 0.35 + EPS and abs(after) >= abs(t[1]) + 0.25 - EPS:
+            out.append((t[0], t[1], round(after, 3)))
+    return out
 
 
 def _frame(mk: dict) -> tuple | None:

@@ -56,7 +56,8 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
     specks   isolated specks and dust;  blots  stains and edge streaks;  edge  scanner edge noise and sheet edges;
     lines    thin lines and dashed lines (not content here);  rules  faint printed rules and frames beside the text;
     allowed  where the box may go (inside scanner bands and edge shadows);  dark  share of dark pixels;
-    xy       content ink pixels (for the tilt measure);  parts  every content mark's box.
+    xy       content ink pixels, thin lines included (for the tilt measures);  xy_text  the same without the lines;
+    parts    every content mark's box.
 
     ``scale`` = pixels per pt, ``width`` = page width in pt; ``exclude``: boxes (pt) whitened before measuring."""
     if exclude:
@@ -66,7 +67,7 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
     unit = scale * width / REF
     out: dict[str, Any] = {"box": None, "core": None, "text": None, "specks": [], "blots": [], "edge": [], "rules": [],
                            "lines": [], "margin": [], "folio": None, "allowed": None, "dark": 1.0, "xy": None,
-                           "parts": [], "level_frame": False}
+                           "xy_text": None, "parts": [], "level_frame": False}
     paper = float(np.percentile(a, 90))
     out["paper"] = paper
     if paper < 110:
@@ -457,6 +458,7 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
     kl = np.zeros(n + 1, bool)
     kl[with_lines] = True
     out["xy"] = tuple(reversed(np.nonzero(kl[lab]))) if len(with_lines) != len(content) else (xs, ys)
+    out["xy_text"] = (xs, ys)  # the same without the thin lines: what the text's own edges are read on
     return out
 
 

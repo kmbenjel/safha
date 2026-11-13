@@ -18,13 +18,18 @@ from .pages import cover_rect
 from .pdf import Turner, gray
 from .profile import Profile
 from .tilt import (
+    EPS,
     baseline_tilt,
+    columns_tilt,
+    edges_refuse,
     frame_lean,
     frame_shear,
+    ink_mask,
     line_tracks,
     lines_read,
     print_turn,
     proj_tilt,
+    rules_made_to_lean,
     skew_of,
     two_angles,
 )
@@ -63,6 +68,19 @@ class Looker:
         mk["lines_fn"] = lambda: once("lines", lambda: baseline_tilt(a, mk["paper"]) if mk.get("paper") else None)
         mk["tracks"] = lambda: once("tracks", lambda: line_tracks(a, mk["paper"], mk.get("text"), z)
                                     if mk.get("paper") else [])
+        def ink(key: str) -> np.ndarray | None:  # content ink as an image of the page inside its scanner bands
+            xy, bd = mk.get(key), mk.get("bands")
+            if xy is None or len(xy[0]) == 0:
+                return None
+            hw = (int(xy[1].max()) + 1, int(xy[0].max()) + 1)
+            if bd:
+                hw = (max(hw[0], int(round((bd[3] - bd[1]) * z))), max(hw[1], int(round((bd[2] - bd[0]) * z))))
+            return ink_mask(xy, hw)
+
+        mk["ink"] = lambda: once("ink", lambda: ink("xy"))            # print and rules: where a column rule is sought
+        mk["ink_text"] = lambda: once("ink_text", lambda: ink("xy_text"))  # print alone: its edges, its gutter
+        mk["cols"] = lambda: once("cols", lambda: columns_tilt(mk["ink"](), mk["ink_text"]())
+                                  if mk["ink"]() is not None and mk["ink_text"]() is not None else None)
         self.views[key] = mk
         return mk
 
@@ -224,15 +242,77 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
         p["skew"] = round(d, 3)
         p["after"] = [round(r, 3), round(im, 3)]
 
+    def refused(d: float, m2: dict) -> bool:
+        """the text's own margins against the turn ``d`` (edges_refuse: on the page as scanned and on the page as turned,
+        ``m2``, they show less than half the tilt the turn was made for): the page then stays as scanned and is listed --
+        unless its print certifies the turn: every printed rule across the text (half the block wide or more) stands
+        level once turned (<= 0.15 deg). A sheared print, its lines and rules leaning one way and its margins another,
+        is levelled by its lines and rules."""
+        if not prof.edge_guard:
+            return False
+        R = [t for t in mk0["tracks"]() if t[5] and t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.5]
+        if R and all(abs(t[1] - d) <= 0.15 + EPS for t in R):
+            return False
+        e = edges_refuse(mk0["ink_text"](), -d, turned=m2["ink_text"]())
+        if e:
+            p["edges"] = e
+            if "tilt_disputed" not in flags:
+                flags.append("tilt_disputed")
+        return bool(e)
+
     mk0 = lk.look(unturned(), px)
-    if p.get("skew"):
+    # TWO COLUMNS: the whole-page measures are not trusted on a page in two columns (an index of short entries, a
+    # dictionary whose headword and gloss stand at different heights in the line, verse: their row profile sharpens at
+    # an angle the lines do not lie at). Each column is read by its own lines' edge; the page is turned only when both
+    # columns show the same clear tilt (>= 0.25 deg, within 0.15 deg of each other) and both edges stand upright once
+    # turned (<= 0.15 deg). Otherwise it stays as scanned and is listed.
+    ct = mk0["cols"]() if prof.deskew else None
+    if ct is not None:
+        had = p.pop("skew", None)
+        tr, tl = ct
+        if tr is not None and tl is not None and tr * tl > 0 and min(abs(tr), abs(tl)) >= 0.25 \
+                and abs(tr - tl) <= max(0.15, 0.15 * max(abs(tr), abs(tl))) + EPS:
+            u2 = (tr + tl) / 2
+            best: tuple | None = None
+            # the turn that squares an edge is minus its lean: that turn first, then the turns beside it (0.05 deg apart),
+            # and only if none stands the columns upright the turns the other way
+            for sgn in (-1, 1):
+                for k in (0, -1, 1, -2, 2, -3, 3):
+                    d = round(sgn * u2 + 0.05 * k, 3)
+                    if abs(d) < prof.skew_min - EPS:
+                        continue
+                    m2 = lk.look(dict(unturned(), skew=d), px)
+                    c2 = m2["cols"]()
+                    if not c2 or c2[0] is None or c2[1] is None:
+                        continue
+                    sc = max(abs(c2[0]), abs(c2[1]))
+                    if best is None or sc < best[0]:
+                        best = (sc, d, m2)
+                    if sc <= 0.05 + EPS:
+                        break
+                if best and best[0] <= 0.15 + EPS:
+                    break
+            if best and best[0] <= 0.15 + EPS:
+                sc, d, m2 = best
+                p["skew"] = d
+                p["tilt"] = round(-d, 3)
+                p["columns"] = {"tilt": [round(tr, 3), round(tl, 3)], "after": round(sc, 3)}
+                flags.append("by_columns")
+            else:
+                p["tilt"] = round(u2, 3)
+                flags.append("tilt_disputed")
+        elif had:
+            p.pop("tilt", None)
+            flags.append("unsure_tilt")
+    elif p.get("skew"):
         before = p["skew"]
         d, r, im, m2 = best_turn(before)
-        if keep(d, r, im, before, m2):
+        if keep(d, r, im, before, m2) and not refused(d, m2):
             set_turn(d, r, im)
         else:
             p.pop("skew", None)
-            flags.append("unsure_tilt")
+            if "tilt_disputed" not in flags:
+                flags.append("unsure_tilt")
     elif mk0.get("xy") is not None and p.get("kind") == "text" and prof.deskew and texty(mk0, 300):
         u, g = skew_of(mk0["xy"], wide=prof.skew_max)
         if abs(u) >= 1.0 and mk0.get("level_frame"):
@@ -251,13 +331,14 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
                 done = False
                 if tries:
                     d, r, im, m2 = best_turn(min(tries)[1])
-                    if keep(d, r, im, u, m2):
+                    if keep(d, r, im, u, m2) and not refused(d, m2):
                         set_turn(d, r, im)
                         p["tilt"] = round(-d, 3)
                         flags.append("found_in_check")
                         done = True
                 if not done:
-                    flags.append("untreated_tilt")
+                    if "tilt_disputed" not in flags:
+                        flags.append("untreated_tilt")
                     p["tilt"] = round(u, 3)
     # LINES AT TWO ANGLES: every turn is checked line by line on the page as scanned and as turned
     if p.get("skew") and prof.two_angle_guard:
@@ -267,21 +348,26 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
         if tw and print_turn(t0, t1, p["skew"])[0]:
             tw = []
             flags.append("level_by_print")
+        if not tw:  # a printed rule the turn makes lean: the print refuses it
+            tw = rules_made_to_lean(t0, t1, p["skew"])
         if tw:
             d0 = p.pop("skew")
             p.pop("after", None)
-            m_ = round(round(float(np.median([v[1] for v in L])) / 0.025) * 0.025, 3)
+            m_ = round(round(float(np.median([v[1] for v in L])) / 0.025) * 0.025, 3) if L else 0.0
             L2, m2 = None, None
-            if abs(m_) >= prof.skew_min:
+            # (a page in two columns is turned by its rule or its columns' edges, or not at all: no second turn by its lines)
+            if abs(m_) >= prof.skew_min and "by_columns" not in flags:
                 m2 = lk.look(dict(p, skew=m_), px)
                 L2 = lines_read(t0, m2["tracks"](), m_)
             if L2 and m2 is not None and not two_angles(L2) and sum(1 for v in L2 if abs(v[2]) <= 0.2 + 1e-6) >= 0.8 * len(L2) \
-                    and m2["xy"] is not None and abs(skew_of(m2["xy"], raw=True)[0]) <= 0.2 + 1e-6:
+                    and m2["xy"] is not None and abs(skew_of(m2["xy"], raw=True)[0]) <= 0.2 + 1e-6 \
+                    and not rules_made_to_lean(t0, m2["tracks"](), m_):
                 set_turn(m_, abs(skew_of(m2["xy"], raw=True)[0]), m2["proj"]())
                 flags.append("level_by_tracks")
             else:
-                if "found_in_check" in flags:
-                    flags.remove("found_in_check")
+                for k in ("found_in_check", "by_columns"):
+                    if k in flags:
+                        flags.remove(k)
                 flags.append("two_angles")
                 p["two_angles"] = {"turn": d0, "lines": [list(v) for v in tw[:8]]}
     # THE PRINTED FRAME IS THE STANDARD OF TILT

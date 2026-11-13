@@ -8,7 +8,7 @@ import os
 import safha
 
 HERE = os.path.dirname(__file__)
-FIXTURES = ["arabic-leiden.pdf", "arabic-bulaq.pdf", "latin-jbig2.pdf", "spreads.pdf", "urdu-ccitt.pdf"]
+FIXTURES = ["arabic-leiden.pdf", "arabic-bulaq.pdf", "latin-jbig2.pdf", "spreads.pdf", "urdu-ccitt.pdf", "dictionary-rule.pdf"]
 OPTIONS = {"spreads.pdf": {"direction": "rtl"}}
 
 

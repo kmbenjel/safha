@@ -1,0 +1,80 @@
+{
+ "mode": "crop",
+ "size": [
+  362.83,
+  526.39
+ ],
+ "split": null,
+ "framed": false,
+ "clean_margins": true,
+ "pages": [
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    2.8,
+    13.9,
+    365.6,
+    540.3
+   ],
+   "move": null,
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": 0.532,
+   "shear": null,
+   "show": [
+    6.8,
+    12.7,
+    369.6,
+    539.1
+   ],
+   "move": null,
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    0.0,
+    9.5,
+    362.8,
+    535.9
+   ],
+   "move": [
+    0.4,
+    0
+   ],
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": -0.767,
+   "shear": null,
+   "show": [
+    27.8,
+    8.3,
+    390.6,
+    534.7
+   ],
+   "move": null,
+   "whole": false
+  },
+  {
+   "kind": "text",
+   "skew": null,
+   "shear": null,
+   "show": [
+    28.6,
+    9.2,
+    391.4,
+    535.5
+   ],
+   "move": null,
+   "whole": false
+  }
+ ]
+}

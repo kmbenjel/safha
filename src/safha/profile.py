@@ -47,6 +47,7 @@ class Profile:
     shear_min: float = 1.25  # a frame whose rules lean this much against its upright sides is sheared level ...
     shear_max: float = 3.0  # ... up to this (beyond it: a misreading, left alone)
     two_angle_guard: bool = True  # never turn a page whose lines lie at two angles (warped leaf)
+    edge_guard: bool = True  # never turn a page against its text's own margins (unless its printed rules certify the turn)
     # -- pages ---------------------------------------------------------------------------------------------------------
     split: str = "auto"  # split two-page spreads: auto | always | never
     direction: str = "auto"  # reading order of a split spread: ltr | rtl | auto (from the text layer, else ltr)

@@ -17,6 +17,8 @@ pipx install safha
 safha crop book.pdf            # -> book.safha.pdf: same images, same size, text larger on screen
 ```
 
+![A tilted page: the scan with safha's box in red, then the page turned level, cropped and centred](docs/media/deskew.gif)
+
 *safha* (صفحة) is Arabic for "page".
 
 ## Why safha? How it compares

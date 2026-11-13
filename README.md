@@ -25,7 +25,8 @@ safha crop book.pdf            # -> book.safha.pdf: same images, same size, text
 
 Scanned books read badly on small screens: wide margins shrink the text, pages sway from left to right, some are
 tilted, some scans hold two pages. The usual fixes either crop page by page (every page a different size), or
-rasterise and re-encode every page (a 600 dpi bitonal scan comes back blurred, bigger, or both).
+rasterise and re-encode every page (the pixels are resampled, and a colour or grey scan comes back several times
+bigger, or lossy).
 
 safha does the whole job **through the PDF's drawing instructions**: each page's visible box and a transformation
 matrix. The image streams stay byte for byte, the file keeps its size, and the original can be restored from the
@@ -33,12 +34,12 @@ output.
 
 | | safha 0.1 | pdfCropMargins 2.2.1 | Briss 2.0a5 | k2pdfopt 2.55 | ScanTailor Advanced 1.0 | unpaper 7.0 | OCRmyPDF 15.2 `--deskew` |
 |---|---|---|---|---|---|---|---|
-| Keeps the scan's image streams (lossless) | ✓ R | ✓ R | ✓ R | ✗ R (re-rendered) | ✗ D (TIFF output) | ✗ R (raster in, raster out) | ✗ R (deskewed pages re-encoded) |
+| Keeps the scan's image streams (lossless) | ✓ R | ✓ R | ✓ R | ✗ R when it reflows or straightens; its trim mode (`-mode tm`) keeps the page content (D) | ✗ D (TIFF output) | ✗ R (raster in, raster out) | ✗ R (deskewed pages re-encoded) |
 | One page size for the whole book | ✓ R | ✓ R (`-u -s`) | partial R | partial R (device pages) | ✓ D | ✗ D (works on images) | ✗ R |
 | Text centred on every page | ✓ R | ✗ R | ✗ R | n/a (reflowed) | ✓ D | partial D | ✗ |
-| Deskew | ✓ R | ✗ D | ✗ D | ✓ R (`-as`) | ✓ D | partial R (0 of 3 test pages) | ✓ R |
-| Refuses a turn that makes level lines lean (warped leaves) | ✓ R | n/a | n/a | n/a (reflowed) | ✗ D (dewarps instead) | ✗ R | ✗ R |
-| Printed frame decides the tilt; sheared print levelled | ✓ R | ✗ | ✗ | ✗ | ✗ D | ✗ D | ✗ D |
+| Deskew | ✓ R | ✗ D | ✗ D | ✓ R (`-as`) | ✓ D | ✓ R | ✓ R |
+| Refuses a turn that makes level lines lean (warped leaves) | ✓ R | n/a | n/a | ✗ R | ✗ D (dewarps instead) | ✗ R | ✗ R |
+| Printed frame or column rule decides the tilt; sheared print levelled | ✓ R | ✗ | ✗ | ✗ | ✗ D | ✗ D | ✗ D |
 | Splits two-page spreads | ✓ R | ✗ D | partial D (manual, GUI) | partial D (columns) | ✓ D | ✓ D (`--layout double`) | ✗ D |
 | Dewarps curved lines | ✗ | ✗ | ✗ | ✗ | ✓ D | ✗ | ✗ |
 | Reflows text for narrow screens | ✗ | ✗ | ✗ | ✓ R | ✗ | ✗ | ✗ |
@@ -53,41 +54,65 @@ their releases). D: from the tool's documentation (2026-11-13). The script that 
 
 ### What the difference looks like, measured
 
-Four 40-page excerpts of public-domain scans (an Arabic print in colour, JPEG 2000; an English print, JPEG 2000; an
-Urdu print, bitonal CCITT G4; an Arabic manuscript on microfilm) and a synthetic book with a known truth, each run
-through every tool with its usual command ([full tables](bench/results/compare.md)):
+Five 40-page excerpts of public-domain scans (an Arabic print in colour, JPEG 2000; an English print, JPEG 2000; an
+Urdu print, bitonal CCITT G4; an Arabic manuscript on microfilm; a French-Arabic dictionary in two columns, bitonal
+JBIG2) and a synthetic book with a known truth. Every tool runs the way a careful user would run it for this job, with
+its optional helpers installed; where a tool has several reasonable settings, each one is a row
+([full tables and commands](bench/results/compare.md)):
 
-| | size of the output | image streams kept byte for byte | codec after | tilted pages levelled | warped pages wrongly turned |
-|---|---:|---:|---|---:|---:|
-| **safha** | **100-102 %** | **100 %** | **unchanged** | **3/3** | **0/3** |
-| pdfCropMargins | 100 % | 100 % | unchanged | 0/3 (no deskew) | 0/3 |
-| Briss | 100 % | 100 % | unchanged | 0/3 (no deskew) | 0/3 |
-| k2pdfopt | 25-326 % | 0 % | Flate (re-rendered) | n/a (reflowed) | n/a |
-| unpaper | 541-783 % | 0 % | Flate (re-rendered) | 0/3 | 2/3 |
-| OCRmyPDF `--deskew` | 286-6551 % | 0 % | Flate (re-encoded) | 3/3 | 3/3 |
+| | size of the output | image streams kept byte for byte | tilted pages levelled | warped pages wrongly turned | ruled pages upright after | ruled pages made worse |
+|---|---:|---:|---:|---:|---:|---:|
+| the scans as they are | | | | | 18 of 39 | |
+| **safha** | **100-102 %** | **100 %** | **3/3** | **0/3** | 29 | 0 |
+| pdfCropMargins | 100 % | 100 % | no deskew | 0/3 | 18 | 0 |
+| Briss | 100 % | 100 % | no deskew | 0/3 | 19 | 0 |
+| k2pdfopt (its default: reflow) | 25-326 % | 0 % | n/a (reflowed) | n/a | n/a | n/a |
+| k2pdfopt `-mode copy -as` | 330-1177 % | 0 % | 3/3 | 1/3 | 11 | 21 |
+| unpaper | 79-860 % | 0 % | 0/3 | 2/3 | 29 | 6 |
+| OCRmyPDF `--deskew` (its default: PDF/A) | 73-1453 % | 0 % | 3/3 | 3/3 | 35 | 1 |
+| OCRmyPDF `--deskew --output-type pdf` | 79-6551 % | 0 % | 3/3 | 3/3 | 35 | 1 |
+| ... with `-O2` / `-O3` (lossy) | 79-2980 % / 79-2395 % | 0 % | 3/3 | 3/3 | 35 | 1 |
 
-Only safha both levels the tilted pages and leaves the warped ones alone; the two other tools that deskew turned
-warped pages, so that their level lines now lean. The lossless croppers (pdfCropMargins, Briss) keep the pixels but do
-not deskew, centre the text page by page, or split spreads.
+The two middle columns are the synthetic book: three pages tilted 1 degree, three warped pages whose upper lines
+are level and lower lines tilted 1.5 degrees. The last two are the dictionary's 39 pages that carry a printed rule
+between their columns: the rule is the print's own upright, read on every tool's output by a script independent of
+safha's measures ("upright": within 0.2 degree; "made worse": at least 0.1 degree further from upright than on the
+scan).
+
+What the table says:
+
+- **Only the tools that leave the image streams alone keep the file's size on every kind of scan.** On bitonal scans
+  the tools that re-encode stay small (OCRmyPDF writes the deskewed pages back as JBIG2, unpaper's output was stored
+  as CCITT G4: 73 to 140 %). On JPEG 2000 scans a deskewed page has to be stored again, and comes back 3 to 65 times
+  larger, or lossy.
+- **Only safha left all three warped pages alone.** The three other tools that deskew turned at least one of them, so
+  that its level upper lines now lean.
+- **On the dictionary's ruled pages OCRmyPDF's deskew did best** (35 of 39 upright). safha and unpaper stood 29
+  upright; unpaper made 6 pages worse, safha none: it turns a page by its rule only when the rule is straight and
+  the lines agree, and leaves the others as scanned. k2pdfopt's auto-straighten made 21 of the 39 worse.
+- The lossless croppers (pdfCropMargins, Briss) keep the pixels but do not deskew, centre the text page by page, or
+  split spreads.
 
 ![The same page as each tool leaves it, with one word magnified 4x](docs/media/compare.webp)
 
 ### Five differences, with the evidence
 
 1. **Nothing is re-encoded.** Over 17 public-domain books (7,998 pages: JPEG 2000, JBIG2, CCITT G4, colour and
-   bitonal), every image codec came out unchanged and every image stream byte for byte; the files grew by 0.70 % in the
-   reversible mode and by 0.02 % with `--compact`. On the same excerpts, the two tools that deskew by re-rendering made
-   the files 2.9 to 65 times larger (OCRmyPDF) and 5.4 to 7.8 times larger (unpaper).
-2. **One box per book, on every page's text.** Every output page has the book's size to 0.01 pt (checked by `apply`). On the
-   microfilmed manuscript, the text filled 67 % of the page width before and 79 % after, its centre within 0.3 % of the
-   page's (pdfCropMargins: 63 % and 3.1 %; Briss: 54 % and 23 %); on the Urdu excerpt the text's place swayed 0.9 % of
-   the page width from page to page before and 0.1 % after (pdfCropMargins: 1.2 %).
-3. **No invented tilt.** On a synthetic book with a known truth (three pages tilted 1 degree, three warped pages whose
-   upper lines are level and lower lines tilted 1.5 degrees), safha levelled the three tilted pages and turned none of the warped ones; OCRmyPDF's
-   deskew turned all three warped pages and unpaper two, so that their level upper lines now lean. Across the
-   7,998-page corpus, 85 pages whose lines lie at two angles were left as scanned and listed.
-4. **The printed frame is the ruler.** A frame's sides decide the turn of a framed page, and a frame printed as a
-   parallelogram is sheared level (tested in `tests/test_tilt.py`; no other tool listed does either).
+   bitonal), every image codec came out unchanged and every image stream byte for byte; the files grew by 0.70 %
+   in the reversible mode and by 0.02 % with `--compact`.
+2. **One box per book, on every page's text.** Every output page has the book's size to 0.01 pt (checked by `apply`).
+   On the microfilmed manuscript, the text filled 67 % of the page width before and 79 % after, its centre
+   within 0.3 % of the page's (pdfCropMargins: 63 % and 3.1 %; Briss: 54 % and 23 %); on the Urdu excerpt the
+   text's place swayed 0.9 % of the page width from page to page before and 0.1 % after (pdfCropMargins: 1.2 %).
+3. **No invented tilt.** A turn needs two measures that agree, then passes the page's own witnesses: its lines
+   followed one by one, its margins, its printed rules. On the synthetic book safha levelled the three tilted pages
+   and turned none of the warped ones. Across the corpus, 444 of the pages it turned carry a printed rule inside
+   their text, which an independent script can read: after the turn the rule stood within 0.15 degree of upright on
+   414 of them and within 0.3 degree on 439; 2 were left further from upright than they were, the worst by 0.22
+   degree. 151 pages whose lines lie at two angles and 186 whose witnesses disagreed were left as scanned and listed.
+4. **The print's own lines are the ruler.** A frame's sides decide the turn of a framed page; the rule between two
+   columns decides the turn of a dictionary or an index page; a frame printed as a parallelogram is sheared level
+   (`tests/test_tilt.py`, `tests/test_columns.py`; no other tool listed does any of the three).
 5. **Reviewable and reversible.** `safha plan` writes every decision to a JSON recipe, `safha sheet` draws the box on
    the scan beside the result, and `safha restore` gives back the original file byte for byte (MD5 checked).
 
@@ -98,6 +123,8 @@ not deskew, centre the text page by page, or split spreads.
 - You read on a **very small e-ink screen** and want the text **reflowed** into one narrow column: k2pdfopt.
 - You need **searchable text**: run OCRmyPDF on safha's output, without `--deskew`, and the images stay untouched.
 - You want **clean pixels** (despeckle, binarise, whiten the paper) and accept re-encoding: unpaper or ScanTailor.
+- Your scan is **bitonal** and you want every tilted page turned, whatever its lines and rules say, and accept
+  re-encoded pages: OCRmyPDF's `--deskew` keeps such a file small.
 - You need to crop a **born-digital** PDF's white margins quickly: pdfCropMargins is simpler for that.
 
 ## Features
@@ -107,11 +134,17 @@ not deskew, centre the text page by page, or split spreads.
   book prints in its margins.
 - **Not content, kept outside**: scanner bands, edge shadows, specks and dust, the edges of a photocopied sheet,
   streaks and blots. **Content, kept inside**: marginal notes, figures, printed rules and frames, page numbers.
+- **No line of print cut**: after the box is placed, the page image is read again around its edge; a letter the edge
+  runs through, a note that goes on beyond it, a running head above it make the box slide or grow, or the page is
+  shown whole.
 - **Deskew**: the ink-shear profile on the whole page and on its halves, checked on the turned page by the page image
-  itself; each line followed across the page to refuse turns that make level lines lean.
+  itself; each line followed across the page to refuse turns that make level lines lean; the text's own margins and
+  its printed rules heard as witnesses.
+- **Two columns**: a dictionary, an index or a journal page with a printed rule between its columns is turned by
+  that rule when its lines agree, never by the whole-page measures such pages fool.
 - **Printed frames**: a frame's sides decide its page's tilt; a parallelogram frame is sheared level.
 - **Spreads**: wide sheets split into two pages (right page first with `--rtl`); wrap-around covers split.
-- **Covers**: a cover photographed on the scanner bed shown alone.
+- **Covers**: a cover photographed on the scanner bed shown alone, filling the page.
 - **One page size**: pages holding more than the box (a plate, a wide table) are drawn smaller, never cut.
 - **Recipes**: plain JSON, re-appliable; `safha inspect` prints them page by page.
 - **Review**: `safha sheet` draws the box on the scan beside the result (an image, an HTML folder, or review cards
@@ -174,12 +207,13 @@ The full method and the reasons behind each rule are in [docs/design.md](docs/de
 | | |
 |---|---|
 | books / pages | 17 / 7,998 (0 errors) |
-| written | 13 cropped, 4 levelled only (well-cropped scans whose only flaw was tilted pages) |
+| written | 13 cropped, 4 levelled only (well-cropped scans whose only flaw was tilted pages, or books no one box fits) |
 | image codecs unchanged | 17 of 17 books (JPEG 2000, JBIG2, CCITT G4) |
 | size | 504.6 MB in, 508.1 MB out (+0.70 %, reversible); +0.02 % with `--compact` |
-| pages turned | 863 of 7,776 text pages (11.1 %) |
-| left as scanned, lines at two angles | 85 pages |
-| speed | 1.37 pages/s per book with 3 worker processes; 5.0 pages/s with 4 books at once |
+| pages turned | 1,022 of 7,776 text pages (13.1 %) |
+| left as scanned, lines at two angles | 151 pages |
+| left as scanned, witnesses of the tilt disagree | 186 pages |
+| speed | 2.1 pages/s per book with 4 worker processes; 11 pages/s with 6 books at once |
 
 Per book: [bench/results/bench.md](bench/results/bench.md); corpus with years and licences:
 [bench/results/corpus.tsv](bench/results/corpus.tsv).
@@ -190,18 +224,32 @@ book's year and licence, is written to `CORPUS/corpus.tsv`).
 ## Design decisions
 
 - **Drawing instructions, not pixels.** Lossless by construction, and verified after every write.
-- **Two witnesses for every turn**, and a line-by-line check: a page left tilted is a small fault, a page made to lean
-  is a new one.
+- **Two witnesses for every turn**, a line-by-line check, and the print's own standards (a frame, a column rule, the
+  text's margins) above them: a page left tilted is a small fault, a page made to lean is a new one.
 - **One size per book**: a reader's zoom and the text's place stay still from page to page.
 - **Crop only when it pays** (default profile): a well-made scan is left alone.
 - **Recipes as the contract** between the method and the writer: reviewable, editable, re-appliable.
 - **Thresholds in one profile object**, all overridable; the defaults were tuned page by page on a 16,700-volume
   library of scanned Arabic books, then tested on Latin, Urdu and handwritten pages.
 
+## Limits
+
+- A page is turned as a whole or not at all. When its witnesses disagree (lines at two angles, margins against
+  lines, a bent column rule) it stays as scanned, and the summary lists it. Curved lines are not straightened.
+- Pages that carry a `/Rotate` entry are not measured: they are shown whole at the book's page size.
+- Split spreads are ordered by `--rtl` / `--ltr`, else by the file's text layer; with neither, the left page comes
+  first and the summary says so.
+- A cover fills the page: up to 4 % of it is left out at two opposite edges to match the book's proportions.
+- Links and form fields keep their own coordinates: on a page that was turned or drawn smaller they sit off by
+  that much.
+- A lone mark in the margin of a book that prints nothing there (a pencil stroke, a single sign) is left outside
+  the box.
+
 ## Roadmap
 
 - Fill the scanner bed beyond a short sheet's edge with the paper's colour (a vector patch, still lossless).
-- Folio-anchored placement of short pages; two-column index pages measured column by column.
+- Folio-anchored placement of short pages.
+- A cover's own print read before it is trimmed to the book's proportions.
 - Uploader stamps and coloured marks kept outside the box.
 - A browser demo: the same engine on [Pyodide](https://pyodide.org) (PyMuPDF, NumPy and SciPy have WebAssembly
   builds), so a reader can drop a PDF on a static page and get it back cropped, with nothing uploaded.

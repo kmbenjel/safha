@@ -16,7 +16,7 @@ import pymupdf
 from PIL import Image, ImageDraw, ImageFont
 
 from .geometry import inside
-from .pdf import back_to_scan, open_book
+from .pdf import back_to_scan, display_matrix, open_book, user_unit, wrap_contents
 
 WHY = {"turned": "turned level", "found_in_check": "tilt found by the second look", "frame_turn": "squared by its frame",
        "by_columns": "two columns: turned by the printed rule between them",
@@ -40,6 +40,19 @@ def _font(size: int) -> ImageFont.ImageFont:
 def _pix(page: pymupdf.Page, z: float, clip: Any = None) -> Image.Image:
     pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), clip=clip, alpha=False)
     return Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
+
+
+def _overlay(page: pymupdf.Page, strokes: list[tuple[list, tuple, float, str]]) -> None:
+    """closed outlines (corner points in page coordinates, colour, line width in pt, dash pattern) drawn over a page's
+    content, written in PDF coordinates: right for a page stored sideways (/Rotate) or in another unit too"""
+    if not strokes:
+        return
+    inv, u = ~display_matrix(page), user_unit(page)
+    ops = []
+    for pts, color, width, dashes in strokes:
+        path = " ".join(f"{q.x:.3f} {q.y:.3f} {'l' if k else 'm'}" for k, q in enumerate(pt * inv for pt in pts))
+        ops.append(f"{color[0]:g} {color[1]:g} {color[2]:g} RG {width / u:.3f} w {dashes or '[] 0'} d {path} h S\n")
+    wrap_contents(page.parent, page, b"q\n", b"\nQ\nq\n" + "".join(ops).encode() + b"Q\n")
 
 
 def pick_pages(rec: dict, k: int = 8) -> list[tuple[int, str]]:
@@ -97,26 +110,22 @@ class Pair:
         tp = tmp[0]
         z0 = px / tp.rect.width
         bk = back_to_scan(tp, p)
-        sh = tp.new_shape()
+        strokes: list[tuple[list, tuple, float, str]] = []
 
-        def poly(r: list) -> list:
-            return [bk(r[0], r[1]), bk(r[2], r[1]), bk(r[2], r[3]), bk(r[0], r[3]), bk(r[0], r[1])]
+        def box(r: list, color: tuple, width: float, dashes: str = "") -> None:
+            strokes.append(([bk(r[0], r[1]), bk(r[2], r[1]), bk(r[2], r[3]), bk(r[0], r[3])], color, width, dashes))
 
         lw = max(1.5, 2.2 / z0)
         if p.get("crop"):
-            sh.draw_polyline(poly(p["crop"]))
-            sh.finish(color=(0.85, 0, 0), width=lw)
+            box(p["crop"], (0.85, 0, 0), lw)
         if p.get("show") and (not p.get("crop") or any(abs(a - b) > 1 for a, b in zip(p["show"], p["crop"]))):
-            sh.draw_polyline(poly(p["show"]))
-            sh.finish(color=(0, 0.35, 1), width=lw * 0.7, dashes="[6 4] 0")
+            box(p["show"], (0, 0.35, 1), lw * 0.7, "[6 4] 0")
         for b in p.get("blots") or []:
-            sh.draw_polyline(poly([b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3]))
-            sh.finish(color=(1, 0.55, 0), width=lw)
+            box([b[0] - 3, b[1] - 3, b[2] + 3, b[3] + 3], (1, 0.55, 0), lw)
         for b in p.get("edge") or []:
             if p.get("crop") and not inside(b, p["crop"], 0):
-                sh.draw_polyline(poly([b[0] - 2, b[1] - 2, b[2] + 2, b[3] + 2]))
-                sh.finish(color=(0.6, 0, 0.8), width=lw * 0.6)
-        sh.commit()
+                box([b[0] - 2, b[1] - 2, b[2] + 2, b[3] + 2], (0.6, 0, 0.8), lw * 0.6)
+        _overlay(tp, strokes)
         before = _pix(tp, z0)
         tmp.close()
         ap = self.after[i]

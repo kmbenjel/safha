@@ -15,7 +15,7 @@ import pymupdf
 from .geometry import rnd
 from .measure import marks
 from .pages import cover_rect
-from .pdf import Turner, gray
+from .pdf import Turner, display_matrix, gray, shown_as_computed
 from .profile import Profile
 from .tilt import (
     EPS,
@@ -105,7 +105,7 @@ def _ink(mk: dict) -> int:
 
 def _inner(page: pymupdf.Page, q: dict, b: list) -> list:
     """the largest upright box inside box ``b`` as it lies once the page is turned like ``q`` (scanner bands carried over)"""
-    tm = page.transformation_matrix
+    tm = display_matrix(page)
     from .pdf import frame_matrix
     m = ~tm * frame_matrix(page, q) * tm
     pts = [pymupdf.Point(x, y) * m for x, y in ((b[0], b[1]), (b[2], b[1]), (b[2], b[3]), (b[0], b[3]))]
@@ -120,7 +120,7 @@ def first_look(doc: pymupdf.Document, i: int, prof: Profile, lk: Looker) -> tupl
     r = page.rect
     n = doc.page_count
     rec: dict[str, Any] = {"n": i + 1, "w": round(r.width, 2), "h": round(r.height, 2), "flags": []}
-    if page.rotation:
+    if not shown_as_computed(page):  # (a /Rotate or a box MuPDF reads another way: the page is shown whole)
         rec["kind"] = "rotated"
         return rec, {}
     q0: dict = {}

@@ -35,7 +35,8 @@ def decide(pages: list[dict], prof: Profile, wq: float = 0.95) -> dict[str, Any]
         rot = sum(1 for p in pages if p["kind"] == "rotated")
         out["decision"] = "skip"
         out["why"] = f"few text pages ({len(text)} of {len(pages)})" \
-            + (f"; {rot} pages are turned by a /Rotate entry: such pages are shown whole, not measured" if rot else "")
+            + (f"; {rot} pages are shown in a way that cannot be followed (their /Rotate entry or their boxes): such "
+               "pages are shown whole, not measured" if rot else "")
         return out
     # a «stain» at the same place on 3 other pages or more is print (an ornament, a logo): content again
     allb = [(i, bl) for i in text for bl in pages[i].get("blots") or []]

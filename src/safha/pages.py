@@ -6,7 +6,7 @@ import numpy as np
 import pymupdf
 from scipy import ndimage
 
-from .pdf import gray
+from .pdf import gray, shown_as_computed
 
 
 def cover_rect(page: pymupdf.Page, px: int = 360) -> list[float] | None:
@@ -95,7 +95,7 @@ def spread_gutter(page: pymupdf.Page, px: int = 500) -> float | None:
     column's ink (rows 10-90 %). A sheet without such a run (a map, a table across both pages) is not split.
     -> the gutter's x in pt (page coordinates) or None. The paper is read inside the scan's dark border, if any."""
     r = page.rect
-    if page.rotation % 180 or r.width <= 1.15 * r.height:
+    if r.width <= 1.15 * r.height:
         return None
     a, z = gray(page, px)
     H, W = a.shape
@@ -141,7 +141,7 @@ def find_spreads(doc: pymupdf.Document, mode: str = "auto") -> dict[str, float]:
     n = doc.page_count
     if mode == "never" or n == 0:
         return {}
-    wide = [i for i in range(n) if not doc[i].rotation and doc[i].rect.width > 1.15 * doc[i].rect.height]
+    wide = [i for i in range(n) if doc[i].rect.width > 1.15 * doc[i].rect.height and shown_as_computed(doc[i])]
     spreads = mode == "always" or len(wide) >= 0.5 * n
     out: dict[str, float] = {}
     for i in wide:

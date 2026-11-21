@@ -7,6 +7,11 @@ changes the instructions:
 * for a turned, sheared, moved or scaled page, one content stream ``q a b c d e f cm`` before the page's own content and
   one ``Q`` after it, so the reader draws the same image turned. The image streams, the text layer and everything else
   stay byte for byte.
+
+Two frames are in play. The method measures a page **as it is shown** (page coordinates: points from the shown page's top
+left corner, y downward), whatever the file does to show it that way: a ``/Rotate`` entry (a scan stored sideways), a
+``/UserUnit``, a CropBox inside the MediaBox. The file is written in **PDF coordinates** (y upward, the page as stored).
+``display_matrix`` is the map from the second to the first, and every box and matrix written goes through it.
 """
 
 from __future__ import annotations
@@ -76,11 +81,66 @@ def media_box(page: pymupdf.Page) -> list[float]:
     return mb
 
 
+def user_unit(page: pymupdf.Page) -> float:
+    """the page's ``/UserUnit``: the size of one unit of its coordinates in points (1 unless the file says otherwise)"""
+    t, v = page.parent.xref_get_key(page.xref, "UserUnit")
+    try:
+        u = float(v) if t in ("int", "float", "real") else 1.0
+    except ValueError:
+        u = 1.0
+    return u if u > 0 else 1.0
+
+
+def plain(page: pymupdf.Page) -> bool:
+    """a page shown as it is stored: no ``/Rotate``, one unit one point"""
+    return not page.rotation and user_unit(page) == 1.0
+
+
+def display_matrix(page: pymupdf.Page) -> pymupdf.Matrix:
+    """PDF coordinates -> the page as it is shown (points from its top left corner, y downward), the page's ``/Rotate``
+    and ``/UserUnit`` included: what a reader draws. For a plain page it is PyMuPDF's ``transformation_matrix``"""
+    if plain(page):
+        return page.transformation_matrix
+    mb = media_box(page)
+    cb = raw_box(page.parent, page.xref, "CropBox")
+    box = mb if cb is None else [max(cb[0], mb[0]), max(cb[1], mb[1]), min(cb[2], mb[2]), min(cb[3], mb[3])]
+    if box[2] - box[0] <= 0 or box[3] - box[1] <= 0:
+        box = mb
+    u = user_unit(page)
+    c, s = {0: (1, 0), 90: (0, -1), 180: (-1, 0), 270: (0, 1)}.get(page.rotation, (1, 0))  # of minus the rotation
+    m = pymupdf.Matrix(c, s, -s, c, 0, 0) * pymupdf.Matrix(u, 0, 0, -u, 0, 0)
+    xs = [x * m.a + y * m.c for x in (box[0], box[2]) for y in (box[1], box[3])]
+    ys = [x * m.b + y * m.d for x in (box[0], box[2]) for y in (box[1], box[3])]
+    return m * pymupdf.Matrix(1, 0, 0, 1, -min(xs), -min(ys))
+
+
+def shown_as_computed(page: pymupdf.Page) -> bool:
+    """the page is shown where ``display_matrix`` says: its box, mapped, is the rectangle MuPDF gives the page. (A page
+    for which this does not hold is not measured: it is shown whole.)"""
+    if plain(page):
+        return True
+    m = display_matrix(page)
+    mb = media_box(page)
+    cb = raw_box(page.parent, page.xref, "CropBox")
+    box = mb if cb is None else [max(cb[0], mb[0]), max(cb[1], mb[1]), min(cb[2], mb[2]), min(cb[3], mb[3])]
+    pts = [pymupdf.Point(x, y) * m for x in (box[0], box[2]) for y in (box[1], box[3])]
+    r = page.rect
+    return (abs(min(q.x for q in pts) - r.x0) < 0.05 and abs(min(q.y for q in pts) - r.y0) < 0.05
+            and abs(max(q.x for q in pts) - r.x1) < 0.05 and abs(max(q.y for q in pts) - r.y1) < 0.05)
+
+
+def _linear(m: pymupdf.Matrix) -> pymupdf.Matrix:
+    return pymupdf.Matrix(m.a, m.b, m.c, m.d, 0, 0)
+
+
 def turn_cm(doc: pymupdf.Document, page: pymupdf.Page, deg: float, dx: float = 0.0, dy: float = 0.0,
             shear: float = 0.0) -> bytes:
     """the ``q ... cm`` line that draws the page's content turned by ``deg`` degrees about the MediaBox centre, its rows
-    then tilted by ``shear`` degrees (y' = y + tan(shear)(x - cx); the columns stay upright), then moved by (dx, dy) pt
-    (page coordinates: dy > 0 moves down)"""
+    (as shown) then tilted by ``shear`` degrees (y' = y + tan(shear)(x - cx); the columns stay upright), then moved by
+    (dx, dy) pt (page coordinates: dy > 0 moves down)"""
+    if not plain(page):
+        m = frame_matrix(page, {"skew": deg, "shear": shear, "move": [dx, dy]})
+        return f"q {m.a + 0.0:.6f} {m.b + 0.0:.6f} {m.c + 0.0:.6f} {m.d + 0.0:.6f} {m.e + 0.0:.4f} {m.f + 0.0:.4f} cm\n".encode()
     mb = media_box(page)
     cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
     t = math.radians(deg)
@@ -91,8 +151,9 @@ def turn_cm(doc: pymupdf.Document, page: pymupdf.Page, deg: float, dx: float = 0
     return f"q {c:.6f} {b:.6f} {-s:.6f} {d:.6f} {e:.4f} {f:.4f} cm\n".encode()
 
 
-def wrap_contents(doc: pymupdf.Document, page: pymupdf.Page, pre: bytes) -> bool:
-    """one new stream ``pre`` (opening with ``q``) before the page's content and one ``Q`` after it"""
+def wrap_contents(doc: pymupdf.Document, page: pymupdf.Page, pre: bytes, post: bytes = b"\nQ\n") -> bool:
+    """one new stream ``pre`` (opening with ``q``) before the page's content and one after it (``Q``, unless ``post``
+    says more). False when the page has no content to wrap"""
     ta, v = doc.xref_get_key(page.xref, "Contents")
     if ta == "xref":
         x = int(v.split()[0])
@@ -107,7 +168,7 @@ def wrap_contents(doc: pymupdf.Document, page: pymupdf.Page, pre: bytes) -> bool
     doc.update_stream(xa, pre)
     xb = doc.get_new_xref()
     doc.update_object(xb, "<<>>")
-    doc.update_stream(xb, b"\nQ\n")
+    doc.update_stream(xb, post)
     doc.xref_set_key(page.xref, "Contents", f"[{xa} 0 R {old} {xb} 0 R]")
     return True
 
@@ -126,9 +187,16 @@ def frame_matrix(page: pymupdf.Page, p: dict) -> pymupdf.Matrix:
     mb = media_box(page)
     cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
     fwd = pymupdf.Matrix(1, 0, 0, 1, -cx, -cy) * pymupdf.Matrix(deg)
+    if plain(page):
+        if sh:
+            fwd = fwd * pymupdf.Matrix(1, math.tan(math.radians(sh)), 0, 1, 0, 0)
+        return fwd * pymupdf.Matrix(1, 0, 0, 1, cx, cy) * pymupdf.Matrix(1, 0, 0, 1, mv[0], -mv[1])
+    # a page stored sideways or in another unit: the shear and the move are those of the page as shown
+    lin = _linear(display_matrix(page))
     if sh:
-        fwd = fwd * pymupdf.Matrix(1, math.tan(math.radians(sh)), 0, 1, 0, 0)
-    return fwd * pymupdf.Matrix(1, 0, 0, 1, cx, cy) * pymupdf.Matrix(1, 0, 0, 1, mv[0], -mv[1])
+        fwd = fwd * lin * pymupdf.Matrix(1, -math.tan(math.radians(sh)), 0, 1, 0, 0) * ~lin
+    d = pymupdf.Point(mv[0], mv[1]) * ~lin
+    return fwd * pymupdf.Matrix(1, 0, 0, 1, cx, cy) * pymupdf.Matrix(1, 0, 0, 1, d.x, d.y)
 
 
 def as_scanned(p: dict) -> bool:
@@ -140,7 +208,7 @@ def fwd_boxes(page: pymupdf.Page, p: dict, bs: Sequence[Sequence[float]]) -> lis
     """boxes of the page as scanned (page coordinates) as they lie in the reader's frame (bounding boxes)"""
     if as_scanned(p):
         return [list(b) for b in bs]
-    tm = page.transformation_matrix
+    tm = display_matrix(page)
     m = ~tm * frame_matrix(page, p) * tm
     out = []
     for b in bs:
@@ -151,7 +219,7 @@ def fwd_boxes(page: pymupdf.Page, p: dict, bs: Sequence[Sequence[float]]) -> lis
 
 def back_to_scan(page: pymupdf.Page, p: dict):
     """maps points of the reader's frame back onto the page as scanned (to draw the box on the scan)"""
-    tm = page.transformation_matrix
+    tm = display_matrix(page)
     m = ~tm * ~frame_matrix(page, p) * tm
     return lambda x, y: pymupdf.Point(x, y) * m
 
@@ -228,15 +296,27 @@ def split_pages(doc: pymupdf.Document, split: dict, rtl: bool = False) -> None:
     for i in sorted((int(k) for k in split), reverse=True):
         g = float(split[str(i)] if str(i) in split else split[i])
         page = doc[i]
-        inv = ~page.transformation_matrix
-        cb = raw_box(doc, page.xref, "CropBox") or media_box(page)
-        a, b = pymupdf.Point(g, 0) * inv, pymupdf.Point(g, page.rect.height) * inv
-        gx = (a.x + b.x) / 2
+        if plain(page):
+            inv = ~page.transformation_matrix
+            cb = raw_box(doc, page.xref, "CropBox") or media_box(page)
+            a, b = pymupdf.Point(g, 0) * inv, pymupdf.Point(g, page.rect.height) * inv
+            gx = (a.x + b.x) / 2
+            left, right = [cb[0], cb[1], gx, cb[3]], [gx, cb[1], cb[2], cb[3]]
+            nd = 2
+        else:  # a sheet stored sideways: the two halves of the sheet as shown, each back in PDF coordinates
+            inv = ~display_matrix(page)
+            w, h = page.rect.width, page.rect.height
+
+            def half(x0: float, x1: float) -> list[float]:
+                pts = [pymupdf.Point(x, y) * inv for x in (x0, x1) for y in (0, h)]
+                return [min(q.x for q in pts), min(q.y for q in pts), max(q.x for q in pts), max(q.y for q in pts)]
+
+            left, right = half(0, g), half(g, w)
+            nd = 4
         doc.fullcopy_page(i, i + 1 if i + 1 < doc.page_count else -1)
-        first, second = ([gx, cb[1], cb[2], cb[3]], [cb[0], cb[1], gx, cb[3]]) if rtl else \
-            ([cb[0], cb[1], gx, cb[3]], [gx, cb[1], cb[2], cb[3]])
-        doc.xref_set_key(doc[i].xref, "CropBox", "[%s]" % " ".join(f"{v:.2f}" for v in first))
-        doc.xref_set_key(doc[i + 1].xref, "CropBox", "[%s]" % " ".join(f"{v:.2f}" for v in second))
+        first, second = (right, left) if rtl else (left, right)
+        doc.xref_set_key(doc[i].xref, "CropBox", "[%s]" % " ".join(f"{v:.{nd}f}" for v in first))
+        doc.xref_set_key(doc[i + 1].xref, "CropBox", "[%s]" % " ".join(f"{v:.{nd}f}" for v in second))
 
 
 def open_book(path: str, rec: dict | None = None) -> pymupdf.Document:

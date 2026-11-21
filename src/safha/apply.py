@@ -19,7 +19,7 @@ import pymupdf
 
 from .engine import file_md5
 from .geometry import union
-from .pdf import images_of, media_box, raw_box, rotate_contents, split_pages, wrap_contents
+from .pdf import display_matrix, images_of, media_box, plain, raw_box, rotate_contents, split_pages, user_unit, wrap_contents
 
 MARK = "SafhaOriginal"
 CHUNK = 1 << 20
@@ -29,8 +29,8 @@ class ApplyError(RuntimeError):
     pass
 
 
-def _box(v: list[float]) -> str:
-    return "[%s]" % " ".join(f"{x:.2f}" for x in v)
+def _box(v: list[float], nd: int = 2) -> str:
+    return "[%s]" % " ".join(f"{x:.{nd}f}" for x in v)
 
 
 def _same_file(a: str, b: str) -> bool:
@@ -138,8 +138,12 @@ def _edit(doc: pymupdf.Document, rec: dict, imgs: list, mode: str | None) -> tup
         W, H = rec.get("size") or (None, None)
         for i, p in enumerate(rec["pages"]):
             page = doc[i]
-            inv = ~page.transformation_matrix
+            inv = ~display_matrix(page)
             mb = media_box(page)
+            # a page stored sideways (/Rotate) or in another unit (/UserUnit): the book's size as its file counts it
+            flat = plain(page)
+            u = 1.0 if flat else user_unit(page)
+            nd = 2 if flat else 4
             if mode == "level":
                 if p.get("skew") or p.get("shear"):
                     rotate_contents(doc, page, p.get("skew") or 0, shear=p.get("shear") or 0)
@@ -147,13 +151,14 @@ def _edit(doc: pymupdf.Document, rec: dict, imgs: list, mode: str | None) -> tup
                 c = p.get("crop")
                 if c:
                     a, b = pymupdf.Point(c[0], c[1]) * inv, pymupdf.Point(c[2], c[3]) * inv
-                    doc.xref_set_key(page.xref, "CropBox", _box([min(a.x, b.x), min(a.y, b.y), max(a.x, b.x), max(a.y, b.y)]))
+                    doc.xref_set_key(page.xref, "CropBox",
+                                     _box([min(a.x, b.x), min(a.y, b.y), max(a.x, b.x), max(a.y, b.y)], nd))
                     done += 1
                 continue
             if p.get("fit_whole"):  # a page turned by /Rotate: all of it, fitted
                 cb = raw_box(doc, page.xref, "CropBox") or mb
                 clip = [max(cb[0], mb[0]), max(cb[1], mb[1]), min(cb[2], mb[2]), min(cb[3], mb[3])]
-                tw, th = (W, H) if page.rotation % 180 == 0 else (H, W)
+                tw, th = (W / u, H / u) if page.rotation % 180 == 0 else (H / u, W / u)
                 s = min(tw / (clip[2] - clip[0]), th / (clip[3] - clip[1]))
                 cx, cy = (clip[0] + clip[2]) / 2, (clip[1] + clip[3]) / 2
             elif p.get("show"):
@@ -165,7 +170,7 @@ def _edit(doc: pymupdf.Document, rec: dict, imgs: list, mode: str | None) -> tup
                 a, b = pymupdf.Point(R[0], R[1]) * inv, pymupdf.Point(R[2], R[3]) * inv
                 cx, cy = (a.x + b.x) / 2, (a.y + b.y) / 2
                 s = p["scale"]
-                tw, th = W, H
+                tw, th = (W / u, H / u) if page.rotation % 180 == 0 else (H / u, W / u)
                 clip = None
                 if p.get("bands"):
                     r0, r1 = pymupdf.Point(0, 0) * inv, pymupdf.Point(page.rect.width, page.rect.height) * inv
@@ -178,11 +183,11 @@ def _edit(doc: pymupdf.Document, rec: dict, imgs: list, mode: str | None) -> tup
                     pre += f"{clip[0]:.4f} {clip[1]:.4f} {clip[2] - clip[0]:.4f} {clip[3] - clip[1]:.4f} re W n\n"
                 wrap_contents(doc, page, pre.encode())
                 scaled_n += 1
-            x0, y0 = round(cx - tw / 2, 2), round(cy - th / 2, 2)
-            T = [x0, y0, round(x0 + tw, 2), round(y0 + th, 2)]
+            x0, y0 = round(cx - tw / 2, nd), round(cy - th / 2, nd)
+            T = [x0, y0, round(x0 + tw, nd), round(y0 + th, nd)]
             if T[0] < mb[0] - 1e-3 or T[1] < mb[1] - 1e-3 or T[2] > mb[2] + 1e-3 or T[3] > mb[3] + 1e-3:
-                doc.xref_set_key(page.xref, "MediaBox", _box(union([mb, T])))
-            doc.xref_set_key(page.xref, "CropBox", _box(T))
+                doc.xref_set_key(page.xref, "MediaBox", _box(union([mb, T]), nd))
+            doc.xref_set_key(page.xref, "CropBox", _box(T, nd))
             done += 1
     drop = sorted({int(k) for k in rec.get("drop") or []}, reverse=True)
     for k in drop:

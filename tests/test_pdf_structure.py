@@ -157,7 +157,29 @@ def test_links_outline_and_text_layer_stay(base, tmp_path):
             assert abs(ca.x - cb.x) < 2e-3 and abs(ca.y - cb.y) < 2e-3
 
 
-def test_pages_turned_by_rotate_are_shown_whole(base, tmp_path, capsys):
+def test_pages_turned_by_rotate_are_measured_as_they_are_shown(base, tmp_path):
+    """a ``/Rotate`` on some pages (here they are shown on their side and upside down, as a careless scan is): every
+    page is measured as the reader shows it, and the book still comes out at one page size, restorable"""
+    d = pymupdf.open("pdf", base)
+    d[2].set_rotation(90)
+    d[5].set_rotation(180)
+    src, rec, out, rep = run(tmp_path, "rot", d.tobytes())
+    assert "rotated" not in rec["summary"]["kinds"] and rec["pages"][5]["kind"] == "text"
+    assert rec["pages"][2]["w"] > rec["pages"][2]["h"]  # the page on its side, as shown
+    b = pymupdf.open(out)
+    assert len({(round(p.rect.width, 2), round(p.rect.height, 2)) for p in b}) == 1
+    assert md5(tmp_path / "rot.pdf") == safha.restore(out, str(tmp_path / "b.pdf"))["md5"]
+    assert same_picture(src, rec, out, 5) >= 0.93  # the page shown upside down: the part the recipe names, as shown
+
+
+def test_a_page_whose_frame_cannot_be_followed_is_shown_whole(base, tmp_path, capsys, monkeypatch):
+    """the way out for a page MuPDF shows otherwise than its boxes say: it is not measured, and is shown whole at the
+    book's page size"""
+    import safha.detect
+    import safha.pages
+
+    for module in (safha.detect, safha.pages):
+        monkeypatch.setattr(module, "shown_as_computed", lambda page: not page.rotation)
     d = pymupdf.open("pdf", base)
     d[2].set_rotation(90)
     d[5].set_rotation(180)

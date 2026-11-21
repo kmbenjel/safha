@@ -508,7 +508,7 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
         try:
             found = None if prof.direction in ("ltr", "rtl") else text_direction(src)
             split = find_spreads(src, prof.split)
-        except RuntimeError as e:
+        except (RuntimeError, ValueError) as e:
             if repaired:
                 raise _damaged(path, e) from e
             raise
@@ -519,7 +519,7 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
     n = n0 + len(split)
     try:
         pages_d = _run(_measure_chunk, (path, split, direction, prof), n, jobs, progress, "measure")
-    except RuntimeError as e:
+    except (RuntimeError, ValueError) as e:
         if repaired:
             raise _damaged(path, e) from e
         raise

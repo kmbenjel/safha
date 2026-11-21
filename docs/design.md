@@ -11,7 +11,15 @@ drawing instructions; safha rewrites only the instructions:
 | an incremental update appended to the file | everything above; the original file is the first N bytes | `safha restore` truncates and checks the MD5 |
 
 After writing, `apply` re-opens the result and refuses it unless it has the expected pages, every image stream is byte
-for byte the input's (compared by MD5 of the raw, still-compressed streams), and every page has the book's size.
+for byte the input's (compared by MD5 of the raw, still-compressed streams), and every page has the book's size. The
+copy is written and checked under a temporary name beside the output and takes the output's name only then: a refused
+run leaves nothing on disk, and an output that was there before stays as it was.
+
+The method measures a page **as it is shown**, and writes it back **as the file stores it**. A page kept sideways and
+shown upright by a `/Rotate` entry, a page counted in another unit (`/UserUnit`), a CropBox that sits inside the
+MediaBox or off its origin, a box inherited from the page tree or written as an object of its own: one matrix, from the
+file's coordinates to the shown page, carries every box and every turn across, and a test holds it to what MuPDF
+draws.
 
 What else the file carries stays as it is: an OCR text layer is part of the page's content, so it turns and moves with
 the scan; the outline and its targets, and encryption with an owner password, are kept. Links and form fields keep
@@ -49,7 +57,9 @@ larger, or lossy.
 **One box per book, not per page.** Per-page crops make the pages of a book different sizes, so the text jumps and
 the reader's zoom changes from page to page. safha measures the text block of every page, takes the width of 95 % of
 the typical pages (else 98 %, else all), adds a margin, and places that same box on each page's text. Pages whose
-content is larger (a plate, a wide table) are shown whole, drawn smaller, at the same page size.
+content is larger (a plate, a wide table) are shown whole, drawn smaller, at the same page size. When more than 5 %
+of the text pages are like that, no one box fits the book and it is not cropped; a sheet of another size (a quarter
+larger than the median page: a chart, a frame filmed at another scale) is shown whole in any case and does not count.
 
 **Centred on the text, not on the ink.** The text block is measured mark by mark (2nd to 98th percentile of the marks'
 edges, then widened by gaps), so one heavy streak or a scanner band cannot drag it. Short pages (a chapter end) keep
@@ -59,6 +69,11 @@ the place of their full neighbours, corrected by their own scan shift, so their 
 photocopy, streaks and blots are kept outside the box; everything else is content, however faint: marginal notes,
 printed rules and frames, folio numbers. A "stain" that repeats at the same place on many pages is print (an
 ornament) and comes back in. Pixels are never cleaned: a speck is only left outside the box.
+
+A turned page shows nothing beyond the scan's own sheet: a blank wedge at each edge. Where the scan ends in a scanner
+band, the bed went on there, and the bands of a turned page are read as if it did. Without that the wedge hides the
+band behind it, the whole bed passes for content, and a leaf that lay askew on a dark bed would be the one page of its
+book left uncropped.
 
 **A turn needs two witnesses.** The tilt is read by the ink-shear profile on the whole page and on its two halves
 (index pages, two columns and verse fool the whole page alone); a turned page is kept only when that measure and an
@@ -117,8 +132,10 @@ well-made scan is left as it is; `--profile reader` crops it anyway.
 
 - A page is turned as a whole or not at all. A page whose witnesses disagree (lines at two angles, margins against
   lines, a bent column rule) stays as scanned and is listed in the summary and in `safha inspect`.
-- Pages that carry a `/Rotate` entry are not measured: they are shown whole, fitted to the book's page size. A file
-  in which most pages carry one is left as it is.
+- A page with fewer than eight lines of text, or fewer than a hundred letters, has too little to read a tilt from: it
+  is turned only by its printed frame or its column rule, and otherwise stays as scanned.
+- A file MuPDF has to repair on reading (a broken cross-reference table) takes no incremental update: its output is
+  written whole and checked the same, and `safha restore` cannot give the original back from it. The run says so.
 - The reading order of split spreads comes from `--rtl` / `--ltr`, else from the file's text layer; a file with no
   text layer is split left page first, and the summary says so.
 - A marginal note is kept when it is a group of three strokes or more, or runs on from the text; a lone mark in the

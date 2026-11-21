@@ -140,8 +140,11 @@ well-made scan is left as it is; `--profile reader` crops it anyway.
   text layer is split left page first, and the summary says so.
 - A marginal note is kept when it is a group of three strokes or more, or runs on from the text; a lone mark in the
   margin of a book that prints nothing there (a pencil stroke, a single sign) is left outside the box.
-- A cover (a cover photographed on the scanner bed, a picture page at either end of the book) fills the page: up to
-  4 % of it is left out at two opposite edges to match the book's proportions.
+- A cover (a cover photographed on the scanner bed, a picture page at either end of the book) fills the page: a
+  strip of it is left out at two opposite edges to match the book's proportions. A cover found on the scanner bed
+  loses at most 4 % at each edge, or is shown whole; a picture page at either end of the book is cut to the
+  proportions whatever the strip (in the benchmark: 3 % or less at each edge in seven printed books, 8 to 10 % on the
+  boards of an eighth).
 - Encryption with a user password is refused; with an owner password alone the file is processed and stays encrypted.
 - `--compact` rewrites the file: smaller, but `safha restore` cannot give the original back.
 

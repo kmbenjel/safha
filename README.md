@@ -271,7 +271,10 @@ prints the numbers quoted on this page from the result files.
   tilt from: it is turned only by its printed frame or column rule, and otherwise stays as scanned.
 - Split spreads are ordered by `--rtl` / `--ltr`, else by the file's text layer; with neither, the left page comes
   first and the summary says so.
-- A cover fills the page: up to 4 % of it is left out at two opposite edges to match the book's proportions.
+- A cover fills the page: a strip of it is left out at two opposite edges to match the book's proportions. A cover
+  found on the scanner bed loses at most 4 % at each edge, or is shown whole; a picture page at either end of the
+  book is cut to the proportions whatever the strip: in the benchmark 3 % or less at each edge in seven printed
+  books, 8 to 10 % on the boards of an eighth ([every cover](bench/results/covers.md), `bench/covers.py`).
 - Links and form fields keep their own coordinates: on a page that was turned or drawn smaller they sit off by
   that much.
 - A lone mark in the margin of a book that prints nothing there (a pencil stroke, a single sign) is left outside

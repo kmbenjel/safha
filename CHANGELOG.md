@@ -20,7 +20,8 @@ All notable changes to this project are documented here. The format follows
   judges turns with readers that owe nothing to safha's measures (`bench/rules.py`), on a known-truth book of level,
   tilted and warped pages drawn at scan resolution; it records the version of every tool that ran and runs the
   current OCRmyPDF release beside the distribution's; `bench/compare_report.py --summary` prints the README's table,
-  `bench/docs_numbers.py` every other number the docs quote, and `bench/big_file.sh` measures a large file.
+  `bench/docs_numbers.py` every other number the docs quote, `bench/big_file.sh` measures a large file, and
+  `bench/covers.py` lists what the book's proportions take off each cover.
 
 ### Changed
 - A leaf lying askew on a dark scanner bed, or on a microfilm's black field, is turned level and cropped like its

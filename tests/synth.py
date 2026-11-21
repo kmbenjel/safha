@@ -86,6 +86,20 @@ def page(w: int = 900, h: int = 1300, tilt: float = 0.0, seed: int = 0, margin: 
     return im
 
 
+def on_bed(seed: int = 0, tilt: float = 0.0, w: int = 900, h: int = 1300, border: tuple = (70, 55, 60, 65),
+           bed: int = 18, blank: bool = False) -> Image.Image:
+    """a leaf of text (or a ``blank`` one) lying on a dark scanner bed, the bed showing on every side (left, top,
+    right, bottom px); the leaf, its edges and its lines together, turned by ``tilt`` degrees, the bed's own edge level
+    (the scan's frame)"""
+    l, t, r, b = border
+    leaf = page(w - l - r, h - t - b, seed=seed, margin=(95, 110, 95, 120), blank=blank)
+    im = Image.new("L", (w, h), bed)
+    if tilt:
+        leaf = leaf.rotate(tilt, resample=Image.BICUBIC, expand=True, fillcolor=bed)
+    im.paste(leaf, (l + (w - l - r - leaf.width) // 2, t + (h - t - b - leaf.height) // 2))
+    return im
+
+
 def spread(seed: int = 0, w: int = 900, h: int = 1300) -> Image.Image:
     """two book pages on one sheet, with a gutter between them; the right page carries a mark (a 3 x 3 dot grid at
     its top) so a test can tell the halves apart"""

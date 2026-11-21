@@ -199,6 +199,39 @@ def frame_matrix(page: pymupdf.Page, p: dict) -> pymupdf.Matrix:
     return fwd * pymupdf.Matrix(1, 0, 0, 1, cx, cy) * pymupdf.Matrix(1, 0, 0, 1, d.x, d.y)
 
 
+def sheet_corners(page: pymupdf.Page, p: dict) -> list[tuple[float, float]]:
+    """the four corners of the scan's sheet (the page's MediaBox) as recipe entry ``p`` draws it, in page coordinates,
+    in order round the sheet: beyond them a turned page shows nothing, where the scanner's bed went on"""
+    mb = media_box(page)
+    m = frame_matrix(page, p) * display_matrix(page)
+    pts = [pymupdf.Point(x, y) * m for x, y in ((mb[0], mb[3]), (mb[2], mb[3]), (mb[2], mb[1]), (mb[0], mb[1]))]
+    return [(q.x, q.y) for q in pts]
+
+
+def beyond_sheet(shape: tuple[int, int], corners: Sequence[tuple[float, float]], z: float,
+                 sides: Sequence[bool]) -> np.ndarray | None:
+    """the pixels of a view (``shape``, ``z`` px per pt) that lie beyond the scan's sheet (``sheet_corners``) on the
+    given sides of the view (left, top, right, bottom); None when there are none"""
+    H, W = shape
+    cx, cy = sum(c[0] for c in corners) / 4 * z, sum(c[1] for c in corners) / 4 * z
+    xs, ys = np.arange(W, dtype=np.float32) + 0.5, np.arange(H, dtype=np.float32) + 0.5
+    out = np.zeros(shape, bool)
+    for k in range(4):
+        (x0, y0), (x1, y1) = [(c[0] * z, c[1] * z) for c in (corners[k], corners[(k + 1) % 4])]
+        mx, my = (x0 + x1) / 2 - cx, (y0 + y1) / 2 - cy  # from the sheet's centre to this edge
+        side = (0 if mx < 0 else 2) if abs(mx) > abs(my) else (1 if my < 0 else 3)
+        if not sides[side]:
+            continue
+        nx, ny = y1 - y0, x0 - x1  # the edge's normal, turned to point away from the centre
+        n = math.hypot(nx, ny)
+        if n == 0:
+            continue
+        if nx * mx + ny * my < 0:
+            nx, ny = -nx, -ny
+        out |= ((xs[None, :] - x0) * (nx / n) + (ys[:, None] - y0) * (ny / n)) > 0
+    return out if out.any() else None
+
+
 def as_scanned(p: dict) -> bool:
     mv = p.get("move") or [0, 0]
     return not (p.get("skew") or 0) and not (p.get("shear") or 0) and not any(mv)

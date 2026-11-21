@@ -192,7 +192,7 @@ def check_page(doc: pymupdf.Document, i: int, p: dict, rec: dict, prof: Profile)
     whatever the first look took its letters for."""
     if not p.get("crop") or p["kind"] != "text":
         return
-    lk = Looker(doc, i)
+    lk = Looker(doc, i, prof.first_px, p.get("bed"))
     try:
         q = {k: p[k] for k in ("skew", "shear", "move") if p.get(k)}
         mk = lk.look(q, prof.check_px)
@@ -567,7 +567,7 @@ def finish(rec: dict, path: str, prof: Profile, split: dict, direction: str, n0:
 
     pages = [to_recipe_page(p) for p in rec["pages"]]
     for p in pages:
-        for k in ("level_frame",):
+        for k in ("level_frame", "bed"):
             p.pop(k, None)
     out: dict[str, Any] = {
         "safha": __version__, "schema": SCHEMA,

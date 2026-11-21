@@ -15,7 +15,7 @@ import pymupdf
 from .geometry import rnd
 from .measure import marks
 from .pages import cover_rect
-from .pdf import Turner, display_matrix, gray, shown_as_computed
+from .pdf import Turner, beyond_sheet, display_matrix, gray, sheet_corners, shown_as_computed
 from .profile import Profile
 from .tilt import (
     EPS,
@@ -41,20 +41,36 @@ KEEP_KEYS = ("box", "core", "text", "allowed", "blots", "edge", "lines", "rules"
 class Looker:
     """the views of one page (turned, sheared, moved) at a given resolution, each measured once"""
 
-    def __init__(self, doc: pymupdf.Document, i: int):
+    def __init__(self, doc: pymupdf.Document, i: int, first_px: int = 500, bed: list | None = None):
         self.doc, self.i = doc, i
         self.tu = Turner(doc, i)
         self.views: dict[tuple, dict] = {}
+        self.first_px = first_px
+        self._bed = bed
+
+    def bed(self) -> list[bool]:
+        """the sides (left, top, right, bottom) on which the page as scanned ends in a scanner band"""
+        if self._bed is None:
+            b = self.look({}, self.first_px).get("bands")
+            r = self.tu.page().rect
+            self._bed = [b[0] > 0.5, b[1] > 0.5, b[2] < r.width - 0.5, b[3] < r.height - 0.5] if b else [False] * 4
+        return self._bed
 
     def look(self, q: dict, px: int) -> dict[str, Any]:
         mv = q.get("move") or [0, 0]
         key = (round(q.get("skew") or 0, 4), round(q.get("shear") or 0, 4), mv[0], mv[1], px)
         if key in self.views:
             return self.views[key]
+        # a view that is turned shows nothing beyond the scan's sheet: where the scan ends in a scanner band, the bed
+        # went on there, and the bands are read as if it did
+        bed = self.bed() if any(key[:4]) else None
         page = self.tu.page(key[0], mv[0], mv[1], key[1])
         a, z = gray(page, px)
         a = np.array(a)
-        mk = marks(a, z, page.rect.width)
+        void = None
+        if bed and any(bed):
+            void = beyond_sheet(a.shape, sheet_corners(page, {"skew": key[0], "shear": key[1], "move": mv}), z, bed)
+        mk = marks(a, z, page.rect.width, void=void)
         mk["z"], mk["img"] = z, a
         memo: dict = {}
 
@@ -164,16 +180,18 @@ def first_look(doc: pymupdf.Document, i: int, prof: Profile, lk: Looker) -> tupl
 
 
 def _carry_bands(page: pymupdf.Page, rec: dict, mk0: dict, mk: dict) -> None:
-    """the scanner bands read on the page as scanned bound the turned page too (a turn's blank wedge hides them)"""
+    """the bands and edge shadows read on the page as scanned bound the turned page too, on every side where the
+    turned page shows none of its own (a shadow the turn has lifted off the page's edge)"""
     al0 = mk0.get("allowed")
     if not rec.get("skew") or not al0 or not mk.get("allowed"):
         return
     w, h = rec["w"], rec["h"]
-    bd = [al0[0] > 0.5, al0[1] > 0.5, al0[2] < w - 0.5, al0[3] < h - 0.5]
+    al = mk["allowed"]
+    bd = [al0[0] > 0.5 and al[0] <= 0.5, al0[1] > 0.5 and al[1] <= 0.5, al0[2] < w - 0.5 and al[2] >= w - 0.5,
+          al0[3] < h - 0.5 and al[3] >= h - 0.5]
     if not any(bd):
         return
     a_ = _inner(page, rec, al0)
-    al = mk["allowed"]
     mk["allowed"] = [max(al[0], a_[0]) if bd[0] else al[0], max(al[1], a_[1]) if bd[1] else al[1],
                      min(al[2], a_[2]) if bd[2] else al[2], min(al[3], a_[3]) if bd[3] else al[3]]
 
@@ -408,7 +426,7 @@ def second_look(doc: pymupdf.Document, i: int, p: dict, prof: Profile, lk: Looke
 
 def measure_page(doc: pymupdf.Document, i: int, prof: Profile) -> dict:
     """the first and second look at page i -> its record, with the marks of its final view (at prof.first_px)"""
-    lk = Looker(doc, i)
+    lk = Looker(doc, i, prof.first_px)
     try:
         rec, mk0 = first_look(doc, i, prof, lk)
         if rec.get("kind") in ("rotated", "cover"):
@@ -424,6 +442,7 @@ def measure_page(doc: pymupdf.Document, i: int, prof: Profile) -> dict:
         final = {k: v for k, v in rec.items() if k in ("skew", "shear")}
         mk = lk.look(final, prof.first_px)
         if final:
+            rec["bed"] = lk.bed()  # (for the second check of the box, which looks at the turned page alone)
             mk = dict(mk)
             _carry_bands(doc[i], rec, mk0, mk)
             if mk["box"] is None:  # the turned page lost its content: a broken drawing, never kept

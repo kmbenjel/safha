@@ -6,6 +6,7 @@ import numpy as np
 import pymupdf
 from scipy import ndimage
 
+from .measure import bands
 from .pdf import gray, shown_as_computed
 
 
@@ -80,9 +81,13 @@ def cover_rect(page: pymupdf.Page, px: int = 360) -> list[float] | None:
 
 
 def ink_share(page: pymupdf.Page, dpi: float = 40) -> float:
-    """share of dark pixels in the central 90 % of the page at 40 dpi: a blank page reads below 0.001"""
+    """share of dark pixels in the central 90 % of the page at 40 dpi, read inside its scanner bands when it has any
+    (a blank leaf on a dark bed is blank): a blank page reads below 0.001"""
     pix = page.get_pixmap(matrix=pymupdf.Matrix(dpi / 72, dpi / 72), colorspace=pymupdf.csGRAY, alpha=False)
     a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width].astype(int)
+    r0, r1, c0, c1 = bands(a < min(128, float(np.percentile(a, 90)) - 60))
+    if (r1 - r0) * (c1 - c0) >= 0.3 * a.size:  # (a page dark all over has no paper inside its bands)
+        a = a[r0:r1, c0:c1]
     h, w = a.shape
     core = a[int(.05 * h):int(.95 * h), int(.05 * w):int(.95 * w)]
     paper = float(np.percentile(core, 90)) if core.size else 255.0

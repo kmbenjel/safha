@@ -48,7 +48,8 @@ def bands(mask: np.ndarray) -> tuple[int, int, int, int]:
     return r0, r1, c0, c1
 
 
-def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None) -> dict[str, Any]:
+def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None,
+          void: np.ndarray | None = None) -> dict[str, Any]:
     """ink marks of one page in pt (page coordinates) -> dict with
 
     box      every content mark;  core  the text block (2-98 % of the content ink: where the page is centred);
@@ -59,7 +60,11 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
     xy       content ink pixels, thin lines included (for the tilt measures);  xy_text  the same without the lines;
     parts    every content mark's box.
 
-    ``scale`` = pixels per pt, ``width`` = page width in pt; ``exclude``: boxes (pt) whitened before measuring."""
+    ``scale`` = pixels per pt, ``width`` = page width in pt; ``exclude``: boxes (pt) whitened before measuring;
+    ``void``: the pixels of a turned view that lie beyond the scan's sheet, on the sides where the scan ends in a
+    scanner band: nothing is drawn there, but the bed went on, so for the bands (and only for them) they are dark.
+    Without them the blank wedge a turn leaves at the page's edge hides the band behind it, and the whole bed is taken
+    for content."""
     if exclude:
         a = a.copy()
         for b in exclude:
@@ -74,7 +79,7 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
         return out
     mask = a < paper - 50
     out["dark"] = float(mask.mean())
-    r0, r1, c0, c1 = bands(mask)
+    r0, r1, c0, c1 = bands(mask if void is None else mask | void)
     m = mask[r0:r1, c0:c1]
     if m.size >= 0.3 * mask.size:  # a page on a black field (microfilm, scanner bed): dark share inside the bands
         out["dark"] = float(m.mean())

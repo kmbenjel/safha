@@ -187,6 +187,12 @@ def test_level_only_on_grey_paper_stored_sideways(tmp_path):
     assert b["mode"] == "level" and b["level_trim"] and b["summary"]["turned"] == [3]
 
 
+def test_leaf_askew_on_the_bed_stored_sideways(tmp_path, prof):
+    ims = [synth.on_bed(i, {2: 1.2, 4: -0.9}.get(i, 0.0)) for i in range(6)]
+    a, b = same_result(tmp_path, ims, prof, "bed", rot=90)
+    assert b["mode"] == "crop" and b["summary"]["turned"] == [3, 5] and not b["summary"]["whole"]
+
+
 def test_review_sheet_of_a_book_stored_sideways(tilted, tmp_path, prof):
     """the box drawn on the scan lies on the text, as on the upright book's sheet"""
     from safha.sheet import contact_sheet

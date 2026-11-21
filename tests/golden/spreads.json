@@ -16,16 +16,16 @@
  "pages": [
   {
    "kind": "text",
-   "skew": null,
+   "skew": -1.4,
    "shear": null,
    "show": [
-    3.2,
-    59.7,
-    344.2,
-    580.6
+    0.0,
+    62.2,
+    341.0,
+    583.2
    ],
    "move": [
-    15.2,
+    16.5,
     0
    ],
    "whole": false
@@ -100,16 +100,16 @@
   },
   {
    "kind": "text",
-   "skew": null,
+   "skew": -1.525,
    "shear": null,
    "show": [
     0.0,
-    68.6,
+    73.3,
     341.0,
-    589.5
+    594.2
    ],
    "move": [
-    7.5,
+    7.0,
     0
    ],
    "whole": false

@@ -329,7 +329,8 @@ def cmd_drop(a: argparse.Namespace) -> int:
 def cmd_bench(a: argparse.Namespace) -> int:
     from .bench import bench
 
-    bench(a.paths, _profile(a), out=a.output, jobs=a.jobs, book_jobs=a.book_jobs, keep=a.keep, compact=a.compact)
+    bench(a.paths, _profile(a), out=a.output, jobs=a.jobs, book_jobs=a.book_jobs, keep=a.keep, compact=a.compact,
+          recipes=a.recipes)
     return 0
 
 
@@ -440,7 +441,9 @@ def build_parser() -> argparse.ArgumentParser:
     common(p, "write the results here (.json and .md next to it)")
     p.add_argument("--book-jobs", type=int, default=1, help="books processed at once")
     p.add_argument("--keep", metavar="DIR", help="keep the output PDFs here")
-    p.add_argument("--compact", action="store_true")
+    p.add_argument("--recipes", metavar="DIR", help="keep each book's recipe here; a recipe already there for the same "
+                                                     "file, safha version and profile is used instead of planning again")
+    p.add_argument("--compact", action="store_true", help="write the files whole (see crop --compact)")
     p.set_defaults(fn=cmd_bench)
 
     p = sub.add_parser("same-scan", help="are two PDFs the same scan? (page images compared by their raw streams)")

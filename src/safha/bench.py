@@ -1,8 +1,10 @@
 """Benchmark: run safha over many books and report speed, size before and after, and what it did.
 
-    safha bench books/ -o results.json --book-jobs 8 --jobs 4
+    safha bench books/ -o results.json --book-jobs 8 --jobs 4 --recipes recipes/
 
-Writes ``results.json`` (one row per book) and ``results.md`` (a table and the totals).
+Writes ``results.json`` (one row per book) and ``results.md`` (a table and the totals). With ``--recipes`` each book's
+recipe is kept, and a recipe already there for the same file, safha version and profile is used instead of planning
+again: a second run (``--compact``, an audit) then describes the same decisions and takes minutes.
 """
 
 from __future__ import annotations
@@ -31,8 +33,36 @@ def _books(paths: list[str]) -> list[str]:
     return sorted(out)
 
 
+def _cpu() -> float:
+    """CPU seconds this process and the worker processes it has waited for have used"""
+    t = os.times()
+    return t.user + t.system + t.children_user + t.children_system
+
+
+def _kept_recipe(path: str, prof: Profile, recipes: str | None) -> tuple[str | None, dict | None]:
+    """where a book's recipe is kept, and the recipe when one made from this very file, by this safha, with this
+    profile, is already there"""
+    from . import __version__
+    from .engine import file_md5
+
+    if not recipes:
+        return None, None
+    where = os.path.join(recipes, os.path.splitext(os.path.basename(path))[0] + ".recipe.json")
+    if not os.path.exists(where):
+        return where, None
+    with open(where, encoding="utf-8") as f:
+        rec = json.load(f)
+    same = rec.get("safha") == __version__ and rec.get("profile") == {"name": prof.name, "changed": _plain(prof.diff())} \
+        and rec.get("source", {}).get("md5") == file_md5(path)
+    return where, (rec if same else None)
+
+
+def _plain(v: Any) -> Any:
+    return json.loads(json.dumps(v))  # (tuples as lists: what a recipe read back from its file holds)
+
+
 def one(args: tuple) -> dict[str, Any]:
-    path, prof, jobs, keep, compact = args
+    path, prof, jobs, keep, compact, recipes = args
     from .apply import apply_recipe
     from .engine import plan
     from .pdf import image_filters
@@ -43,13 +73,22 @@ def one(args: tuple) -> dict[str, Any]:
         row["pages_in"] = d.page_count
         row["filters"] = image_filters(d)
         d.close()
-        t0 = time.time()
-        rec = plan(path, prof, jobs=jobs)
-        row["plan_s"] = round(time.time() - t0, 2)
+        where, rec = _kept_recipe(path, prof, recipes)
+        c0 = _cpu()
+        if rec is not None:
+            row["plan_s"], row["recipe"] = rec["summary"]["seconds"], "reused"
+        else:
+            t0 = time.time()
+            rec = plan(path, prof, jobs=jobs)
+            row["plan_s"] = round(time.time() - t0, 2)
+            if where:
+                with open(where, "w", encoding="utf-8") as f:
+                    json.dump(rec, f, ensure_ascii=False)
         s = rec["summary"]
         row.update(mode=rec["mode"], why=rec.get("why"), reasons=rec.get("reasons"), pages=s["pages"], text=s["text"],
                    turned=len(s["turned"]), sheared=len(s["sheared"]), frame_turn=len(s["frame_turn"]),
                    two_angles=len(s["two_angles"]), unsure=len(s["unsure_tilt"]) + len(s["untreated_tilt"]),
+                   disputed=len(s.get("tilt_disputed") or []), by_columns=len(s.get("by_columns") or []),
                    whole=len(s["whole"]), split=len(rec.get("split") or {}), gain=rec.get("gain"), size=rec.get("size"))
         out_dir = keep or tempfile.mkdtemp(prefix="safha-bench-")
         dst = os.path.join(out_dir, os.path.splitext(os.path.basename(path))[0] + ".safha.pdf")
@@ -69,22 +108,25 @@ def one(args: tuple) -> dict[str, Any]:
         if not keep:
             with contextlib.suppress(OSError):
                 os.rmdir(out_dir)
-        row["seconds"] = round(time.time() - t0, 2)
+        row["seconds"] = round(row["plan_s"] + row.get("apply_s", 0.0), 2)
         row["pages_per_s"] = round(row["pages"] / max(row["seconds"], 1e-6), 2)
+        if row.get("recipe") != "reused":
+            row["cpu_s"] = round(_cpu() - c0, 1)  # (planning and writing, the worker processes included)
     except Exception as e:  # a broken book is a result too
         row["error"] = f"{type(e).__name__}: {e}"
     return row
 
 
 def bench(paths: list[str], prof: Profile, out: str | None = None, jobs: int = 1, book_jobs: int = 1,
-          keep: str | None = None, compact: bool = False) -> list[dict[str, Any]]:
+          keep: str | None = None, compact: bool = False, recipes: str | None = None) -> list[dict[str, Any]]:
     books = _books(paths)
     if not books:
         raise ValueError("no PDF found")
-    if keep:
-        os.makedirs(keep, exist_ok=True)
+    for d in (keep, recipes):
+        if d:
+            os.makedirs(d, exist_ok=True)
     t0 = time.time()
-    args = [(b, prof, jobs, keep, compact) for b in books]
+    args = [(b, prof, jobs, keep, compact, recipes) for b in books]
     rows: list[dict[str, Any]] = []
     if book_jobs > 1:
         with ProcessPoolExecutor(book_jobs) as ex:
@@ -120,6 +162,8 @@ def report(rows: list[dict], prof: Profile, wall: float, jobs: int, book_jobs: i
     pages = sum(r["pages"] for r in ok)
     cpu = sum(r["seconds"] for r in ok)
     bi, bo = sum(r["bytes_in"] for r in ok), sum(r["bytes_out"] for r in ok)
+    fresh = [r for r in ok if "cpu_s" in r]
+    reused = sum(1 for r in ok if r.get("recipe") == "reused")
     changed = [r for r in ok if r["mode"] in ("crop", "level")]
     same_codecs = sum(1 for r in changed if r.get("filters") == r.get("filters_out"))
     lines = [f"# safha bench ({prof.name} profile)", "",
@@ -131,13 +175,23 @@ def report(rows: list[dict], prof: Profile, wall: float, jobs: int, book_jobs: i
             continue
         lines.append(f"| {r['book']} | {r['pages']} | {r['mode']} | {r['turned']} | {r['two_angles']} | {r['whole']} | "
                      f"{r['bytes_in'] / 1e6:.2f} | {r['bytes_out'] / 1e6:.2f} | {r['pages_per_s']:.2f} |")
-    lines += ["", f"- books: {len(rows)} ({len(rows) - len(ok)} errors); pages: {pages}; cropped or levelled: {len(changed)}",
-              f"- speed: {pages / max(cpu, 1e-6):.2f} pages/s per book worker ({jobs} page workers each); wall {wall:.0f} s "
-              f"with {book_jobs} books at once: {pages / max(wall, 1e-6):.1f} pages/s",
-              f"- size: {bi / 1e6:.1f} MB in, {bo / 1e6:.1f} MB out ({(bo - bi) / max(bi, 1) * 100:+.2f} %)",
+    lines += ["", f"- books: {len(rows)} ({len(rows) - len(ok)} errors); pages: {pages}; cropped or levelled: {len(changed)}"]
+    if reused:
+        lines.append(f"- {reused} recipes planned by an earlier run were used again: their planning times are that run's")
+    else:
+        lines.append(f"- speed: {pages / max(cpu, 1e-6):.2f} pages/s per book worker ({jobs} page workers each); wall "
+                     f"{wall:.0f} s with {book_jobs} books at once: {pages / max(wall, 1e-6):.1f} pages/s")
+    if fresh:
+        lines.append(f"- processor time: {sum(r['pages'] for r in fresh) / max(sum(r['cpu_s'] for r in fresh), 1e-6):.2f} pages "
+                     "per CPU-second, planning and writing (the measure to compare between machines: the wall clock of a "
+                     "shared machine is not)")
+    text = sum(r["text"] for r in ok)
+    turned = sum(r["turned"] for r in ok)
+    lines += [f"- size: {bi / 1e6:.1f} MB in, {bo / 1e6:.1f} MB out ({(bo - bi) / max(bi, 1) * 100:+.2f} %)",
               f"- image codecs unchanged in {same_codecs} of {len(changed)} written books",
-              f"- pages turned: {sum(r['turned'] for r in ok)} of {sum(r['text'] for r in ok)} text pages "
-              f"({sum(r['turned'] for r in ok) / max(1, sum(r['text'] for r in ok)) * 100:.1f} %); "
-              f"left as scanned for lines at two angles: {sum(r['two_angles'] for r in ok)}; "
-              f"sheared prints levelled: {sum(r['sheared'] for r in ok)}"]
+              f"- pages turned: {turned} of {text} text pages ({turned / max(1, text) * 100:.1f} %), "
+              f"{sum(r.get('by_columns', 0) for r in ok)} of them by the printed rule between two columns; "
+              f"sheared prints levelled: {sum(r['sheared'] for r in ok)}",
+              f"- left as scanned: lines at two angles {sum(r['two_angles'] for r in ok)}; the witnesses of the tilt "
+              f"disagree {sum(r.get('disputed', 0) for r in ok)}; a tilt seen and not confirmed {sum(r['unsure'] for r in ok)}"]
     return "\n".join(lines) + "\n"

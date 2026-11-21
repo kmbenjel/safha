@@ -91,3 +91,19 @@ def test_demo(tmp_path, capsys):
     assert main(["demo", "-o", str(tmp_path / "demo"), "-j", "2"]) == 0
     out = capsys.readouterr().out
     assert "sample-spreads" in out and (tmp_path / "demo" / "sample-latin.safha.pdf").exists()
+def test_bench_keeps_recipes_and_uses_them_again(books, prof, tmp_path, capsys):
+    """a second run over the same books (``--compact``, an audit) describes the same decisions without planning again"""
+    from safha.bench import bench
+
+    kept = tmp_path / "recipes"
+    a = bench([books["tilt"]], prof, out=str(tmp_path / "a.json"), recipes=str(kept))
+    assert (kept / "tilt.recipe.json").exists() and a[0]["cpu_s"] > 0 and "recipe" not in a[0]
+    assert "pages per CPU-second" in (tmp_path / "a.md").read_text()
+    b = bench([books["tilt"]], prof, out=str(tmp_path / "b.json"), recipes=str(kept), compact=True)
+    assert b[0]["recipe"] == "reused" and b[0]["turned"] == a[0]["turned"] == 1 and b[0]["bytes_out"] <= a[0]["bytes_out"]
+    assert "used again" in (tmp_path / "b.md").read_text()
+    assert main(["apply", books["tilt"], str(kept / "tilt.recipe.json"), "-o", str(tmp_path / "o.pdf")]) == 0  # a recipe like any
+    c = bench([books["tilt"]], prof.with_values(margin=0.1), recipes=str(kept))
+    assert "recipe" not in c[0]  # another profile: planned again
+
+

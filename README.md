@@ -107,10 +107,14 @@ What the table says:
    text's place swayed 0.9 % of the page width from page to page before and 0.1 % after (pdfCropMargins: 1.2 %).
 3. **No invented tilt.** A turn needs two measures that agree, then passes the page's own witnesses: its lines
    followed one by one, its margins, its printed rules. On the synthetic book safha levelled the three tilted pages
-   and turned none of the warped ones. Across the corpus, 444 of the pages it turned carry a printed rule inside
-   their text, which an independent script can read: after the turn the rule stood within 0.15 degree of upright on
-   414 of them and within 0.3 degree on 439; 2 were left further from upright than they were, the worst by 0.22
-   degree. 151 pages whose lines lie at two angles and 186 whose witnesses disagreed were left as scanned and listed.
+   and turned none of the warped ones. Across the corpus, 472 of the 1,112 pages it turned carry a long straight
+   rule inside their print, which an independent script can read ([`bench/rule_audit.py`](bench/rule_audit.py),
+   [results](bench/results/rule-audit.md)): after the turn the rule stood within 0.15 degree of upright on 427 of
+   them and within 0.3 degree on 456. Of the 16 others, 12 are hand-ruled tables of a manuscript, and 15 stand nearer
+   upright than they did. 3 pages were left further from upright than on the scan: two by 0.22 and 0.12 degree, and
+   one manuscript leaf by 1.5 degree, where the line the script reads is the leaf's own edge on the film: the hand
+   slopes on that leaf, and safha levelled the hand. 153 pages whose lines lie at two angles and 174 whose witnesses
+   disagreed were left as scanned and listed.
 4. **The print's own lines are the ruler.** A frame's sides decide the turn of a framed page; the rule between two
    columns decides the turn of a dictionary or an index page; a frame printed as a parallelogram is sheared level
    (`tests/test_tilt.py`, `tests/test_columns.py`; no other tool listed does any of the three).
@@ -216,24 +220,29 @@ The full method and the reasons behind each rule are in [docs/design.md](docs/de
 ## Benchmark
 
 17 public-domain books from the Internet Archive (Arabic, Persian, Urdu, Telugu, English and French; prints from 1853 to
-1915, microfilmed manuscripts, Google and Digital Library of India scans), default profile, on a shared 32-core VM:
+1915, microfilmed manuscripts, Google and Digital Library of India scans), default profile, on a 16-vCPU cloud VM
+(2026-11-21):
 
 | | |
 |---|---|
 | books / pages | 17 / 7,998 (0 errors) |
-| written | 13 cropped, 4 levelled only (well-cropped scans whose only flaw was tilted pages, or books no one box fits) |
+| written | 13 cropped, 4 levelled only (two well-made scans whose only flaw was tilted pages, two books no one box fits) |
 | image codecs unchanged | 17 of 17 books (JPEG 2000, JBIG2, CCITT G4) |
 | size | 504.6 MB in, 508.1 MB out (+0.70 %, reversible); +0.02 % with `--compact` |
-| pages turned | 1,022 of 7,776 text pages (13.1 %) |
-| left as scanned, lines at two angles | 151 pages |
-| left as scanned, witnesses of the tilt disagree | 186 pages |
-| speed | 2.1 pages/s per book with 4 worker processes; 11 pages/s with 6 books at once |
+| pages turned | 1,112 of 7,776 text pages (14.3 %), 533 of them by the printed rule between two columns |
+| left as scanned, lines at two angles | 153 pages |
+| left as scanned, witnesses of the tilt disagree | 174 pages |
+| speed | 0.47 pages per CPU-second, planning and writing: from 0.16 (large microfilm frames, JPEG 2000) to 2.0 (bitonal pages); 1.7 pages/s per book with 4 worker processes, four books at once |
+| a 600 MB file (4,580 pages) | a page dropped and every check made in under 10 s, 115 MB of memory at peak; the original restored in under 2 s |
 
-Per book: [bench/results/bench.md](bench/results/bench.md); corpus with years and licences:
+Per book: [bench/results/bench.md](bench/results/bench.md); corpus with years, licences, file names and MD5s:
 [bench/results/corpus.tsv](bench/results/corpus.tsv).
 
-Reproduce: `python bench/fetch_corpus.py CORPUS && safha bench CORPUS -o results.json` (the corpus list, with each
-book's year and licence, is written to `CORPUS/corpus.tsv`).
+Reproduce: `python bench/fetch_corpus.py CORPUS && safha bench CORPUS -o results.json --recipes RECIPES` (the corpus
+list is written to `CORPUS/corpus.tsv`, and a file the Archive has re-derived since is said to be one). Then
+`python bench/rule_audit.py CORPUS RECIPES` holds every turn against the print's own rules,
+`bench/big_file.sh CORPUS/in.ernet.dli.2015.207418.pdf` measures the large file, and `python bench/docs_numbers.py`
+prints the numbers quoted on this page from the result files.
 
 ## Design decisions
 

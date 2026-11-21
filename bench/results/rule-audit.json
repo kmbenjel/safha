@@ -1,0 +1,5144 @@
+{
+ "pages_turned": {
+  "almuqaddimah00ibnk.pdf": 2,
+  "arabicmanuscript28loui.pdf": 22,
+  "arabicmanuscript33loui.pdf": 136,
+  "arabicproverbsor00burc.pdf": 20,
+  "chronologyofanci00biru.pdf": 98,
+  "dictionnairefra00lagogoog.pdf": 261,
+  "in.ernet.dli.2015.207418.pdf": 29,
+  "in.ernet.dli.2015.262150.pdf": 0,
+  "in.ernet.dli.2015.361017.pdf": 16,
+  "in.ernet.dli.2015.70512.pdf": 285,
+  "in.ernet.dli.2015.86278.pdf": 18,
+  "kitabalzabur00barguoft.pdf": 40,
+  "kitbalmawiwaalit01maqruoft.pdf": 54,
+  "majmaalmasarrt00khrsuoft.pdf": 31,
+  "persianmedicalma33loui.pdf": 3,
+  "taghrbatbanhilla00bayruoft.pdf": 57,
+  "tarkhalrusulwaal01abaruoft.pdf": 40
+ },
+ "rows": [
+  {
+   "book": "arabicmanuscript28loui.pdf",
+   "page": 176,
+   "turn": -1.525,
+   "rules": 1,
+   "before": 0.028,
+   "after": -1.497,
+   "flags": [
+    "reduced"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 24,
+   "turn": 1.9,
+   "rules": 1,
+   "before": -2.507,
+   "after": -0.607,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 25,
+   "turn": 1.325,
+   "rules": 1,
+   "before": -1.243,
+   "after": 0.082,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 27,
+   "turn": 1.75,
+   "rules": 1,
+   "before": -1.688,
+   "after": 0.062,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 30,
+   "turn": 1.575,
+   "rules": 1,
+   "before": -1.575,
+   "after": 0.0,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 32,
+   "turn": 1.725,
+   "rules": 1,
+   "before": -1.644,
+   "after": 0.081,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 36,
+   "turn": 1.677,
+   "rules": 2,
+   "before": -1.612,
+   "after": 0.065,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 44,
+   "turn": 1.375,
+   "rules": 2,
+   "before": -1.819,
+   "after": -0.444,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 46,
+   "turn": 1.45,
+   "rules": 1,
+   "before": -1.21,
+   "after": 0.24,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 47,
+   "turn": 3.05,
+   "rules": 1,
+   "before": -2.297,
+   "after": 0.753,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 48,
+   "turn": 1.875,
+   "rules": 1,
+   "before": -2.484,
+   "after": -0.609,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 68,
+   "turn": 1.225,
+   "rules": 1,
+   "before": -1.536,
+   "after": -0.311,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 79,
+   "turn": 2.175,
+   "rules": 1,
+   "before": -1.978,
+   "after": 0.197,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 82,
+   "turn": 0.75,
+   "rules": 2,
+   "before": -0.899,
+   "after": -0.149,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 84,
+   "turn": 0.925,
+   "rules": 2,
+   "before": -0.949,
+   "after": -0.023,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 87,
+   "turn": 1.05,
+   "rules": 1,
+   "before": -1.901,
+   "after": -0.851,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 93,
+   "turn": 1.025,
+   "rules": 3,
+   "before": -1.289,
+   "after": -0.264,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 94,
+   "turn": 1.75,
+   "rules": 3,
+   "before": -2.057,
+   "after": -0.307,
+   "flags": [
+    "own_centre",
+    "whole"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 98,
+   "turn": 1.8,
+   "rules": 1,
+   "before": -1.467,
+   "after": 0.333,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 102,
+   "turn": 2.625,
+   "rules": 1,
+   "before": -2.75,
+   "after": -0.125,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 106,
+   "turn": 1.325,
+   "rules": 1,
+   "before": -1.418,
+   "after": -0.093,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 116,
+   "turn": 2.35,
+   "rules": 2,
+   "before": -2.341,
+   "after": 0.009,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 124,
+   "turn": 2.5,
+   "rules": 1,
+   "before": -2.523,
+   "after": -0.023,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 140,
+   "turn": 2.175,
+   "rules": 3,
+   "before": -2.123,
+   "after": 0.052,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 141,
+   "turn": 2.85,
+   "rules": 2,
+   "before": -2.837,
+   "after": 0.013,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 146,
+   "turn": 2.05,
+   "rules": 1,
+   "before": -1.645,
+   "after": 0.405,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 148,
+   "turn": 1.75,
+   "rules": 1,
+   "before": -2.036,
+   "after": -0.286,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 150,
+   "turn": 1.25,
+   "rules": 1,
+   "before": -0.877,
+   "after": 0.373,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 152,
+   "turn": 1.9,
+   "rules": 1,
+   "before": -2.128,
+   "after": -0.228,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 158,
+   "turn": 3.25,
+   "rules": 1,
+   "before": -2.999,
+   "after": 0.251,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 171,
+   "turn": 2.575,
+   "rules": 3,
+   "before": -2.359,
+   "after": 0.216,
+   "flags": [
+    "own_centre",
+    "whole"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 176,
+   "turn": 3.8,
+   "rules": 1,
+   "before": -4.159,
+   "after": -0.359,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 178,
+   "turn": 2.2,
+   "rules": 1,
+   "before": -2.369,
+   "after": -0.169,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 184,
+   "turn": 1.075,
+   "rules": 4,
+   "before": -1.214,
+   "after": -0.139,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 189,
+   "turn": 1.475,
+   "rules": 1,
+   "before": -1.032,
+   "after": 0.443,
+   "flags": []
+  },
+  {
+   "book": "arabicmanuscript33loui.pdf",
+   "page": 195,
+   "turn": 0.975,
+   "rules": 1,
+   "before": -1.003,
+   "after": -0.028,
+   "flags": []
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 89,
+   "turn": -0.4,
+   "rules": 1,
+   "before": 0.472,
+   "after": 0.072,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 105,
+   "turn": 0.275,
+   "rules": 9,
+   "before": -0.255,
+   "after": 0.02,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 135,
+   "turn": 0.624,
+   "rules": 1,
+   "before": -0.899,
+   "after": -0.275,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 139,
+   "turn": 0.375,
+   "rules": 6,
+   "before": -0.38,
+   "after": -0.005,
+   "flags": []
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 140,
+   "turn": -0.289,
+   "rules": 4,
+   "before": 0.269,
+   "after": -0.02,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 206,
+   "turn": -0.225,
+   "rules": 2,
+   "before": 0.235,
+   "after": 0.01,
+   "flags": []
+  },
+  {
+   "book": "chronologyofanci00biru.pdf",
+   "page": 474,
+   "turn": 0.314,
+   "rules": 1,
+   "before": -0.317,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 21,
+   "turn": 0.586,
+   "rules": 1,
+   "before": -0.57,
+   "after": 0.016,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 30,
+   "turn": 0.607,
+   "rules": 1,
+   "before": -0.598,
+   "after": 0.009,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 40,
+   "turn": -0.275,
+   "rules": 1,
+   "before": 0.261,
+   "after": -0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 44,
+   "turn": -0.578,
+   "rules": 1,
+   "before": 0.583,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 45,
+   "turn": 0.408,
+   "rules": 1,
+   "before": -0.406,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 47,
+   "turn": 0.594,
+   "rules": 1,
+   "before": -0.591,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 49,
+   "turn": 1.204,
+   "rules": 1,
+   "before": -1.169,
+   "after": 0.035,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 50,
+   "turn": -0.369,
+   "rules": 1,
+   "before": 0.496,
+   "after": 0.127,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 51,
+   "turn": 0.484,
+   "rules": 1,
+   "before": -0.486,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 52,
+   "turn": -0.767,
+   "rules": 1,
+   "before": 0.746,
+   "after": -0.021,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 55,
+   "turn": -0.78,
+   "rules": 1,
+   "before": 0.778,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 61,
+   "turn": 0.645,
+   "rules": 1,
+   "before": -0.646,
+   "after": -0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 66,
+   "turn": -0.317,
+   "rules": 1,
+   "before": 0.309,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 69,
+   "turn": 0.744,
+   "rules": 1,
+   "before": -0.69,
+   "after": 0.054,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 71,
+   "turn": -0.313,
+   "rules": 1,
+   "before": 0.313,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 75,
+   "turn": -0.619,
+   "rules": 1,
+   "before": 0.569,
+   "after": -0.05,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 79,
+   "turn": -0.582,
+   "rules": 1,
+   "before": 0.625,
+   "after": 0.043,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 82,
+   "turn": -0.426,
+   "rules": 1,
+   "before": 0.412,
+   "after": -0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 86,
+   "turn": -0.836,
+   "rules": 1,
+   "before": 0.824,
+   "after": -0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 87,
+   "turn": 0.532,
+   "rules": 1,
+   "before": -0.517,
+   "after": 0.015,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 92,
+   "turn": -0.271,
+   "rules": 1,
+   "before": 0.262,
+   "after": -0.009,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 103,
+   "turn": -0.65,
+   "rules": 1,
+   "before": 0.656,
+   "after": 0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 106,
+   "turn": -1.004,
+   "rules": 1,
+   "before": 0.996,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 111,
+   "turn": -0.684,
+   "rules": 1,
+   "before": 0.682,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 113,
+   "turn": 0.363,
+   "rules": 1,
+   "before": -0.372,
+   "after": -0.009,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 119,
+   "turn": 0.869,
+   "rules": 1,
+   "before": -0.868,
+   "after": 0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 123,
+   "turn": -0.321,
+   "rules": 1,
+   "before": 0.175,
+   "after": -0.146,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 127,
+   "turn": -0.313,
+   "rules": 1,
+   "before": 0.317,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 131,
+   "turn": 0.265,
+   "rules": 1,
+   "before": -0.313,
+   "after": -0.048,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 132,
+   "turn": -2.174,
+   "rules": 1,
+   "before": 2.092,
+   "after": -0.082,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 134,
+   "turn": -0.479,
+   "rules": 1,
+   "before": 0.476,
+   "after": -0.003,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 141,
+   "turn": -0.293,
+   "rules": 1,
+   "before": 0.248,
+   "after": -0.045,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 142,
+   "turn": 0.916,
+   "rules": 1,
+   "before": -0.912,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 144,
+   "turn": 0.517,
+   "rules": 1,
+   "before": -0.523,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 147,
+   "turn": -0.397,
+   "rules": 1,
+   "before": 0.387,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 148,
+   "turn": 0.822,
+   "rules": 1,
+   "before": -0.819,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 151,
+   "turn": -0.371,
+   "rules": 1,
+   "before": 0.357,
+   "after": -0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 152,
+   "turn": 0.616,
+   "rules": 1,
+   "before": -0.642,
+   "after": -0.026,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 156,
+   "turn": -0.556,
+   "rules": 1,
+   "before": 0.477,
+   "after": -0.079,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 171,
+   "turn": 0.859,
+   "rules": 1,
+   "before": -0.726,
+   "after": 0.133,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 172,
+   "turn": -0.605,
+   "rules": 1,
+   "before": 0.608,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 178,
+   "turn": 0.338,
+   "rules": 1,
+   "before": -0.313,
+   "after": 0.025,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 184,
+   "turn": -0.261,
+   "rules": 1,
+   "before": 0.249,
+   "after": -0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 194,
+   "turn": -0.545,
+   "rules": 1,
+   "before": 0.547,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 199,
+   "turn": 0.524,
+   "rules": 1,
+   "before": -0.528,
+   "after": -0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 202,
+   "turn": 0.593,
+   "rules": 1,
+   "before": -0.596,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 204,
+   "turn": -0.313,
+   "rules": 1,
+   "before": 0.319,
+   "after": 0.006,
+   "flags": [
+    "by_columns",
+    "dodged"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 214,
+   "turn": -0.378,
+   "rules": 1,
+   "before": 0.388,
+   "after": 0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 218,
+   "turn": 0.334,
+   "rules": 1,
+   "before": -0.318,
+   "after": 0.016,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 222,
+   "turn": 0.275,
+   "rules": 1,
+   "before": -0.264,
+   "after": 0.011,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 231,
+   "turn": 0.637,
+   "rules": 1,
+   "before": -0.6,
+   "after": 0.037,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 233,
+   "turn": 0.819,
+   "rules": 1,
+   "before": -0.796,
+   "after": 0.023,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 239,
+   "turn": 0.462,
+   "rules": 1,
+   "before": -0.451,
+   "after": 0.011,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 243,
+   "turn": 0.563,
+   "rules": 1,
+   "before": -0.609,
+   "after": -0.046,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 244,
+   "turn": 0.429,
+   "rules": 1,
+   "before": -0.392,
+   "after": 0.037,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 251,
+   "turn": -0.285,
+   "rules": 1,
+   "before": 0.305,
+   "after": 0.02,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 255,
+   "turn": -0.403,
+   "rules": 1,
+   "before": 0.444,
+   "after": 0.041,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 263,
+   "turn": -0.314,
+   "rules": 1,
+   "before": 0.365,
+   "after": 0.051,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 268,
+   "turn": 0.594,
+   "rules": 1,
+   "before": -0.589,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 278,
+   "turn": -0.347,
+   "rules": 1,
+   "before": 0.325,
+   "after": -0.022,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 282,
+   "turn": -0.268,
+   "rules": 1,
+   "before": 0.272,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 288,
+   "turn": 0.288,
+   "rules": 1,
+   "before": -0.288,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 290,
+   "turn": -0.318,
+   "rules": 1,
+   "before": 0.32,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 296,
+   "turn": 0.279,
+   "rules": 1,
+   "before": -0.295,
+   "after": -0.016,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 305,
+   "turn": 0.363,
+   "rules": 1,
+   "before": -0.36,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 315,
+   "turn": 0.387,
+   "rules": 1,
+   "before": -0.394,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 318,
+   "turn": -0.437,
+   "rules": 1,
+   "before": 0.442,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 321,
+   "turn": 0.473,
+   "rules": 1,
+   "before": -0.5,
+   "after": -0.027,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 322,
+   "turn": -0.304,
+   "rules": 1,
+   "before": 0.329,
+   "after": 0.025,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 326,
+   "turn": -0.804,
+   "rules": 1,
+   "before": 0.802,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 329,
+   "turn": 1.234,
+   "rules": 1,
+   "before": -1.242,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 330,
+   "turn": -0.815,
+   "rules": 1,
+   "before": 0.814,
+   "after": -0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 331,
+   "turn": -0.469,
+   "rules": 1,
+   "before": 0.482,
+   "after": 0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 344,
+   "turn": -0.338,
+   "rules": 1,
+   "before": 0.362,
+   "after": 0.024,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 352,
+   "turn": -0.338,
+   "rules": 1,
+   "before": 0.306,
+   "after": -0.032,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 354,
+   "turn": 0.281,
+   "rules": 1,
+   "before": -0.294,
+   "after": -0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 359,
+   "turn": -1.166,
+   "rules": 1,
+   "before": 1.255,
+   "after": 0.089,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 360,
+   "turn": -0.442,
+   "rules": 1,
+   "before": 0.44,
+   "after": -0.002,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 368,
+   "turn": -0.213,
+   "rules": 1,
+   "before": 0.255,
+   "after": 0.042,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 371,
+   "turn": -0.802,
+   "rules": 1,
+   "before": 0.804,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 375,
+   "turn": -0.296,
+   "rules": 1,
+   "before": 0.246,
+   "after": -0.05,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 388,
+   "turn": -0.264,
+   "rules": 2,
+   "before": 0.209,
+   "after": -0.055,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 390,
+   "turn": -0.809,
+   "rules": 1,
+   "before": 0.804,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 395,
+   "turn": -0.97,
+   "rules": 1,
+   "before": 0.948,
+   "after": -0.022,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 402,
+   "turn": -0.713,
+   "rules": 1,
+   "before": 0.71,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 410,
+   "turn": 0.349,
+   "rules": 1,
+   "before": -0.329,
+   "after": 0.02,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 412,
+   "turn": -0.467,
+   "rules": 1,
+   "before": 0.462,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 417,
+   "turn": -0.308,
+   "rules": 1,
+   "before": 0.313,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 420,
+   "turn": 0.671,
+   "rules": 1,
+   "before": -0.66,
+   "after": 0.011,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 423,
+   "turn": -0.937,
+   "rules": 1,
+   "before": 0.871,
+   "after": -0.066,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 428,
+   "turn": 0.56,
+   "rules": 1,
+   "before": -0.563,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 431,
+   "turn": -1.012,
+   "rules": 1,
+   "before": 0.878,
+   "after": -0.134,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 435,
+   "turn": -0.292,
+   "rules": 1,
+   "before": 0.282,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 438,
+   "turn": -1.265,
+   "rules": 1,
+   "before": 1.32,
+   "after": 0.055,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 441,
+   "turn": 0.434,
+   "rules": 2,
+   "before": -0.51,
+   "after": -0.076,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 444,
+   "turn": -0.395,
+   "rules": 1,
+   "before": 0.399,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 445,
+   "turn": -1.026,
+   "rules": 1,
+   "before": 1.134,
+   "after": 0.108,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 455,
+   "turn": -1.518,
+   "rules": 1,
+   "before": 1.449,
+   "after": -0.069,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 460,
+   "turn": 0.578,
+   "rules": 1,
+   "before": -0.586,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 464,
+   "turn": -0.255,
+   "rules": 1,
+   "before": 0.25,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 468,
+   "turn": 0.568,
+   "rules": 1,
+   "before": -0.566,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 471,
+   "turn": -0.404,
+   "rules": 1,
+   "before": 0.409,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 474,
+   "turn": -0.564,
+   "rules": 1,
+   "before": 0.528,
+   "after": -0.036,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 487,
+   "turn": -0.418,
+   "rules": 1,
+   "before": 0.412,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 489,
+   "turn": -0.304,
+   "rules": 1,
+   "before": 0.298,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 500,
+   "turn": -0.825,
+   "rules": 1,
+   "before": 0.772,
+   "after": -0.053,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 501,
+   "turn": -0.326,
+   "rules": 1,
+   "before": 0.32,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 504,
+   "turn": 0.5,
+   "rules": 1,
+   "before": -0.461,
+   "after": 0.039,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 509,
+   "turn": -0.608,
+   "rules": 1,
+   "before": 0.616,
+   "after": 0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 525,
+   "turn": -0.33,
+   "rules": 1,
+   "before": 0.35,
+   "after": 0.02,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 537,
+   "turn": 0.341,
+   "rules": 1,
+   "before": -0.351,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 539,
+   "turn": 0.378,
+   "rules": 1,
+   "before": -0.406,
+   "after": -0.028,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 541,
+   "turn": -0.527,
+   "rules": 1,
+   "before": 0.511,
+   "after": -0.016,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 545,
+   "turn": 0.297,
+   "rules": 1,
+   "before": -0.301,
+   "after": -0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 547,
+   "turn": 0.276,
+   "rules": 1,
+   "before": -0.272,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 548,
+   "turn": -0.423,
+   "rules": 1,
+   "before": 0.379,
+   "after": -0.044,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 553,
+   "turn": -0.29,
+   "rules": 1,
+   "before": 0.238,
+   "after": -0.052,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 557,
+   "turn": 0.617,
+   "rules": 1,
+   "before": -0.584,
+   "after": 0.033,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 565,
+   "turn": -0.3,
+   "rules": 1,
+   "before": 0.293,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 567,
+   "turn": 0.282,
+   "rules": 1,
+   "before": -0.299,
+   "after": -0.017,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 569,
+   "turn": 0.315,
+   "rules": 1,
+   "before": -0.347,
+   "after": -0.032,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 574,
+   "turn": 0.346,
+   "rules": 1,
+   "before": -0.343,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 575,
+   "turn": -0.47,
+   "rules": 1,
+   "before": 0.455,
+   "after": -0.015,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 581,
+   "turn": 0.486,
+   "rules": 1,
+   "before": -0.482,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 583,
+   "turn": -0.396,
+   "rules": 2,
+   "before": 0.27,
+   "after": -0.126,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 584,
+   "turn": 0.448,
+   "rules": 2,
+   "before": -0.451,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 586,
+   "turn": -0.429,
+   "rules": 1,
+   "before": 0.492,
+   "after": 0.063,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 587,
+   "turn": -1.018,
+   "rules": 1,
+   "before": 0.99,
+   "after": -0.028,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 588,
+   "turn": 0.453,
+   "rules": 1,
+   "before": -0.502,
+   "after": -0.049,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 589,
+   "turn": 0.287,
+   "rules": 1,
+   "before": -0.286,
+   "after": 0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 590,
+   "turn": -0.26,
+   "rules": 1,
+   "before": 0.257,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 594,
+   "turn": -0.37,
+   "rules": 1,
+   "before": 0.358,
+   "after": -0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 597,
+   "turn": 0.287,
+   "rules": 1,
+   "before": -0.285,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 600,
+   "turn": 0.359,
+   "rules": 1,
+   "before": -0.365,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 602,
+   "turn": -0.365,
+   "rules": 1,
+   "before": 0.375,
+   "after": 0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 604,
+   "turn": 0.259,
+   "rules": 1,
+   "before": -0.258,
+   "after": 0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 607,
+   "turn": -0.769,
+   "rules": 1,
+   "before": 0.774,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 608,
+   "turn": 0.42,
+   "rules": 1,
+   "before": -0.42,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 612,
+   "turn": -0.514,
+   "rules": 1,
+   "before": 0.509,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 613,
+   "turn": 0.251,
+   "rules": 1,
+   "before": -0.251,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 614,
+   "turn": -0.565,
+   "rules": 1,
+   "before": 0.564,
+   "after": -0.001,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 617,
+   "turn": 0.344,
+   "rules": 1,
+   "before": -0.324,
+   "after": 0.02,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 619,
+   "turn": -0.346,
+   "rules": 1,
+   "before": 0.474,
+   "after": 0.128,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 622,
+   "turn": 0.281,
+   "rules": 1,
+   "before": -0.335,
+   "after": -0.054,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 624,
+   "turn": 0.424,
+   "rules": 1,
+   "before": -0.442,
+   "after": -0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 631,
+   "turn": 0.319,
+   "rules": 1,
+   "before": -0.358,
+   "after": -0.039,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 638,
+   "turn": 0.765,
+   "rules": 1,
+   "before": -0.77,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 640,
+   "turn": 0.522,
+   "rules": 1,
+   "before": -0.499,
+   "after": 0.023,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 641,
+   "turn": 0.406,
+   "rules": 1,
+   "before": -0.401,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 646,
+   "turn": 0.629,
+   "rules": 1,
+   "before": -0.598,
+   "after": 0.031,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 649,
+   "turn": 0.531,
+   "rules": 1,
+   "before": -0.541,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 651,
+   "turn": -0.744,
+   "rules": 1,
+   "before": 0.752,
+   "after": 0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 657,
+   "turn": 0.715,
+   "rules": 1,
+   "before": -0.713,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 660,
+   "turn": 0.466,
+   "rules": 1,
+   "before": -0.496,
+   "after": -0.03,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 661,
+   "turn": -0.259,
+   "rules": 1,
+   "before": 0.257,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 663,
+   "turn": -0.337,
+   "rules": 1,
+   "before": 0.313,
+   "after": -0.024,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 666,
+   "turn": 0.356,
+   "rules": 1,
+   "before": -0.343,
+   "after": 0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 667,
+   "turn": -0.62,
+   "rules": 1,
+   "before": 0.649,
+   "after": 0.029,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 668,
+   "turn": 0.739,
+   "rules": 2,
+   "before": -0.816,
+   "after": -0.077,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 669,
+   "turn": -0.347,
+   "rules": 1,
+   "before": 0.333,
+   "after": -0.014,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 677,
+   "turn": -0.355,
+   "rules": 1,
+   "before": 0.352,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 687,
+   "turn": -0.425,
+   "rules": 1,
+   "before": 0.373,
+   "after": -0.052,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 695,
+   "turn": -0.463,
+   "rules": 1,
+   "before": 0.432,
+   "after": -0.031,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 703,
+   "turn": -0.52,
+   "rules": 2,
+   "before": 0.484,
+   "after": -0.036,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 706,
+   "turn": 0.484,
+   "rules": 2,
+   "before": -0.515,
+   "after": -0.031,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 708,
+   "turn": 0.725,
+   "rules": 1,
+   "before": -0.774,
+   "after": -0.049,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 714,
+   "turn": 0.581,
+   "rules": 1,
+   "before": -0.602,
+   "after": -0.021,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 718,
+   "turn": 0.74,
+   "rules": 1,
+   "before": -0.732,
+   "after": 0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 719,
+   "turn": -0.626,
+   "rules": 1,
+   "before": 0.663,
+   "after": 0.037,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 720,
+   "turn": 0.839,
+   "rules": 1,
+   "before": -0.94,
+   "after": -0.101,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 721,
+   "turn": 0.537,
+   "rules": 1,
+   "before": -0.616,
+   "after": -0.079,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 724,
+   "turn": 0.293,
+   "rules": 1,
+   "before": -0.324,
+   "after": -0.031,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 727,
+   "turn": -0.276,
+   "rules": 1,
+   "before": 0.276,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 728,
+   "turn": 0.573,
+   "rules": 1,
+   "before": -0.564,
+   "after": 0.009,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 732,
+   "turn": 0.43,
+   "rules": 1,
+   "before": -0.396,
+   "after": 0.034,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 733,
+   "turn": 0.381,
+   "rules": 1,
+   "before": -0.387,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 734,
+   "turn": 0.553,
+   "rules": 1,
+   "before": -0.55,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 735,
+   "turn": -0.658,
+   "rules": 1,
+   "before": 0.657,
+   "after": -0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 739,
+   "turn": -0.442,
+   "rules": 1,
+   "before": 0.431,
+   "after": -0.011,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 740,
+   "turn": 0.313,
+   "rules": 1,
+   "before": -0.366,
+   "after": -0.053,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 744,
+   "turn": 0.312,
+   "rules": 1,
+   "before": -0.338,
+   "after": -0.026,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 747,
+   "turn": 0.307,
+   "rules": 1,
+   "before": -0.271,
+   "after": 0.036,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 753,
+   "turn": -0.518,
+   "rules": 1,
+   "before": 0.517,
+   "after": -0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 755,
+   "turn": -0.264,
+   "rules": 1,
+   "before": 0.254,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 762,
+   "turn": 0.582,
+   "rules": 1,
+   "before": -0.579,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 765,
+   "turn": -1.062,
+   "rules": 1,
+   "before": 1.054,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 768,
+   "turn": 0.419,
+   "rules": 1,
+   "before": -0.405,
+   "after": 0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 770,
+   "turn": -1.22,
+   "rules": 1,
+   "before": 1.073,
+   "after": -0.147,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 773,
+   "turn": 0.609,
+   "rules": 1,
+   "before": -0.586,
+   "after": 0.023,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 784,
+   "turn": 0.281,
+   "rules": 1,
+   "before": -0.294,
+   "after": -0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 785,
+   "turn": -0.39,
+   "rules": 1,
+   "before": 0.395,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 793,
+   "turn": 0.213,
+   "rules": 1,
+   "before": -0.324,
+   "after": -0.111,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 794,
+   "turn": -0.809,
+   "rules": 2,
+   "before": 0.858,
+   "after": 0.049,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 795,
+   "turn": -0.245,
+   "rules": 1,
+   "before": 0.199,
+   "after": -0.046,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 796,
+   "turn": 0.734,
+   "rules": 1,
+   "before": -0.678,
+   "after": 0.056,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 799,
+   "turn": 0.662,
+   "rules": 1,
+   "before": -0.662,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 800,
+   "turn": 0.747,
+   "rules": 1,
+   "before": -0.784,
+   "after": -0.037,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 802,
+   "turn": 0.43,
+   "rules": 1,
+   "before": -0.564,
+   "after": -0.134,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 809,
+   "turn": 0.421,
+   "rules": 1,
+   "before": -0.406,
+   "after": 0.015,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 814,
+   "turn": 0.293,
+   "rules": 1,
+   "before": -0.307,
+   "after": -0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 815,
+   "turn": 0.381,
+   "rules": 1,
+   "before": -0.391,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 820,
+   "turn": 0.86,
+   "rules": 1,
+   "before": -0.661,
+   "after": 0.199,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 821,
+   "turn": -0.619,
+   "rules": 1,
+   "before": 0.616,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 822,
+   "turn": 0.858,
+   "rules": 1,
+   "before": -0.877,
+   "after": -0.019,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 825,
+   "turn": -0.317,
+   "rules": 1,
+   "before": 0.312,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 839,
+   "turn": 1.234,
+   "rules": 1,
+   "before": -1.229,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 841,
+   "turn": 0.42,
+   "rules": 1,
+   "before": -0.413,
+   "after": 0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 842,
+   "turn": 0.47,
+   "rules": 1,
+   "before": -0.421,
+   "after": 0.049,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 843,
+   "turn": 0.478,
+   "rules": 1,
+   "before": -0.504,
+   "after": -0.026,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 847,
+   "turn": 0.542,
+   "rules": 1,
+   "before": -0.55,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 850,
+   "turn": 0.662,
+   "rules": 1,
+   "before": -0.672,
+   "after": -0.01,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 851,
+   "turn": 0.64,
+   "rules": 1,
+   "before": -0.644,
+   "after": -0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 855,
+   "turn": 0.268,
+   "rules": 1,
+   "before": -0.268,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 857,
+   "turn": -0.393,
+   "rules": 1,
+   "before": 0.375,
+   "after": -0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 859,
+   "turn": -0.259,
+   "rules": 1,
+   "before": 0.255,
+   "after": -0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 862,
+   "turn": 0.728,
+   "rules": 1,
+   "before": -0.717,
+   "after": 0.011,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 863,
+   "turn": -0.352,
+   "rules": 1,
+   "before": 0.236,
+   "after": -0.116,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 866,
+   "turn": 0.643,
+   "rules": 1,
+   "before": -0.645,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 867,
+   "turn": -0.383,
+   "rules": 1,
+   "before": 0.376,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 868,
+   "turn": 0.569,
+   "rules": 1,
+   "before": -0.544,
+   "after": 0.025,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 870,
+   "turn": 0.609,
+   "rules": 1,
+   "before": -0.617,
+   "after": -0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 878,
+   "turn": 0.29,
+   "rules": 1,
+   "before": -0.277,
+   "after": 0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 886,
+   "turn": 0.333,
+   "rules": 1,
+   "before": -0.336,
+   "after": -0.003,
+   "flags": [
+    "by_columns",
+    "dodged"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 890,
+   "turn": 0.679,
+   "rules": 1,
+   "before": -0.629,
+   "after": 0.05,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 894,
+   "turn": 0.42,
+   "rules": 1,
+   "before": -0.422,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 895,
+   "turn": 0.586,
+   "rules": 1,
+   "before": -0.533,
+   "after": 0.053,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 898,
+   "turn": 0.893,
+   "rules": 1,
+   "before": -0.855,
+   "after": 0.038,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 899,
+   "turn": -0.318,
+   "rules": 1,
+   "before": 0.332,
+   "after": 0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 900,
+   "turn": 0.742,
+   "rules": 1,
+   "before": -0.686,
+   "after": 0.056,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 901,
+   "turn": 0.31,
+   "rules": 1,
+   "before": -0.36,
+   "after": -0.05,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 904,
+   "turn": 0.373,
+   "rules": 1,
+   "before": -0.373,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 909,
+   "turn": 0.365,
+   "rules": 1,
+   "before": -0.364,
+   "after": 0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 914,
+   "turn": 0.523,
+   "rules": 1,
+   "before": -0.53,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 915,
+   "turn": -0.4,
+   "rules": 1,
+   "before": 0.399,
+   "after": -0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 918,
+   "turn": 0.385,
+   "rules": 1,
+   "before": -0.372,
+   "after": 0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 925,
+   "turn": -0.68,
+   "rules": 1,
+   "before": 0.65,
+   "after": -0.03,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 933,
+   "turn": 0.378,
+   "rules": 2,
+   "before": -0.351,
+   "after": 0.027,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 934,
+   "turn": -0.896,
+   "rules": 1,
+   "before": 0.935,
+   "after": 0.039,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 935,
+   "turn": -0.399,
+   "rules": 1,
+   "before": 0.418,
+   "after": 0.019,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 936,
+   "turn": 0.372,
+   "rules": 1,
+   "before": -0.373,
+   "after": -0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 939,
+   "turn": 0.28,
+   "rules": 1,
+   "before": -0.268,
+   "after": 0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 949,
+   "turn": 0.272,
+   "rules": 1,
+   "before": -0.278,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 953,
+   "turn": 0.411,
+   "rules": 1,
+   "before": -0.377,
+   "after": 0.034,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 954,
+   "turn": -0.429,
+   "rules": 1,
+   "before": 0.43,
+   "after": 0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 957,
+   "turn": 0.336,
+   "rules": 1,
+   "before": -0.357,
+   "after": -0.021,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 959,
+   "turn": -0.628,
+   "rules": 1,
+   "before": 0.614,
+   "after": -0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 961,
+   "turn": -0.681,
+   "rules": 1,
+   "before": 0.749,
+   "after": 0.068,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "dictionnairefra00lagogoog.pdf",
+   "page": 968,
+   "turn": -0.449,
+   "rules": 1,
+   "before": 0.452,
+   "after": 0.003,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 20,
+   "turn": 0.275,
+   "rules": 1,
+   "before": -0.204,
+   "after": 0.071,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 28,
+   "turn": 0.425,
+   "rules": 1,
+   "before": -0.34,
+   "after": 0.085,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 43,
+   "turn": 0.425,
+   "rules": 1,
+   "before": -0.353,
+   "after": 0.072,
+   "flags": [
+    "found_in_check",
+    "level_by_print"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 196,
+   "turn": -0.2,
+   "rules": 1,
+   "before": 0.495,
+   "after": 0.295,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 280,
+   "turn": 0.689,
+   "rules": 1,
+   "before": -0.692,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 316,
+   "turn": 0.225,
+   "rules": 1,
+   "before": -0.305,
+   "after": -0.08,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 318,
+   "turn": 0.425,
+   "rules": 2,
+   "before": -0.479,
+   "after": -0.054,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 368,
+   "turn": -0.272,
+   "rules": 1,
+   "before": 0.342,
+   "after": 0.07,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 404,
+   "turn": 0.625,
+   "rules": 1,
+   "before": -0.581,
+   "after": 0.044,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 419,
+   "turn": -0.226,
+   "rules": 1,
+   "before": 0.28,
+   "after": 0.054,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 435,
+   "turn": -0.645,
+   "rules": 1,
+   "before": 0.648,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 440,
+   "turn": 0.284,
+   "rules": 1,
+   "before": -0.299,
+   "after": -0.015,
+   "flags": [
+    "by_columns",
+    "dodged"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 442,
+   "turn": 0.3,
+   "rules": 1,
+   "before": -0.349,
+   "after": -0.049,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 444,
+   "turn": 0.321,
+   "rules": 1,
+   "before": -0.367,
+   "after": -0.046,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.207418.pdf",
+   "page": 449,
+   "turn": 0.946,
+   "rules": 1,
+   "before": -0.94,
+   "after": 0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 6,
+   "turn": 1.55,
+   "rules": 1,
+   "before": -1.495,
+   "after": 0.055,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 14,
+   "turn": 0.375,
+   "rules": 1,
+   "before": -0.286,
+   "after": 0.089,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 17,
+   "turn": 0.4,
+   "rules": 1,
+   "before": -0.315,
+   "after": 0.085,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 18,
+   "turn": 0.375,
+   "rules": 1,
+   "before": -0.3,
+   "after": 0.075,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 30,
+   "turn": 0.525,
+   "rules": 1,
+   "before": -0.296,
+   "after": 0.229,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 39,
+   "turn": -0.425,
+   "rules": 1,
+   "before": 0.507,
+   "after": 0.082,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 45,
+   "turn": -0.3,
+   "rules": 1,
+   "before": 0.038,
+   "after": -0.262,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 53,
+   "turn": -0.675,
+   "rules": 1,
+   "before": 0.589,
+   "after": -0.086,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 64,
+   "turn": 0.375,
+   "rules": 1,
+   "before": -0.31,
+   "after": 0.065,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.361017.pdf",
+   "page": 66,
+   "turn": -0.375,
+   "rules": 1,
+   "before": 0.375,
+   "after": 0.0,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 7,
+   "turn": -0.65,
+   "rules": 1,
+   "before": 0.611,
+   "after": -0.039,
+   "flags": []
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 80,
+   "turn": -0.546,
+   "rules": 1,
+   "before": 0.343,
+   "after": -0.203,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 82,
+   "turn": -1.1,
+   "rules": 1,
+   "before": 0.861,
+   "after": -0.239,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 91,
+   "turn": -1.036,
+   "rules": 1,
+   "before": 1.034,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 101,
+   "turn": -0.755,
+   "rules": 1,
+   "before": 0.58,
+   "after": -0.175,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 102,
+   "turn": 0.321,
+   "rules": 1,
+   "before": -0.308,
+   "after": 0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 111,
+   "turn": 0.456,
+   "rules": 1,
+   "before": -0.198,
+   "after": 0.258,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 114,
+   "turn": 0.394,
+   "rules": 1,
+   "before": -0.333,
+   "after": 0.061,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 116,
+   "turn": 0.562,
+   "rules": 1,
+   "before": -0.579,
+   "after": -0.017,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 119,
+   "turn": -0.605,
+   "rules": 1,
+   "before": 0.635,
+   "after": 0.03,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 120,
+   "turn": -0.362,
+   "rules": 1,
+   "before": 0.41,
+   "after": 0.048,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 123,
+   "turn": -0.341,
+   "rules": 1,
+   "before": 0.321,
+   "after": -0.02,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 124,
+   "turn": -0.907,
+   "rules": 1,
+   "before": 0.846,
+   "after": -0.061,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 126,
+   "turn": -0.982,
+   "rules": 1,
+   "before": 0.652,
+   "after": -0.33,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 128,
+   "turn": 0.266,
+   "rules": 1,
+   "before": -0.356,
+   "after": -0.09,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 131,
+   "turn": 0.366,
+   "rules": 1,
+   "before": -0.397,
+   "after": -0.031,
+   "flags": [
+    "by_columns",
+    "check_moved",
+    "print_held"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 136,
+   "turn": -0.615,
+   "rules": 1,
+   "before": 0.395,
+   "after": -0.22,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 141,
+   "turn": -0.266,
+   "rules": 1,
+   "before": 0.104,
+   "after": -0.162,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 144,
+   "turn": -0.905,
+   "rules": 1,
+   "before": 0.952,
+   "after": 0.047,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 145,
+   "turn": -0.892,
+   "rules": 1,
+   "before": 0.832,
+   "after": -0.06,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 148,
+   "turn": -0.405,
+   "rules": 1,
+   "before": 0.39,
+   "after": -0.015,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 149,
+   "turn": -0.565,
+   "rules": 1,
+   "before": 0.572,
+   "after": 0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 150,
+   "turn": 0.307,
+   "rules": 1,
+   "before": -0.277,
+   "after": 0.03,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 153,
+   "turn": 0.974,
+   "rules": 1,
+   "before": -0.974,
+   "after": 0.0,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 164,
+   "turn": -0.423,
+   "rules": 1,
+   "before": 0.441,
+   "after": 0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 165,
+   "turn": 0.341,
+   "rules": 1,
+   "before": -0.346,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 168,
+   "turn": 0.34,
+   "rules": 1,
+   "before": -0.335,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 169,
+   "turn": -0.605,
+   "rules": 1,
+   "before": 0.516,
+   "after": -0.089,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 180,
+   "turn": -0.482,
+   "rules": 1,
+   "before": 0.44,
+   "after": -0.042,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 181,
+   "turn": -0.58,
+   "rules": 1,
+   "before": 0.583,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 209,
+   "turn": -0.456,
+   "rules": 1,
+   "before": 0.412,
+   "after": -0.044,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 239,
+   "turn": -0.5,
+   "rules": 1,
+   "before": 0.523,
+   "after": 0.023,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 262,
+   "turn": -0.412,
+   "rules": 1,
+   "before": 0.414,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 268,
+   "turn": 0.3,
+   "rules": 1,
+   "before": -0.24,
+   "after": 0.06,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 282,
+   "turn": -0.644,
+   "rules": 1,
+   "before": 0.494,
+   "after": -0.15,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 289,
+   "turn": 0.398,
+   "rules": 1,
+   "before": -0.371,
+   "after": 0.027,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 298,
+   "turn": -0.599,
+   "rules": 1,
+   "before": 0.583,
+   "after": -0.016,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 303,
+   "turn": -0.829,
+   "rules": 1,
+   "before": 0.807,
+   "after": -0.022,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 305,
+   "turn": -0.294,
+   "rules": 1,
+   "before": 0.2,
+   "after": -0.094,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 307,
+   "turn": -0.883,
+   "rules": 1,
+   "before": 0.895,
+   "after": 0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 308,
+   "turn": 0.669,
+   "rules": 1,
+   "before": -0.509,
+   "after": 0.16,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 325,
+   "turn": -0.374,
+   "rules": 1,
+   "before": 0.346,
+   "after": -0.028,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 336,
+   "turn": -0.357,
+   "rules": 1,
+   "before": 0.315,
+   "after": -0.042,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 380,
+   "turn": -0.647,
+   "rules": 1,
+   "before": 0.674,
+   "after": 0.027,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 387,
+   "turn": -0.847,
+   "rules": 1,
+   "before": 0.947,
+   "after": 0.1,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 397,
+   "turn": -0.732,
+   "rules": 1,
+   "before": 0.663,
+   "after": -0.069,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 399,
+   "turn": 0.32,
+   "rules": 1,
+   "before": -0.404,
+   "after": -0.084,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 401,
+   "turn": 0.4,
+   "rules": 1,
+   "before": -0.144,
+   "after": 0.256,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 406,
+   "turn": -0.258,
+   "rules": 1,
+   "before": 0.215,
+   "after": -0.043,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 407,
+   "turn": -0.561,
+   "rules": 1,
+   "before": 0.54,
+   "after": -0.021,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 409,
+   "turn": -0.58,
+   "rules": 1,
+   "before": 0.54,
+   "after": -0.04,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 415,
+   "turn": -0.553,
+   "rules": 1,
+   "before": 0.557,
+   "after": 0.004,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 420,
+   "turn": -0.53,
+   "rules": 1,
+   "before": 0.406,
+   "after": -0.124,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 439,
+   "turn": 0.336,
+   "rules": 1,
+   "before": -0.351,
+   "after": -0.015,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 447,
+   "turn": -0.286,
+   "rules": 1,
+   "before": 0.279,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 478,
+   "turn": -0.705,
+   "rules": 1,
+   "before": 0.647,
+   "after": -0.058,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 479,
+   "turn": 0.314,
+   "rules": 1,
+   "before": -0.311,
+   "after": 0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 480,
+   "turn": -0.395,
+   "rules": 1,
+   "before": 0.246,
+   "after": -0.149,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 482,
+   "turn": -0.266,
+   "rules": 1,
+   "before": 0.267,
+   "after": 0.001,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 484,
+   "turn": -0.343,
+   "rules": 1,
+   "before": 0.206,
+   "after": -0.137,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 491,
+   "turn": 0.56,
+   "rules": 1,
+   "before": -0.547,
+   "after": 0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 493,
+   "turn": 0.258,
+   "rules": 1,
+   "before": -0.162,
+   "after": 0.096,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 495,
+   "turn": -0.928,
+   "rules": 1,
+   "before": 0.867,
+   "after": -0.061,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 501,
+   "turn": -0.466,
+   "rules": 1,
+   "before": 0.464,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 503,
+   "turn": -0.341,
+   "rules": 1,
+   "before": 0.339,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 505,
+   "turn": 1.375,
+   "rules": 1,
+   "before": -1.305,
+   "after": 0.07,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 523,
+   "turn": 0.63,
+   "rules": 1,
+   "before": -0.558,
+   "after": 0.072,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 529,
+   "turn": -0.351,
+   "rules": 1,
+   "before": 0.346,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 540,
+   "turn": -0.378,
+   "rules": 1,
+   "before": 0.314,
+   "after": -0.064,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 547,
+   "turn": -0.38,
+   "rules": 1,
+   "before": 0.392,
+   "after": 0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 558,
+   "turn": -0.32,
+   "rules": 1,
+   "before": 0.191,
+   "after": -0.129,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 559,
+   "turn": -0.289,
+   "rules": 1,
+   "before": 0.271,
+   "after": -0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 560,
+   "turn": -0.606,
+   "rules": 1,
+   "before": 0.573,
+   "after": -0.033,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 564,
+   "turn": 0.354,
+   "rules": 1,
+   "before": -0.322,
+   "after": 0.032,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 565,
+   "turn": -1.04,
+   "rules": 1,
+   "before": 1.035,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 566,
+   "turn": -0.902,
+   "rules": 1,
+   "before": 0.896,
+   "after": -0.006,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 570,
+   "turn": -0.941,
+   "rules": 1,
+   "before": 0.955,
+   "after": 0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 571,
+   "turn": 0.632,
+   "rules": 1,
+   "before": -0.635,
+   "after": -0.003,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 576,
+   "turn": -0.428,
+   "rules": 1,
+   "before": 0.437,
+   "after": 0.009,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 577,
+   "turn": 0.489,
+   "rules": 1,
+   "before": -0.468,
+   "after": 0.021,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 578,
+   "turn": -0.457,
+   "rules": 1,
+   "before": 0.465,
+   "after": 0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 588,
+   "turn": 0.404,
+   "rules": 1,
+   "before": -0.392,
+   "after": 0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 605,
+   "turn": -0.697,
+   "rules": 1,
+   "before": 0.745,
+   "after": 0.048,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 616,
+   "turn": 0.34,
+   "rules": 1,
+   "before": -0.375,
+   "after": -0.035,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 618,
+   "turn": -0.347,
+   "rules": 1,
+   "before": 0.329,
+   "after": -0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 623,
+   "turn": 0.843,
+   "rules": 1,
+   "before": -0.483,
+   "after": 0.36,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 643,
+   "turn": 0.36,
+   "rules": 1,
+   "before": -0.326,
+   "after": 0.034,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 672,
+   "turn": -0.964,
+   "rules": 1,
+   "before": 0.957,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 681,
+   "turn": -0.478,
+   "rules": 1,
+   "before": 0.438,
+   "after": -0.04,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 687,
+   "turn": -0.649,
+   "rules": 1,
+   "before": 0.496,
+   "after": -0.153,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 688,
+   "turn": 0.357,
+   "rules": 1,
+   "before": -0.349,
+   "after": 0.008,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 699,
+   "turn": -0.687,
+   "rules": 1,
+   "before": 0.6,
+   "after": -0.087,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 709,
+   "turn": -0.67,
+   "rules": 1,
+   "before": 0.652,
+   "after": -0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 724,
+   "turn": -0.452,
+   "rules": 1,
+   "before": 0.468,
+   "after": 0.016,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 726,
+   "turn": -0.313,
+   "rules": 1,
+   "before": 0.3,
+   "after": -0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 764,
+   "turn": -0.595,
+   "rules": 1,
+   "before": 0.537,
+   "after": -0.058,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 768,
+   "turn": -0.62,
+   "rules": 1,
+   "before": 0.596,
+   "after": -0.024,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 786,
+   "turn": -0.729,
+   "rules": 1,
+   "before": 0.677,
+   "after": -0.052,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 789,
+   "turn": -1.141,
+   "rules": 1,
+   "before": 1.177,
+   "after": 0.036,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 794,
+   "turn": -0.442,
+   "rules": 1,
+   "before": 0.585,
+   "after": 0.143,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 796,
+   "turn": -0.907,
+   "rules": 1,
+   "before": 0.792,
+   "after": -0.115,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 802,
+   "turn": -0.748,
+   "rules": 1,
+   "before": 0.729,
+   "after": -0.019,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 825,
+   "turn": -0.462,
+   "rules": 1,
+   "before": 0.306,
+   "after": -0.156,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 828,
+   "turn": 0.553,
+   "rules": 1,
+   "before": -0.368,
+   "after": 0.185,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 837,
+   "turn": 0.278,
+   "rules": 1,
+   "before": -0.376,
+   "after": -0.098,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 846,
+   "turn": -0.627,
+   "rules": 1,
+   "before": 0.614,
+   "after": -0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 850,
+   "turn": -0.662,
+   "rules": 1,
+   "before": 0.655,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 852,
+   "turn": 0.262,
+   "rules": 1,
+   "before": -0.322,
+   "after": -0.06,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 862,
+   "turn": -1.043,
+   "rules": 1,
+   "before": 0.818,
+   "after": -0.225,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 865,
+   "turn": -0.543,
+   "rules": 1,
+   "before": 0.36,
+   "after": -0.183,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 872,
+   "turn": 0.213,
+   "rules": 1,
+   "before": -0.313,
+   "after": -0.1,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 874,
+   "turn": 0.502,
+   "rules": 1,
+   "before": -0.372,
+   "after": 0.13,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 875,
+   "turn": -1.126,
+   "rules": 1,
+   "before": 1.092,
+   "after": -0.034,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 888,
+   "turn": 0.421,
+   "rules": 1,
+   "before": -0.372,
+   "after": 0.049,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 891,
+   "turn": -0.707,
+   "rules": 1,
+   "before": 0.669,
+   "after": -0.038,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 892,
+   "turn": 0.502,
+   "rules": 1,
+   "before": -0.484,
+   "after": 0.018,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 894,
+   "turn": -0.377,
+   "rules": 1,
+   "before": 0.391,
+   "after": 0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 895,
+   "turn": -0.367,
+   "rules": 1,
+   "before": 0.504,
+   "after": 0.137,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 905,
+   "turn": -1.181,
+   "rules": 1,
+   "before": 0.998,
+   "after": -0.183,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 907,
+   "turn": -0.671,
+   "rules": 1,
+   "before": 0.726,
+   "after": 0.055,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 912,
+   "turn": -0.337,
+   "rules": 1,
+   "before": 0.4,
+   "after": 0.063,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 913,
+   "turn": 0.301,
+   "rules": 1,
+   "before": -0.364,
+   "after": -0.063,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 918,
+   "turn": 0.339,
+   "rules": 1,
+   "before": -0.353,
+   "after": -0.014,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 925,
+   "turn": 0.696,
+   "rules": 1,
+   "before": -0.651,
+   "after": 0.045,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 939,
+   "turn": -0.732,
+   "rules": 1,
+   "before": 0.719,
+   "after": -0.013,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 948,
+   "turn": -0.507,
+   "rules": 1,
+   "before": 0.505,
+   "after": -0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 949,
+   "turn": -0.57,
+   "rules": 1,
+   "before": 0.458,
+   "after": -0.112,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 957,
+   "turn": 0.59,
+   "rules": 1,
+   "before": -0.578,
+   "after": 0.012,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 960,
+   "turn": -0.895,
+   "rules": 1,
+   "before": 0.827,
+   "after": -0.068,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 962,
+   "turn": 0.368,
+   "rules": 1,
+   "before": -0.357,
+   "after": 0.011,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 969,
+   "turn": -0.425,
+   "rules": 1,
+   "before": 0.464,
+   "after": 0.039,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.70512.pdf",
+   "page": 973,
+   "turn": -0.452,
+   "rules": 1,
+   "before": 0.445,
+   "after": -0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.86278.pdf",
+   "page": 96,
+   "turn": -0.225,
+   "rules": 7,
+   "before": 0.153,
+   "after": -0.072,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.86278.pdf",
+   "page": 328,
+   "turn": -0.225,
+   "rules": 1,
+   "before": 0.374,
+   "after": 0.149,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "in.ernet.dli.2015.86278.pdf",
+   "page": 364,
+   "turn": -0.95,
+   "rules": 1,
+   "before": 0.705,
+   "after": -0.245,
+   "flags": []
+  },
+  {
+   "book": "kitabalzabur00barguoft.pdf",
+   "page": 7,
+   "turn": -0.366,
+   "rules": 1,
+   "before": 0.361,
+   "after": -0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "kitabalzabur00barguoft.pdf",
+   "page": 8,
+   "turn": 1.133,
+   "rules": 1,
+   "before": -1.128,
+   "after": 0.005,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 7,
+   "turn": 0.98,
+   "rules": 1,
+   "before": -0.973,
+   "after": 0.007,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 9,
+   "turn": 0.903,
+   "rules": 1,
+   "before": -0.901,
+   "after": 0.002,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 13,
+   "turn": -0.307,
+   "rules": 1,
+   "before": 0.368,
+   "after": 0.061,
+   "flags": [
+    "by_columns"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 48,
+   "turn": 0.225,
+   "rules": 2,
+   "before": -0.226,
+   "after": -0.001,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 152,
+   "turn": 0.3,
+   "rules": 2,
+   "before": -0.239,
+   "after": 0.06,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 251,
+   "turn": -0.225,
+   "rules": 2,
+   "before": 0.192,
+   "after": -0.033,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 275,
+   "turn": 0.475,
+   "rules": 1,
+   "before": -0.483,
+   "after": -0.008,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 286,
+   "turn": 0.3,
+   "rules": 2,
+   "before": -0.393,
+   "after": -0.093,
+   "flags": []
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 338,
+   "turn": 0.3,
+   "rules": 2,
+   "before": -0.399,
+   "after": -0.099,
+   "flags": []
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 387,
+   "turn": -0.225,
+   "rules": 2,
+   "before": 0.088,
+   "after": -0.137,
+   "flags": []
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 435,
+   "turn": -0.2,
+   "rules": 2,
+   "before": 0.103,
+   "after": -0.097,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 439,
+   "turn": -0.2,
+   "rules": 2,
+   "before": 0.161,
+   "after": -0.04,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 443,
+   "turn": -0.2,
+   "rules": 4,
+   "before": 0.15,
+   "after": -0.05,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 447,
+   "turn": -0.45,
+   "rules": 1,
+   "before": 0.315,
+   "after": -0.135,
+   "flags": []
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 454,
+   "turn": 0.425,
+   "rules": 4,
+   "before": -0.403,
+   "after": 0.022,
+   "flags": [
+    "found_in_check"
+   ]
+  },
+  {
+   "book": "kitbalmawiwaalit01maqruoft.pdf",
+   "page": 506,
+   "turn": -0.3,
+   "rules": 2,
+   "before": 0.287,
+   "after": -0.013,
+   "flags": []
+  },
+  {
+   "book": "majmaalmasarrt00khrsuoft.pdf",
+   "page": 224,
+   "turn": 0.275,
+   "rules": 1,
+   "before": -0.355,
+   "after": -0.08,
+   "flags": []
+  },
+  {
+   "book": "taghrbatbanhilla00bayruoft.pdf",
+   "page": 556,
+   "turn": -1.875,
+   "rules": 1,
+   "before": 1.413,
+   "after": -0.462,
+   "flags": [
+    "found_in_check",
+    "dodged"
+   ]
+  },
+  {
+   "book": "tarkhalrusulwaal01abaruoft.pdf",
+   "page": 287,
+   "turn": 0.275,
+   "rules": 1,
+   "before": -0.522,
+   "after": -0.247,
+   "flags": [
+    "found_in_check"
+   ]
+  }
+ ]
+}

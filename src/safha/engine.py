@@ -535,9 +535,11 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
         for i, p in checked.items():
             rec["pages"][i] = p
         rec["whole"] = sorted(i for i, p in enumerate(rec["pages"]) if "whole" in p["flags"])
-        if len(rec["whole"]) > prof.max_whole * max(1, rec["measured"]):
+        odd = set(rec.get("other_size") or [])  # (sheets of another size: whole in any case, see decide)
+        misfit = [i for i in rec["whole"] if i not in odd]
+        if len(misfit) > prof.max_whole * max(1, rec["measured"] - len(odd)):
             rec["decision"] = "skip"
-            rec["why"] = f"{len(rec['whole'])} pages do not fit one box (second check)"
+            rec["why"] = f"{len(misfit)} pages do not fit one box (second check)"
             continue
         rec["width_quantile"] = wq
         frames(rec, prof)

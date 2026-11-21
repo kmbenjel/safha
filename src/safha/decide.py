@@ -8,6 +8,8 @@
   whose marks do not fit there is centred on its own content. On white paper the content moves when the box would leave
   the page. The box slides away from a stain or a scan line beside the text when the content allows.
 * A page whose content is wider than the box stays uncropped (shown whole, shrunk to the book's size by ``frames``).
+  When more than 5 % of the text pages are like that, no one box fits the book, and it is not cropped; sheets of
+  another size (a quarter larger than the median page) are shown whole in any case and do not count.
 * The book is cropped for a real gain or a flaw: the text grows >= 15 % on a phone, tilted pages, scanner bands, text
   off-centre or swaying from page to page, stains. Otherwise it is a good scan and stays as it is.
 """
@@ -340,9 +342,14 @@ def decide(pages: list[dict], prof: Profile, wq: float = 0.95) -> dict[str, Any]
     if blot_pages >= prof.stained * len(text):
         reasons.append(f"stains on {blot_pages} pages")
     out["reasons"] = reasons
-    if len(whole) > prof.max_whole * len(text):
+    # A SHEET OF ANOTHER SIZE (a plate, a chart, a frame filmed at another scale: a quarter larger than the median page,
+    # either way) is shown whole whatever the box: it has no say in whether one box fits the book
+    odd = {i for i in text if pages[i]["w"] > 1.25 * pw or pages[i]["h"] > 1.25 * ph}
+    out["other_size"] = sorted(odd)
+    misfit = [i for i in whole if i not in odd]
+    if len(misfit) > prof.max_whole * max(1, len(text) - len(odd)):
         out["decision"] = "skip"
-        out["why"] = f"{len(whole)} pages do not fit one box"
+        out["why"] = f"{len(misfit)} pages do not fit one box"
     elif not reasons and not prof.always:
         out["decision"] = "skip"
         out["why"] = f"a good scan: the crop changes little (text {round((out['gain'] - 1) * 100)} % larger)"

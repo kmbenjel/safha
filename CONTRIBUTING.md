@@ -21,8 +21,12 @@ make lint test
 - A change to a measure (`measure.py`, `tilt.py`) or a decision (`decide.py`, `detect.py`) must keep the golden
   recipes (`make golden`, then review `git diff tests/golden/` page by page: a moved box or a new turn needs a reason).
 - A change that could turn more pages must be checked on real books, not only on the regression cases: compare the
-  turns before and after over a corpus (`safha bench`) and look at the pages that changed. Regression cases only cover
-  pages that were once wrong; a new false turn elsewhere is invisible to them.
+  turns before and after over a corpus and look at the pages that changed. `safha bench CORPUS --recipes DIR` keeps
+  every book's recipe (run it before and after, into two folders, and compare them page by page);
+  `python bench/rule_audit.py CORPUS DIR` holds every turn against the print's own rules; `safha sheet book.pdf --recipe
+  book.recipe.json --pages N` shows a page. Regression cases only cover pages that were once wrong; a new false turn
+  elsewhere is invisible to them.
+- The declared dependency floors are tested (CI job `lowest`): `uv pip install --resolution lowest-direct -e ".[dev]"`.
 - The images are never decoded and re-encoded: any feature that would need it does not belong in safha.
 
 ## Releases

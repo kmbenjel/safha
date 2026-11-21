@@ -1,8 +1,9 @@
-"""Printed rules as the truth for a page's tilt.
+"""Readers of a page's tilt that owe nothing to safha's own measures: the judges of the head-to-head.
 
-A rule the printer set between two columns (or across the page) is the print's straightest line: on a level page it
-stands upright. Its lean, read here independently of safha's own measures, says how far a page is from level, before
-and after any tool has turned it.
+* A rule the printer set between two columns (or across the page) is the print's straightest line: on a level page it
+  stands upright. Its lean says how far a real page is from level, before and after any tool has turned it.
+* On a page drawn for the purpose, whose lines are known to be level or tilted by a known angle, the lean of the lines
+  themselves is read by the oldest method there is, the projection profile, on any part of the page's height.
 """
 
 from __future__ import annotations
@@ -60,3 +61,50 @@ def column_rule_lean(a: np.ndarray) -> float | None:
     H, W = a.shape
     v = [r for r in rule_leans(a)["v"] if r[1] >= 0.35 * H and 0.25 * W <= r[2] <= 0.75 * W]
     return max(v, key=lambda r: r[1])[0] if v else None
+
+
+def lines_lean(a: np.ndarray, top: float = 0.0, bottom: float = 1.0, widest: float = 5.0) -> float | None:
+    """the lean of the lines of text in a gray page image, by the projection profile: the angle at which the rows of
+    ink, sheared back, pile up sharpest (coarse steps of a quarter degree, then steps of 0.02).
+
+    ``top``, ``bottom``: the part of the text's height that is read (0 at its first inked row, 1 at its last), so the
+    upper and the lower lines of a page can be read apart. Edge rows and columns more than half dark (a scanner's
+    bed, a film's black field) are left out. Positive when the page's content is turned counter-clockwise (a turn of
+    minus the lean levels it). None when there is too little ink to tell."""
+    paper = float(np.percentile(a, 90))
+    if paper < 110:
+        return None
+    ink = a < paper - 60
+    rows, cols = ink.mean(1), ink.mean(0)
+    r0, r1, c0, c1 = 0, ink.shape[0], 0, ink.shape[1]
+    while r0 < r1 and rows[r0] > 0.5:
+        r0 += 1
+    while r1 > r0 and rows[r1 - 1] > 0.5:
+        r1 -= 1
+    while c0 < c1 and cols[c0] > 0.5:
+        c0 += 1
+    while c1 > c0 and cols[c1 - 1] > 0.5:
+        c1 -= 1
+    ys, xs = np.nonzero(ink[r0:r1, c0:c1])
+    if len(ys) < 2000:
+        return None
+    y0, y1 = np.percentile(ys, [1, 99])
+    keep = (ys >= y0 + top * (y1 - y0)) & (ys <= y0 + bottom * (y1 - y0))
+    xs, ys = xs[keep].astype(np.float64), ys[keep].astype(np.float64)
+    if len(ys) < 1000:
+        return None
+    if len(ys) > 120000:
+        pick = np.random.default_rng(0).choice(len(ys), 120000, replace=False)
+        xs, ys = xs[pick], ys[pick]
+    xs -= xs.mean()
+
+    def sharpness(deg: float) -> float:
+        yy = np.rint(ys + xs * np.tan(np.radians(deg))).astype(np.int64)
+        c = np.bincount(yy - yy.min()).astype(np.float64)
+        return float((c * c).sum())
+
+    coarse = np.arange(-widest, widest + 1e-9, 0.25)
+    best = float(coarse[int(np.argmax([sharpness(v) for v in coarse]))])
+    fine = np.arange(best - 0.25, best + 0.25 + 1e-9, 0.02)
+    score = np.array([sharpness(v) for v in fine])
+    return round(float(np.median(fine[score >= 0.999 * score.max()])), 2) + 0.0  # (the middle of the sharpest angles)

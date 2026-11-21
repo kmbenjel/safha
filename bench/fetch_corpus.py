@@ -1,13 +1,17 @@
 """Download the public-domain benchmark corpus from the Internet Archive (books published before 1931, manuscripts).
 
 For each item, the scan's original PDF when the uploader gave one (Digital Library of India: CCITT G4 pages), else the
-Archive's own PDF (JPEG 2000 / JBIG2 / JPEG pages). The list, with each item's year and licence, is written to
-corpus.tsv next to the files. Usage: python bench/fetch_corpus.py DIR [--max-mb 160]
+Archive's own PDF (JPEG 2000 / JBIG2 / JPEG pages). The list, with each item's year, licence, file name and MD5, is
+written to corpus.tsv next to the files. Each file is held against the MD5 of the file the published results were made
+from (``PUBLISHED``): the Archive re-derives its PDFs now and then, and a re-derived file is said to be one.
+
+Usage: python bench/fetch_corpus.py DIR [--max-mb 160]
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -33,6 +37,29 @@ ITEMS = [
     ("in.ernet.dli.2015.207418", "English journal, bitonal CCITT", "1907"),
     ("dictionnairefra00lagogoog", "French-Arabic dictionary, Google scan", "1896"),
 ]
+
+
+# the files the published results (bench/results/) were made from, as the Archive served them on 2026-11-13 and still
+# did on 2026-11-21
+PUBLISHED = {
+    "almuqaddimah00ibnk": "f8247191330f9e6f0871d581e2f7bb17", "tarkhalrusulwaal01abaruoft": "db31deff1e1ad890b3d387ed34d4e95b",
+    "kitbalmawiwaalit01maqruoft": "d0b7bcccc748a26d7be28046cffc130e", "kitabalzabur00barguoft": "0b47b67b31b962575d6604083052a657",
+    "taghrbatbanhilla00bayruoft": "f564a4436b5150b70cfd707ef8f565ba", "majmaalmasarrt00khrsuoft": "de18772759e16080df1a629bffd9a4e2",
+    "chronologyofanci00biru": "79dd72773dee43318c1180045eb0a2de", "arabicproverbsor00burc": "82759f9d6f916179c5e7eb80e38b25f0",
+    "arabicmanuscript28loui": "c8597e3561f6886de95042df4228f2b1", "arabicmanuscript33loui": "696d6f69b59337fd40955f1a12a4f307",
+    "persianmedicalma33loui": "c979a440651108b67d2c733eed237a01", "in.ernet.dli.2015.361017": "1441578b44d4690ac5f56c86abb39ba5",
+    "in.ernet.dli.2015.262150": "5f20cba184a179d9605dcd24823f5f8f", "in.ernet.dli.2015.86278": "797b7fa5c045d555dd45e117374685df",
+    "in.ernet.dli.2015.70512": "28a075e75d3bc8190912dcc3116f9dc2", "in.ernet.dli.2015.207418": "a0f23835d7473f3524938492ffa2ab96",
+    "dictionnairefra00lagogoog": "99a1124cca833673eaa938a81bd1802c",
+}
+
+
+def md5_of(path: str) -> str:
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
 
 
 def pick(ident: str, max_mb: float) -> dict | None:
@@ -67,12 +94,15 @@ def main() -> None:
             with urllib.request.urlopen(req, timeout=600) as r, open(out + ".part", "wb") as o:
                 shutil.copyfileobj(r, o, 1 << 20)
             os.replace(out + ".part", out)
-        print(f"{ident}: {f['bytes'] / 1e6:.1f} MB ({f['format']})", flush=True)
+        md5 = md5_of(out)
+        same = "" if PUBLISHED.get(ident) in (None, md5) else \
+            "  NOTE: not the file the published results were made from (the Archive has re-derived it)"
+        print(f"{ident}: {f['bytes'] / 1e6:.1f} MB ({f['format']}){same}", flush=True)
         rows.append([ident, kind, note, f["title"], f["format"], str(f["bytes"]),
                      "public domain (published before 1931)" if "manuscript" not in kind else "public domain (manuscript)",
-                     f"https://archive.org/details/{ident}"])
+                     f"https://archive.org/details/{ident}", f["file"], md5])
     with open(os.path.join(a.dir, "corpus.tsv"), "w", encoding="utf-8") as fh:
-        fh.write("id\tkind\tnote\ttitle\tformat\tbytes\tlicence\turl\n")
+        fh.write("id\tkind\tnote\ttitle\tformat\tbytes\tlicence\turl\tfile\tmd5\n")
         for r in rows:
             fh.write("\t".join(x.replace("\t", " ") for x in r) + "\n")
 

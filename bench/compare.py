@@ -5,13 +5,23 @@ For each input book and each tool: wall time, output size, whether the original 
 consistency of the result across pages (distinct page sizes, the text block's place from page to page), and turns:
 
 * on real pages that carry their own truth -- a two-column dictionary with a printed rule between the columns: the
-  rule's lean after each tool, read independently of safha (``bench/rules.py``);
-* on a synthetic book with a known truth: tilted pages levelled, and warped pages (lines at two angles) wrongly turned.
+  rule's lean after each tool;
+* on a book drawn with a known truth (``truth_book``): level pages left level, tilted pages levelled, and warped pages
+  (lines at two angles) wrongly turned.
+
+Who judges. The turns are judged by ``bench/rules.py``, which owes nothing to safha's own measures (a rule followed and
+fitted; the projection profile of the lines). Sizes, streams and codecs are read from the files. The place of the text
+on the page (off-centre, sway, width) is read on every tool's output alike with safha's own text-block measure
+(``safha.measure.marks``): it describes the outputs, it is no truth, and the report says so.
 
 Every tool runs the way a careful user would run it for this job (see ``run_tool``): the options that keep its output
 small and its pages whole. Where a tool has a lossless and a smaller lossy setting, both are run and both are published.
+The versions of everything that ran are written with the results.
 
 Usage (see bench/compare.sh): python bench/compare.py WORKDIR BOOK.pdf [BOOK.pdf ...]
+Environment: TOOLS (where bench/install_tools.sh put the tools), SAFHA (the safha to run), ONLY_TOOLS (a,b,c),
+NO_TRUTH=1 (books only), OUT (the JSON's name), KEEP=1 (keep every tool's output PDF; else only the truth book's and
+those of the books named in KEEP_BOOKS, which the media script draws from).
 """
 
 from __future__ import annotations
@@ -30,15 +40,38 @@ import pymupdf
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "tests"))
 sys.path.insert(0, os.path.dirname(__file__))
-from rules import column_rule_lean
+from rules import column_rule_lean, lines_lean
 
 import synth
 from safha.measure import marks
 from safha.pdf import gray, image_filters
-from safha.tilt import line_tracks, skew_of
+from safha.tilt import skew_of
 
 TOOLS_DIR = os.environ.get("TOOLS", os.path.expanduser("~/safha-tools"))
 SAFHA = os.environ.get("SAFHA", os.path.join(os.path.dirname(__file__), "..", ".venv", "bin", "safha"))
+JOBS = int(os.environ.get("JOBS", "8"))  # worker processes for the tools that take a number
+
+
+def versions() -> dict[str, str]:
+    """the version each tool reports, and of what it leans on: written with the results"""
+    def first(cmd: str, last: bool = False) -> str:
+        r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True)
+        lines = [ln.strip() for ln in (r.stdout or r.stderr).splitlines() if ln.strip()]
+        line = (lines[-1] if last else lines[0]) if lines else ""
+        return "".join(ch for ch in line.replace("\x1b[0m", "").replace("\x1b[36m", "") if ch.isprintable())[:80]
+
+    jar = first(f'find "{TOOLS_DIR}/briss" -name "*all.jar" | head -1')
+    out = {
+        "safha": first(f'"{SAFHA}" --version'), "PyMuPDF": pymupdf.VersionBind, "MuPDF": pymupdf.mupdf_version,
+        "pdfCropMargins": first(f'"{TOOLS_DIR}/pcm/bin/pdf-crop-margins" --version 2>/dev/null', last=True),
+        "Briss": os.path.basename(jar),
+        "k2pdfopt": first("k2pdfopt -? | head -1"), "unpaper": first("unpaper --version"),
+        "OCRmyPDF": first("ocrmypdf --version"), "OCRmyPDF (new)": first(f'"{TOOLS_DIR}/ocrmypdf-new/bin/ocrmypdf" --version'),
+        "tesseract": first("tesseract --version | head -1"), "Ghostscript": first("gs --version"),
+        "jbig2enc": first("jbig2 --version"), "pngquant": first("pngquant --version"), "poppler": first("pdftoppm -v 2>&1"),
+        "img2pdf": first("img2pdf --version"),
+    }
+    return {k: v for k, v in out.items() if v and "No such file" not in v and "not found" not in v}
 
 
 def native_dpi(path: str) -> int:
@@ -98,7 +131,7 @@ def run_tool(tool: str, src: str, dst: str, work: str) -> None:
     dpi = native_dpi(src)
     if tool in ("safha", "safha-reader"):
         prof = "reader" if tool == "safha-reader" else "warraq"
-        sh(f'"{SAFHA}" crop "{src}" -o "{dst}" -q --jobs 4 --profile {prof}')
+        sh(f'"{SAFHA}" crop "{src}" -o "{dst}" -q --jobs {min(4, JOBS)} --profile {prof}')
         if not os.path.exists(dst):  # nothing to do: the file left as it is
             shutil.copyfile(src, dst)
     elif tool == "k2pdfopt":
@@ -121,10 +154,13 @@ def run_tool(tool: str, src: str, dst: str, work: str) -> None:
         # skips the recognition itself (only the deskew is measured). "ocrmypdf-pdfa" is the tool's own default (PDF/A
         # output through Ghostscript, which may re-encode images as JPEG); the others write a plain PDF: -O1 is its
         # default optimisation (lossless), -O2/-O3 its lossy settings; jbig2enc and pngquant are installed
-        # (bench/install_tools.sh), --jbig2-lossy stays off
+        # (bench/install_tools.sh), --jbig2-lossy stays off. "ocrmypdf-new-*": the same two main settings with the
+        # current release from PyPI beside the distribution's package
+        exe = f'"{TOOLS_DIR}/ocrmypdf-new/bin/ocrmypdf"' if tool.startswith("ocrmypdf-new") else "ocrmypdf"
         opt = {"ocrmypdf-pdfa": "", "ocrmypdf": "--output-type pdf", "ocrmypdf-O2": "--output-type pdf --optimize 2",
-               "ocrmypdf-O3": "--output-type pdf --optimize 3"}[tool]
-        sh(f'ocrmypdf -q --jobs 8 --force-ocr --deskew --tesseract-timeout 0 {opt} "{src}" "{dst}"')
+               "ocrmypdf-O3": "--output-type pdf --optimize 3", "ocrmypdf-new-pdfa": "",
+               "ocrmypdf-new": "--output-type pdf"}[tool]
+        sh(f'{exe} -q --jobs {JOBS} --force-ocr --deskew --tesseract-timeout 0 {opt} "{src}" "{dst}"')
     else:
         raise ValueError(tool)
 
@@ -228,39 +264,55 @@ def level_pages(path: str, k: int = 3) -> list[int]:
     return out
 
 
-def truth_book(path: str) -> list[str]:
-    """six synthetic pages: three tilted 1 deg (should be levelled), three warped -- the upper lines level, the lower ones
-    at 1.5 deg (no single turn fixes them: a turn makes the level lines lean)"""
-    kinds = ["tilt", "warp", "tilt", "warp", "tilt", "warp"]
-    ims = [synth.page(seed=10 + k, tilt=1.0 if t == "tilt" else 0.0, warp=1.5 if t == "warp" else 0.0)
-           for k, t in enumerate(kinds)]
-    synth.write(path, ims)
+TRUTH_TILTS = (0.5, -0.5, 1.0, -1.0, 2.0, -2.0, 3.0, -3.0)
+TRUTH_WARPS = (1.0, -1.0, 1.5, -1.5, 2.0, -2.0, 2.5, -2.5)
+
+
+def truth_book(path: str) -> list[tuple[str, float]]:
+    """A book with a known truth, drawn as a 300 dpi scan: 24 pages in turn level, tilted and warped.
+
+    * 8 level pages: a tool has nothing to turn;
+    * 8 tilted pages, by 0.5 to 3 degrees either way: a tool should level them;
+    * 8 warped pages: the upper half's lines level, the lower half's turned by 1 to 2.5 degrees either way. No
+      single turn levels such a page: a turn by its average makes the level upper lines lean.
+    -> [(kind, angle)] page by page"""
+    kinds: list[tuple[str, float]] = []
+    for k in range(8):
+        kinds += [("level", 0.0), ("tilt", TRUTH_TILTS[k]), ("warp", TRUTH_WARPS[k])]
+    ims = [synth.page(w=1800, h=2600, size=44, margin=(300, 320, 300, 340), seed=10 + k, tilt=v if t == "tilt" else 0.0,
+                      warp=v if t == "warp" else 0.0) for k, (t, v) in enumerate(kinds)]
+    synth.write(path, ims, dpi=300)
     return kinds
 
 
-def turns(dst: str, kinds: list[str]) -> dict:
-    """tilted pages levelled; warped pages whose level upper lines now lean (a wrong turn)"""
+def page_image(page: pymupdf.Page, px: int = 1400) -> np.ndarray:
+    z = px / page.rect.width
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(z, z), colorspace=pymupdf.csGRAY, alpha=False)
+    return np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.stride)[:, :pix.width]
+
+
+def turns(dst: str, kinds: list[tuple[str, float]]) -> dict:
+    """what a tool did with the truth book, read on its output by ``rules.lines_lean`` (the projection profile: nothing of
+    safha's own): level pages still level and tilted pages levelled (the page's lines within 0.2 deg of level); warped
+    pages whose level upper lines the tool made lean (beyond 0.35 deg)"""
     d = pymupdf.open(dst)
+    n = {k: sum(1 for t, _ in kinds if t == k) for k in ("level", "tilt", "warp")}
     if d.page_count != len(kinds):
-        return {"tilted_levelled": "n/a (pages reflowed)", "warped_wrongly_turned": "n/a (pages reflowed)"}
-    levelled = wrong = 0
-    for i, kind in enumerate(kinds):
-        if i >= d.page_count:
-            break
-        a, z = gray(d[i], 1000)
-        mk = marks(a, z, d[i].rect.width)
-        if mk.get("text") is None:
-            continue
-        T = [t for t in line_tracks(a, mk["paper"], mk["text"], z) if t[3] <= 1.0 and t[4] >= 6 and t[2] >= 0.3]
-        if not T:
-            continue
-        mid = (mk["text"][1] + mk["text"][3]) / 2
-        if kind == "tilt":
-            levelled += abs(float(np.median([t[1] for t in T]))) <= 0.2
+        return {k: "n/a (pages reflowed)" for k in ("level_kept", "tilted_levelled", "warped_wrongly_turned")}
+    kept = levelled = wrong = 0
+    leans = []
+    for i, (kind, _) in enumerate(kinds):
+        a = page_image(d[i])
+        whole, upper = lines_lean(a), lines_lean(a, 0.05, 0.45)
+        leans.append([None if v is None else v + 0.0 for v in (whole, upper)])
+        if kind == "level":
+            kept += whole is not None and abs(whole) <= 0.2
+        elif kind == "tilt":
+            levelled += whole is not None and abs(whole) <= 0.2
         else:
-            upper = [t[1] for t in T if t[0] < mid]
-            wrong += sum(1 for v in upper if abs(v) > 0.35) >= 2
-    return {"tilted_levelled": f"{levelled}/{kinds.count('tilt')}", "warped_wrongly_turned": f"{wrong}/{kinds.count('warp')}"}
+            wrong += upper is not None and abs(upper) > 0.35
+    return {"level_kept": f"{kept}/{n['level']}", "tilted_levelled": f"{levelled}/{n['tilt']}",
+            "warped_wrongly_turned": f"{wrong}/{n['warp']}", "leans": leans}
 
 
 def rule_truth(path: str) -> dict:
@@ -291,7 +343,7 @@ def rule_change(before: dict, after: dict) -> dict:
 # k2pdfopt-tm (its "trim margins" mode, native PDF output) is run only on request (ONLY_TOOLS): it needs a k2pdfopt
 # built with MuPDF, and the Ubuntu 24.04 package (Ghostscript only) writes no file in that mode
 TOOLS = ["safha", "safha-reader", "pdfCropMargins", "briss", "k2pdfopt", "k2pdfopt-as", "unpaper",
-         "ocrmypdf-pdfa", "ocrmypdf", "ocrmypdf-O2", "ocrmypdf-O3"]
+         "ocrmypdf-pdfa", "ocrmypdf", "ocrmypdf-O2", "ocrmypdf-O3", "ocrmypdf-new-pdfa", "ocrmypdf-new"]
 RULE_BOOKS = ("dictionnairefra00lagogoog",)  # excerpts whose pages carry a printed column rule: real truth for turns
 
 
@@ -300,9 +352,12 @@ def main() -> None:
     os.makedirs(work, exist_ok=True)
     only = os.environ.get("ONLY_TOOLS")
     tools = only.split(",") if only else TOOLS
-    truth = os.path.join(work, "truth-warped-tilted.pdf")
+    truth = os.path.join(work, "truth.pdf")
     kinds = truth_book(truth) if not os.environ.get("NO_TRUTH") else []
-    rows = []
+    keep_all = bool(os.environ.get("KEEP"))
+    keep_books = tuple(b for b in os.environ.get("KEEP_BOOKS", "").split(",") if b)
+    rows: list[dict] = [{"book": "", "tool": "versions", **versions()}]
+    print(json.dumps(rows[0], ensure_ascii=False), flush=True)
     for src in books + ([truth] if kinds else []):
         name = os.path.basename(src)
         sd = pymupdf.open(src)
@@ -311,6 +366,8 @@ def main() -> None:
         rt_in = rule_truth(src) if ruled else None
         base = {"book": name, "pages": sd.page_count, "bytes_in": os.path.getsize(src), "filters_in": image_filters(sd),
                 "place_in": text_place(sd) if src != truth else None, "rule_in": rt_in}
+        if src == truth:
+            base.update(turns(src, kinds))  # (the judge on the book as drawn: nothing levelled, nothing made to lean)
         print(json.dumps(base), flush=True)
         for tool in tools:
             dst = os.path.join(work, f"{os.path.splitext(name)[0]}.{tool}.pdf")
@@ -334,6 +391,8 @@ def main() -> None:
                 row["error"] = (e.stderr or b"").decode(errors="replace")[-300:]
             except Exception as e:  # report and go on
                 row["error"] = f"{type(e).__name__}: {e}"
+            if not (keep_all or src == truth or name.startswith(keep_books or ("\0",))) and os.path.exists(dst):
+                os.remove(dst)  # (some outputs are hundreds of megabytes)
             rows.append(row)
             print(json.dumps(row, ensure_ascii=False), flush=True)
         rows.append({"book": name, "tool": "input", **base})

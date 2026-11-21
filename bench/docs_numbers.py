@@ -1,6 +1,6 @@
 """Every number the README and the Arabic docs quote, read from the result files in bench/results/.
 
-Usage: python bench/numbers.py [RESULTS_DIR]     (default: bench/results beside this script)
+Usage: python bench/docs_numbers.py [RESULTS_DIR]     (default: bench/results beside this script)
 The files: bench.json and bench-compact.json (`safha bench`), rule-audit.json (bench/rule_audit.py),
 compare/compare-*.json (bench/compare.sh). Run it after a new measurement and hold the docs against what it prints.
 """

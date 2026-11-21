@@ -4,6 +4,7 @@ so that what they say of any tool's output can be trusted."""
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 
 import numpy as np
@@ -46,3 +47,13 @@ def test_lines_lean_leaves_a_dark_bed_out_and_says_when_it_cannot_tell():
 def test_column_rule_lean_reads_a_known_tilt(tilt):
     assert abs(column_rule_lean(image(synth.columns(seed=3, tilt=tilt))) - tilt) <= 0.06
     assert column_rule_lean(image(synth.page(seed=3))) is None  # no rule, no reading
+
+
+def test_the_bench_scripts_start_from_their_own_folder():
+    """run as ``python bench/x.py``, a script finds its own folder first on the import path: no file there, or in
+    scripts/, bears the name of a standard module, and the audit of the turns starts"""
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    names = {f[:-3] for d in ("bench", "scripts") for f in os.listdir(os.path.join(root, d)) if f.endswith(".py")}
+    assert not names & set(sys.stdlib_module_names)
+    r = subprocess.run([sys.executable, os.path.join(root, "bench", "rule_audit.py"), "--help"], capture_output=True, text=True)
+    assert r.returncode == 0 and "RECIPES" in r.stdout

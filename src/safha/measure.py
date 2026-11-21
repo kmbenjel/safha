@@ -28,9 +28,19 @@ M = 14.0  # pt: isolation distance of a speck, and the least margin
 SPECK = 4.0  # pt: a speck is at most SPECK x SPECK
 
 
-def bands(mask: np.ndarray) -> tuple[int, int, int, int]:
-    """rows/columns at the edges more than 60 % dark (scanner bed, black borders) -> the allowed area [r0, r1) x [c0, c1)"""
-    rows, cols = mask.mean(1), mask.mean(0)
+def bands(mask: np.ndarray, void: np.ndarray | None = None) -> tuple[int, int, int, int]:
+    """rows/columns at the edges more than 60 % dark (scanner bed, black borders) -> the allowed area [r0, r1) x [c0, c1).
+
+    ``void``: pixels where nothing of the scan is drawn (beyond the sheet of a turned page). A row is judged by what
+    can be seen of it: the dark share of its pixels outside ``void``; a row wholly in ``void`` is band."""
+    if void is None:
+        rows, cols = mask.mean(1), mask.mean(0)
+    else:
+        seen = ~void
+        dark = mask & seen
+        nr, nc = seen.sum(1), seen.sum(0)
+        rows = np.where(nr > 0, dark.sum(1) / np.maximum(nr, 1), 1.0)
+        cols = np.where(nc > 0, dark.sum(0) / np.maximum(nc, 1), 1.0)
 
     def trim(a: np.ndarray) -> tuple[int, int]:
         i, j = 0, len(a)
@@ -62,9 +72,9 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
 
     ``scale`` = pixels per pt, ``width`` = page width in pt; ``exclude``: boxes (pt) whitened before measuring;
     ``void``: the pixels of a turned view that lie beyond the scan's sheet, on the sides where the scan ends in a
-    scanner band: nothing is drawn there, but the bed went on, so for the bands (and only for them) they are dark.
-    Without them the blank wedge a turn leaves at the page's edge hides the band behind it, and the whole bed is taken
-    for content."""
+    scanner band: nothing is drawn there, and the bands are read on what can be seen of each row and column (see
+    ``bands``). Without that the blank wedge a turn leaves at the page's edge hides the band behind it, and the whole
+    bed is taken for content."""
     if exclude:
         a = a.copy()
         for b in exclude:
@@ -79,7 +89,7 @@ def marks(a: np.ndarray, scale: float, width: float, exclude: list | None = None
         return out
     mask = a < paper - 50
     out["dark"] = float(mask.mean())
-    r0, r1, c0, c1 = bands(mask if void is None else mask | void)
+    r0, r1, c0, c1 = bands(mask, void)
     m = mask[r0:r1, c0:c1]
     if m.size >= 0.3 * mask.size:  # a page on a black field (microfilm, scanner bed): dark share inside the bands
         out["dark"] = float(m.mean())

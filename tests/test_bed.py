@@ -10,7 +10,7 @@ import safha
 import synth
 from safha.pdf import beyond_sheet, gray
 
-TILTS = {3: 1.2, 5: -0.9}
+TILTS = {1: 0.4, 3: 1.2, 5: -0.9, 6: 2.6}  # the leaves that lay askew on the bed, by how much
 
 
 def bed_share(page: pymupdf.Page) -> float:
@@ -29,9 +29,9 @@ def test_a_leaf_askew_on_the_bed_is_cropped_like_its_neighbours(tmp_path, prof):
     assert bed_share(pymupdf.open(path)[3]) > 0.9  # the scan: a dark bed all round the leaf
     rec = safha.plan(path, prof)
     assert rec["mode"] == "crop" and "scanner bands" in rec["reasons"]
-    assert rec["summary"]["turned"] == [4, 6] and not rec["summary"]["whole"]
-    for k, turn in ((3, -1.2), (5, 0.9)):
-        assert abs(rec["pages"][k]["skew"] - turn) <= 0.1
+    assert rec["summary"]["turned"] == [2, 4, 6, 7] and not rec["summary"]["whole"]
+    for k, tilt in TILTS.items():
+        assert abs(rec["pages"][k]["skew"] + tilt) <= 0.1  # each turned by minus its tilt
     widths = [p["crop"][2] - p["crop"][0] for p in rec["pages"]]
     assert max(widths) - min(widths) <= 0.5  # one box, the turned pages too
     for p in rec["pages"]:  # every page's text in the middle of its box, the bed outside it
@@ -49,7 +49,7 @@ def test_a_level_leaf_on_the_bed_reads_the_same_turned_or_not(tmp_path, prof):
     rec = safha.plan(path, prof)
     assert all("bed" not in p for p in rec["pages"])
     a = [p["allowed"] for p in rec["pages"]]
-    for k in (3, 5):  # the turned leaf's bounds are its own edges, as on the level pages (within the leaf's own tilt)
+    for k in (1, 3, 5):  # the turned leaf's bounds are its own edges, as on the level pages (within the leaf's own tilt)
         assert all(abs(u - v) <= 3.0 for u, v in zip(a[k], a[0])), f"page {k + 1}: {a[k]} vs {a[0]}"
 
 
@@ -79,3 +79,24 @@ def test_a_blank_leaf_on_the_bed_is_blank(tmp_path, capsys):
     out = tmp_path / "d.pdf"
     assert main(["drop", path, "--blank", "-o", str(out)]) == 0
     assert "dropped p. 2:" in capsys.readouterr().out and pymupdf.open(out).page_count == 5
+
+
+def test_bands_are_read_on_what_can_be_seen_of_a_row():
+    from safha.measure import bands
+
+    bed = np.zeros((100, 80), bool)
+    bed[:10] = True  # ten rows of scanner bed at the top
+    void = np.zeros_like(bed)
+    for y in range(10):
+        void[y, :60 - 4 * y] = True  # the blank wedge of a turn: three quarters of the first row, less of each next
+    seen = bed & ~void  # nothing is drawn in the wedge
+    assert bands(seen)[0] == 0  # the wedge hides the band: its rows read less than 60 % dark
+    assert bands(seen, void) == (10, 100, 0, 80)  # read on what can be seen of each row, the band is all there
+    void[:3] = True
+    assert bands(bed & ~void, void)[0] == 10  # rows wholly beyond the sheet are band too
+    paper = np.zeros((100, 80), bool)
+    paper[:, :2] = True  # a hairline of shadow down the left edge, and a wide wedge beside it
+    wedge = np.zeros_like(paper)
+    for y in range(100):
+        wedge[y, :max(0, 30 - y)] = True
+    assert bands(paper & ~wedge, wedge)[2] <= 3  # ... takes no more of the page than the hairline itself

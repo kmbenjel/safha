@@ -134,6 +134,8 @@ def _edit(doc: pymupdf.Document, rec: dict, imgs: list, mode: str | None) -> tup
                          + (" once its two-page sheets are split" if split else "")
                          + ": it was made from another file, or edited")
     done = turned_n = scaled_n = 0
+    if mode == "crop" and not (isinstance(rec.get("size"), list) and len(rec["size"]) == 2):
+        raise ApplyError("the recipe crops the book but names no page size")
     if mode in ("crop", "level"):
         W, H = rec.get("size") or (None, None)
         for i, p in enumerate(rec["pages"]):

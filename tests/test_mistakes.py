@@ -121,6 +121,8 @@ def test_refused_output_never_stays_on_disk(books, plans, tmp_path):
         safha.apply_recipe(books["tilt"], {"mode": "crop"}, str(tmp_path / "n.pdf"))
     assert sorted(os.listdir(tmp_path)) == ["o.pdf"]
 
+    with pytest.raises(ApplyError, match="names no page size"):  # a recipe edited by hand, its size lost
+        safha.apply_recipe(books["tilt"], {k: v for k, v in plans["tilt"].items() if k != "size"}, str(tmp_path / "n.pdf"))
 
 def test_output_that_cannot_be_written(books, recipe, tmp_path, capsys):
     fails(capsys, ["apply", books["tilt"], recipe, "-o", str(tmp_path / "no" / "o.pdf")], "folder does not exist")

@@ -83,14 +83,18 @@ def hero(spreads: str, out: str, H: int = 520) -> Image.Image:
     return im
 
 
-def deskew_gif(book: str, out: str, H: int = 560) -> None:
-    """the most tilted page safha turned: the scan with its box (red), then what a reader shows"""
+def deskew_gif(books: list[str], out: str, H: int = 560) -> None:
+    """the most tilted page safha turned, in the first of ``books`` that has one: the scan with its box (red), then what
+    a reader shows"""
     prof = safha.load_profile(None, {"min_text_pages": 1})
-    rec = safha.plan(book, prof, jobs=4)
-    turned = sorted((p for p in rec["pages"] if p.get("skew") and p["kind"] == "text" and (p.get("after") or [9])[0] <= 0.15),
-                    key=lambda p: -abs(p["skew"]))
-    if not turned:
-        print("no turned page in", book)
+    for book in books:
+        rec = safha.plan(book, prof, jobs=4)
+        turned = sorted((p for p in rec["pages"] if p.get("skew") and p["kind"] == "text" and (p.get("after") or [9])[0] <= 0.15),
+                        key=lambda p: -abs(p["skew"]))
+        if turned:
+            break
+    else:
+        print("no turned page in", books)
         return
     i = turned[0]["n"] - 1
     pr = Pair(book, rec)
@@ -183,7 +187,8 @@ def main() -> None:
     fx = os.path.join(ROOT, "tests", "fixtures")
     h = hero(os.path.join(fx, "spreads.pdf"), os.path.join(outdir, "hero.webp"))
     card(h, os.path.join(outdir, "card.webp"))
-    deskew_gif(os.path.join(work, "in", "almuqaddimah00ibnk.pdf"), os.path.join(outdir, "deskew.gif"))
+    deskew_gif([os.path.join(work, "in", b + ".pdf") for b in ("chronologyofanci00biru", "in.ernet.dli.2015.361017",
+                                                                "almuqaddimah00ibnk")], os.path.join(outdir, "deskew.gif"))
     compare_image(work, "chronologyofanci00biru", os.path.join(outdir, "compare.webp"))
     for name, opts in (("latin-jbig2", {}), ("arabic-leiden", {}), ("urdu-ccitt", {})):
         src = os.path.join(fx, name + ".pdf")

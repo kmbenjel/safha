@@ -8,6 +8,7 @@ phone, a Kindle, a Kobo or a reMarkable, in any script.
 [![PyPI](https://img.shields.io/pypi/v/safha.svg)](https://pypi.org/project/safha/)
 [![Python](https://img.shields.io/pypi/pyversions/safha.svg)](https://pypi.org/project/safha/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Arabic docs](https://img.shields.io/badge/docs-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-0a7)](https://warraq.benjelloun.dev/safha/)
 
 ![A microfilm frame holding two manuscript pages on a black field, and the two pages safha made from it](docs/media/hero.webp)
 

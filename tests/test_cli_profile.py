@@ -76,6 +76,23 @@ def test_version_and_help(capsys):
     with pytest.raises(SystemExit):
         main(["--version"])
     assert main([]) == 0
+    assert "safha crop book.pdf" in capsys.readouterr().out  # no command: the help, with its examples
+    for cmd in ("crop", "plan", "apply", "inspect", "sheet", "restore", "drop", "bench", "same-scan", "demo", "profiles"):
+        with pytest.raises(SystemExit) as e:
+            main([cmd, "--help"])
+        assert e.value.code == 0 and "usage: safha " + cmd in capsys.readouterr().out
+
+
+def test_python_api_and_module_entry(books, prof, tmp_path):
+    import subprocess
+    import sys
+
+    rec = safha.crop(books["tilt"], str(tmp_path / "o.pdf"), profile=prof)  # plan and apply in one call
+    assert rec["mode"] == "crop" and rec["applied"]["pages"] == 5 and (tmp_path / "o.pdf").exists()
+    left = safha.crop(books["level"], str(tmp_path / "n.pdf"), profile=prof.with_values(gain_min=3.0))
+    assert left["mode"] == "skip" and left["applied"] is None and not (tmp_path / "n.pdf").exists()  # a good scan
+    r = subprocess.run([sys.executable, "-m", "safha", "--version"], capture_output=True, text=True)
+    assert r.returncode == 0 and r.stdout.strip() == f"safha {safha.__version__}"
 
 
 def test_bench(books, prof, tmp_path, capsys):

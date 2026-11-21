@@ -353,9 +353,14 @@ def cmd_profiles(a: argparse.Namespace) -> int:
         d = p.diff()
         print(f"{name:<10} " + (", ".join(f"{k}={v}" for k, v in d.items()) if d else "(the default)"))
     if a.verbose:
-        print()
+        from .profile import Profile
+
+        why = Profile.explain()
+        print("\nevery setting, with its value in the default profile (change one: --set NAME=VALUE, or a profile file):")
         for k, v in PROFILES["warraq"].to_dict().items():
-            print(f"  {k} = {v}")
+            if k != "name":
+                v = ",".join(map(str, v)) if isinstance(v, list) else str(v).lower() if isinstance(v, bool) else v
+                print(f"  {k + ' = ' + str(v):<34} {why.get(k, '')}")
     return 0
 
 
@@ -365,13 +370,28 @@ def build_parser() -> argparse.ArgumentParser:
         description="Lossless crop, deskew and split for scanned book PDFs. The page images are never re-encoded: "
                     "only each page's visible box and drawing matrix change, so the file keeps its quality and size.")
     ap.add_argument("--version", action="version", version=f"safha {__version__}")
-    sub = ap.add_subparsers(dest="cmd", metavar="COMMAND")
+    subs = ap.add_subparsers(dest="cmd", metavar="COMMAND")
+
+    class _Sub:
+        """every command's own --help opens with what the command does, and may close with examples"""
+
+        @staticmethod
+        def add_parser(name: str, help: str, examples: str = "") -> argparse.ArgumentParser:
+            return subs.add_parser(name, help=help, description=help[:1].upper() + help[1:] + ".",
+                                   epilog=("examples:\n" + examples) if examples else None,
+                                   formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    sub = _Sub
+    BOOK = "the scanned book (a PDF); it is never changed"
+    jobs = max(1, min(4, (os.cpu_count() or 2) - 1))
 
     def common(p: argparse.ArgumentParser, out: str | None = "output PDF") -> None:
         p.add_argument("--profile", "-p", metavar="NAME|FILE", help="warraq (default), reader, eink, crop-only, or a .toml/.json file")
         p.add_argument("--set", action="append", metavar="NAME=VALUE", help="change one setting (see `safha profiles -v`)")
-        p.add_argument("--jobs", "-j", type=int, default=max(1, min(4, (os.cpu_count() or 2) - 1)), help="worker processes")
-        p.add_argument("--quiet", "-q", action="store_true")
+        p.add_argument("--jobs", "-j", type=int, default=jobs, help=f"worker processes (default here: {jobs}); the result "
+                                                                       "does not depend on their number")
+        p.add_argument("--quiet", "-q", action="store_true", help="no progress and no summary (errors are still said, and "
+                                                                  "why a file is left as it is)")
         p.add_argument("--always", action="store_true", help="crop even a well-made scan the crop changes little")
         p.add_argument("--no-deskew", action="store_true", help="never turn a page")
         p.add_argument("--split", choices=("auto", "always", "never"), help="two-page spreads (default auto)")
@@ -381,8 +401,13 @@ def build_parser() -> argparse.ArgumentParser:
         if out:
             p.add_argument("--output", "-o", metavar="FILE", help=out)
 
-    p = sub.add_parser("crop", help="measure, decide and write the cropped PDF (lossless)")
-    p.add_argument("pdf")
+    p = sub.add_parser("crop", help="measure, decide and write the cropped PDF (lossless)", examples=(
+        "  safha crop book.pdf                        writes book.safha.pdf beside it\n"
+        "  safha crop book.pdf --rtl                  two-page scans of a right-to-left book: right page first\n"
+        "  safha crop book.pdf --profile eink --sheet book.jpg\n"
+        "  safha crop short.pdf --set min_text_pages=2\n"
+        "exit status: 0 written, or nothing to do (the reason is said); 2 refused or failed (nothing is written)"))
+    p.add_argument("pdf", help=BOOK)
     common(p, "output PDF (default: <name>.safha.pdf)")
     p.add_argument("--recipe", metavar="FILE", help="also save the recipe (JSON)")
     p.add_argument("--sheet", metavar="IMAGE", help="also write a before | after contact sheet")
@@ -390,29 +415,35 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--compact", action="store_true", help="rewrite the file (smaller; not restorable by truncation)")
     p.set_defaults(fn=cmd_crop)
 
-    p = sub.add_parser("plan", help="measure and decide only: write the recipe (JSON)")
-    p.add_argument("pdf")
+    p = sub.add_parser("plan", help="measure and decide only: write the recipe (JSON)", examples=(
+        "  safha plan book.pdf -o book.recipe.json --pretty\n"
+        "  safha inspect book.recipe.json             read it page by page\n"
+        "  safha apply book.pdf book.recipe.json      write it, as it is or edited"))
+    p.add_argument("pdf", help=BOOK)
     common(p, "recipe file (default: <name>.recipe.json)")
     p.add_argument("--drop", metavar="PAGES", help="pages to drop, e.g. 1,2")
     p.add_argument("--pretty", action="store_true", help="indented JSON")
     p.set_defaults(fn=cmd_plan)
 
     p = sub.add_parser("apply", help="write a recipe into a copy of the PDF (lossless, checked)")
-    p.add_argument("pdf")
-    p.add_argument("recipe")
-    p.add_argument("--output", "-o", metavar="FILE")
+    p.add_argument("pdf", help=BOOK)
+    p.add_argument("recipe", help="the recipe `safha plan` wrote for this very file (JSON)")
+    p.add_argument("--output", "-o", metavar="FILE", help="output PDF (default: <name>.safha.pdf)")
     p.add_argument("--compact", action="store_true", help="rewrite the file (smaller; not restorable by truncation)")
     p.add_argument("--force", action="store_true", help="apply even if the PDF is not the one the recipe was made from")
     p.set_defaults(fn=cmd_apply)
 
     p = sub.add_parser("inspect", help="page by page: kind, measured tilt, turn, shown part, flags")
-    p.add_argument("pdf", help="a PDF, or a recipe .json")
+    p.add_argument("pdf", help="a scanned book (planned here, nothing written), or a recipe .json")
     common(p, None)
     p.add_argument("--json", action="store_true", help="the whole recipe as JSON on stdout")
     p.set_defaults(fn=cmd_inspect)
 
-    p = sub.add_parser("sheet", help="before | after contact sheet (PNG/JPEG/WebP) or an HTML review folder")
-    p.add_argument("pdf")
+    p = sub.add_parser("sheet", help="before | after contact sheet (PNG/JPEG/WebP) or an HTML review folder", examples=(
+        "  safha sheet book.pdf -o sheet.jpg          the telling pages: turned, left whole, stained, two from the middle\n"
+        "  safha sheet book.pdf --pages 12,40-42,200- these pages (from 1; 200- runs to the last page)\n"
+        "  safha sheet book.pdf --html review --all   every page, in a folder to open in a browser"))
+    p.add_argument("pdf", help=BOOK)
     common(p, "image file (default: <name>.sheet.jpg)")
     p.add_argument("--recipe", metavar="FILE", help="use this recipe instead of planning again")
     p.add_argument("--pages", metavar="PAGES", help="these pages instead of the telling ones, e.g. 3,10-12")
@@ -424,20 +455,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(fn=cmd_sheet)
 
     p = sub.add_parser("restore", help="the original file back from a safha output (byte for byte, MD5 checked)")
-    p.add_argument("pdf")
-    p.add_argument("--output", "-o", metavar="FILE")
+    p.add_argument("pdf", help="a file safha wrote (without --compact)")
+    p.add_argument("--output", "-o", metavar="FILE", help="where the original goes (default: <name>.restored.pdf)")
     p.set_defaults(fn=cmd_restore)
 
-    p = sub.add_parser("drop", help="drop blank pages or covers losslessly (reversible)")
-    p.add_argument("pdf")
+    p = sub.add_parser("drop", help="drop blank pages or covers losslessly (reversible)", examples=(
+        "  safha drop book.pdf --blank                the blank pages among the first and last four\n"
+        "  safha drop book.pdf --pages 1 --force      an outer cover (a page with ink needs --force)"))
+    p.add_argument("pdf", help=BOOK)
     p.add_argument("--pages", metavar="PAGES", help="1-based, e.g. 1 or 1,2 or 1-3")
     p.add_argument("--blank", action="store_true", help="also every blank page among the first and last four")
     p.add_argument("--force", action="store_true", help="drop a page that is not blank (a cover)")
-    p.add_argument("--output", "-o", metavar="FILE")
+    p.add_argument("--output", "-o", metavar="FILE", help="output PDF (default: <name>.safha.pdf)")
     p.set_defaults(fn=cmd_drop)
 
     p = sub.add_parser("bench", help="run over PDFs or folders: pages/s, size before/after, pages turned")
-    p.add_argument("paths", nargs="+")
+    p.add_argument("paths", nargs="+", help="PDFs, or folders of them")
     common(p, "write the results here (.json and .md next to it)")
     p.add_argument("--book-jobs", type=int, default=1, help="books processed at once")
     p.add_argument("--keep", metavar="DIR", help="keep the output PDFs here")
@@ -446,14 +479,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--compact", action="store_true", help="write the files whole (see crop --compact)")
     p.set_defaults(fn=cmd_bench)
 
-    p = sub.add_parser("same-scan", help="are two PDFs the same scan? (page images compared by their raw streams)")
-    p.add_argument("a")
-    p.add_argument("b")
+    p = sub.add_parser("same-scan", help="are two PDFs the same scan? (page images compared by their raw streams)", examples=(
+        "  safha same-scan book.pdf book.safha.pdf    exit status 0 the same scan, 1 different"))
+    p.add_argument("a", help="a PDF")
+    p.add_argument("b", help="another")
     p.set_defaults(fn=cmd_same)
 
     p = sub.add_parser("demo", help="crop the bundled public-domain samples and write a before | after sheet")
-    p.add_argument("--output", "-o", default="safha-demo", metavar="DIR")
-    p.add_argument("--jobs", "-j", type=int, default=2)
+    p.add_argument("--output", "-o", default="safha-demo", metavar="DIR", help="where the results go (default: safha-demo)")
+    p.add_argument("--jobs", "-j", type=int, default=2, help="worker processes (default 2)")
     p.set_defaults(fn=cmd_demo)
 
     p = sub.add_parser("profiles", help="list the built-in profiles (-v: every setting)")

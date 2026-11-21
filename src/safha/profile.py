@@ -9,49 +9,56 @@ any value can also be set from the command line (``--set margin=0.05``) or a JSO
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, fields, replace
+from dataclasses import asdict, dataclass, field, fields, replace
 from pathlib import Path
 from typing import Any
+
+
+def _f(default: Any, help: str) -> Any:
+    """a setting: its default and the line `safha profiles -v` prints for it"""
+    return field(default=default, metadata={"help": help})
 
 
 @dataclass(frozen=True)
 class Profile:
     name: str = "warraq"
     # -- measuring -------------------------------------------------------------------------------------------------
-    first_px: int = 500  # width (px) of the page render used by the first look
-    check_px: int = 1000  # width (px) of the second look (tilt check, nothing cut)
+    first_px: int = _f(500, "width (px) of the page render used by the first look")
+    check_px: int = _f(1000, "width (px) of the second look (tilt check, nothing cut)")
     # -- deciding a crop ---------------------------------------------------------------------------------------------
-    gain_min: float = 1.15  # crop a book for size alone when its text grows at least this much on a phone
-    offcentre: float = 0.02  # ... or its text is this far off-centre (share of the page width, median page)
-    sway: float = 0.015  # ... or its text sways this much from page to page (interquartile range of its centre)
-    stained: float = 0.05  # ... or stains are left out on this share of the text pages
-    always: bool = False  # crop every book that fits one box, even a well-made scan the crop changes little
-    max_whole: float = 0.05  # share of text pages allowed to stay uncropped (their content wider than the box)
-    min_text_pages: int = 5  # a file with fewer text pages (or text on fewer than half its pages) is left as it is
-    width_quantiles: tuple[float, ...] = (0.95, 0.98, 1.0)  # the box width: content width of 95 % of pages, else ...
+    gain_min: float = _f(1.15, "crop a book for size alone when its text grows at least this much on a phone")
+    offcentre: float = _f(0.02, "... or its text is this far off-centre (share of the page width, median page)")
+    sway: float = _f(0.015, "... or its text sways this much from page to page (interquartile range of its centre)")
+    stained: float = _f(0.05, "... or stains are left out on this share of the text pages")
+    always: bool = _f(False, "crop every book that fits one box, even a well-made scan the crop changes little")
+    max_whole: float = _f(0.05, "share of text pages allowed to stay uncropped (their content wider than the box)")
+    min_text_pages: int = _f(5, "a file with fewer text pages (or text on fewer than half its pages) is left as it is")
+    width_quantiles: tuple[float, ...] = _f((0.95, 0.98, 1.0), "the box width: the content width of this share of the "
+                                            "typical pages; the next share is tried when too many pages do not fit")
     # -- margins (shares of the text width / height) -------------------------------------------------------------
-    margin: float = 0.08  # side margin of an ordinary book
-    margin_v: float = 0.05  # top and bottom margin
-    framed_margin: float = 0.02  # a book whose text stands in a printed frame keeps a hairline outside it
-    clean_margin: float = 0.06  # a book with nothing printed in its side margins: text block + this on every side
-    min_margin_pt: float = 14.0  # never less than this (pt on a page 420 pt wide)
-    magnify_max: float = 1.05  # a page smaller than the book's box may be drawn up to 5 % larger
+    margin: float = _f(0.08, "side margin of an ordinary book")
+    margin_v: float = _f(0.05, "top and bottom margin")
+    framed_margin: float = _f(0.02, "a book whose text stands in a printed frame keeps a hairline outside it")
+    clean_margin: float = _f(0.06, "a book with nothing printed in its side margins: text block + this on every side")
+    min_margin_pt: float = _f(14.0, "never less than this (pt on a page 420 pt wide)")
+    magnify_max: float = _f(1.05, "a page smaller than the book's box may be drawn up to 5 % larger")
     # -- tilt ---------------------------------------------------------------------------------------------------------
-    deskew: bool = True
-    skew_min: float = 0.2  # degrees: no turn under it (the eye sees 0.25 deg on a full line)
-    level: float = 0.15  # a turned page must read level within this by the ink-shear measure ...
-    img_level: float = 0.2  # ... and within this by the image-projection measure
-    curved: float = 0.25  # a slightly curved page is kept turned when both read <= this and <= a third of its tilt
-    skew_max: float = 8.0  # degrees: the widest tilt looked for
-    frame_side_max: float = 0.35  # a printed frame whose sides lean more than this is turned by the frame
-    shear_min: float = 1.25  # a frame whose rules lean this much against its upright sides is sheared level ...
-    shear_max: float = 3.0  # ... up to this (beyond it: a misreading, left alone)
-    two_angle_guard: bool = True  # never turn a page whose lines lie at two angles (warped leaf)
-    edge_guard: bool = True  # never turn a page against its text's own margins (unless its printed rules certify the turn)
+    deskew: bool = _f(True, "turn tilted pages level (false: crop only)")
+    skew_min: float = _f(0.2, "degrees: no turn under it (the eye sees 0.25 deg on a full line)")
+    level: float = _f(0.15, "a turned page must read level within this by the ink-shear measure ...")
+    img_level: float = _f(0.2, "... and within this by the image-projection measure")
+    curved: float = _f(0.25, "a slightly curved page is kept turned when both read <= this and <= a third of its tilt")
+    skew_max: float = _f(8.0, "degrees: the widest tilt looked for")
+    frame_side_max: float = _f(0.35, "a printed frame whose sides lean more than this is turned by the frame")
+    shear_min: float = _f(1.25, "a frame whose rules lean this much against its upright sides is sheared level ...")
+    shear_max: float = _f(3.0, "... up to this (beyond it: a misreading, left alone)")
+    two_angle_guard: bool = _f(True, "never turn a page whose lines lie at two angles (warped leaf)")
+    edge_guard: bool = _f(True, "never turn a page against its text's own margins (unless its printed rules certify "
+                                "the turn)")
     # -- pages ---------------------------------------------------------------------------------------------------------
-    split: str = "auto"  # split two-page spreads: auto | always | never
-    direction: str = "auto"  # reading order of a split spread: ltr | rtl | auto (from the text layer, else ltr)
-    covers: bool = True  # find a cover photographed on the scanner bed and show it alone
+    split: str = _f("auto", "split two-page spreads: auto | always | never")
+    direction: str = _f("auto", "reading order of a split spread: ltr | rtl | auto (from the text layer, else ltr)")
+    covers: bool = _f(True, "find a cover photographed on the scanner bed and show it alone")
 
     def with_values(self, **kw: Any) -> Profile:
         known = {f.name: f for f in fields(self)}
@@ -66,6 +73,11 @@ class Profile:
             if k in CHOICES and out[k] not in CHOICES[k]:
                 raise ValueError(f"profile setting {k} is one of {', '.join(CHOICES[k])}; got {v!r}")
         return replace(self, **out)
+
+    @classmethod
+    def explain(cls) -> dict[str, str]:
+        """what each setting is, in one line"""
+        return {f.name: f.metadata.get("help", "") for f in fields(cls) if f.name != "name"}
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)

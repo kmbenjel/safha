@@ -135,6 +135,8 @@ What the table says:
   book prints in its margins.
 - **Not content, kept outside**: scanner bands, edge shadows, specks and dust, the edges of a photocopied sheet,
   streaks and blots. **Content, kept inside**: marginal notes, figures, printed rules and frames, page numbers.
+- **Scans on a dark bed or a microfilm's black field**: the bed is left outside the box, on a leaf that lay askew
+  and was turned level as on its neighbours.
 - **No line of print cut**: after the box is placed, the page image is read again around its edge; a letter the edge
   runs through, a note that goes on beyond it, a running head above it make the box slide or grow, or the page is
   shown whole.
@@ -146,11 +148,17 @@ What the table says:
 - **Printed frames**: a frame's sides decide its page's tilt; a parallelogram frame is sheared level.
 - **Spreads**: wide sheets split into two pages (right page first with `--rtl`); wrap-around covers split.
 - **Covers**: a cover photographed on the scanner bed shown alone, filling the page.
-- **One page size**: pages holding more than the box (a plate, a wide table) are drawn smaller, never cut.
+- **One page size**: pages holding more than the box (a plate, a wide table) are drawn smaller, never cut; a sheet
+  of another size (a chart, a frame filmed at another scale) is shown whole and has no say in the book's box.
+- **However the file stores its pages**: kept sideways and shown upright by `/Rotate`, counted in another unit
+  (`/UserUnit`), a CropBox inside the MediaBox, boxes inherited or written as objects of their own, the scan in
+  strips or inside a form: each page is measured as a reader shows it and written back in the file's own coordinates.
 - **Recipes**: plain JSON, re-appliable; `safha inspect` prints them page by page.
 - **Review**: `safha sheet` draws the box on the scan beside the result (an image, an HTML folder, or review cards
   for [agent-workbench](https://warraq.benjelloun.dev/agent-workbench/) pages).
 - **Reversible**: the output starts with the original bytes; `safha restore`; `safha drop` for blank pages and covers.
+- **Checked before it exists**: the output is written under a temporary name and takes its own only when every check
+  has passed (the same pages, every image stream byte for byte, one page size); a refused run leaves nothing behind.
 - **Any script, any direction**: the measures read ink and lines, not letters. Tested on Arabic, Urdu, Latin and
   handwritten pages.
 - **Profiles**: `warraq` (default: crop when it pays), `reader`, `eink`, `crop-only`; every threshold settable.
@@ -164,13 +172,18 @@ safha crop book.pdf --profile eink                 # tight margins for e-ink rea
 safha plan book.pdf -o book.json --pretty          # decisions only (JSON)
 safha inspect book.json                            # page by page: kind, tilt, turn, shown part, flags
 safha sheet book.pdf -o sheet.jpg                  # before | after of the telling pages
+safha sheet book.pdf --pages 12,40-42,200-         # of these pages (200-: to the last one)
 safha sheet book.pdf --html review --all           # an HTML review folder, every page
 safha sheet book.pdf --cards cards/                # review cards (JSON lines + images) for a review page
 safha apply book.pdf book.json -o out.pdf          # write a (possibly edited) recipe
 safha restore out.pdf -o original.pdf              # the original bytes back
-safha drop book.pdf --blank -o book.pdf            # blank pages among the first and last four, losslessly
-safha bench books/ -o results.json                 # speed, sizes, turns over many books
+safha drop book.pdf --blank -o numbered.pdf        # blank pages among the first and last four, losslessly
+safha bench books/ -o results.json --recipes kept/ # speed, sizes, turns over many books; each recipe kept
+safha profiles -v                                  # every setting, with what it does
 ```
+
+Every command explains itself (`safha crop --help`), a mistake gets one plain line and exit status 2, and an output file
+appears only once it has passed every check.
 
 ```python
 import safha
@@ -237,7 +250,8 @@ book's year and licence, is written to `CORPUS/corpus.tsv`).
 
 - A page is turned as a whole or not at all. When its witnesses disagree (lines at two angles, margins against
   lines, a bent column rule) it stays as scanned, and the summary lists it. Curved lines are not straightened.
-- Pages that carry a `/Rotate` entry are not measured: they are shown whole at the book's page size.
+- A page with fewer than eight lines of text (a chapter's last page, a title, a few verses) has too little to read a
+  tilt from: it is turned only by its printed frame or column rule, and otherwise stays as scanned.
 - Split spreads are ordered by `--rtl` / `--ltr`, else by the file's text layer; with neither, the left page comes
   first and the summary says so.
 - A cover fills the page: up to 4 % of it is left out at two opposite edges to match the book's proportions.
@@ -263,3 +277,5 @@ The Arabic documentation is at [warraq.benjelloun.dev/safha](https://warraq.benj
 ## Licence
 
 Code: MIT. Sample pages: public domain (sources in [docs/media/SOURCES.md](docs/media/SOURCES.md)).
+
+Part of **[Warraq](https://warraq.benjelloun.dev)** (الورّاق), open tools for digital heritage libraries.

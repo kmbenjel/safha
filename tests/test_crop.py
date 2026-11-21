@@ -102,3 +102,60 @@ def test_cover_on_the_scanner_bed(tmp_path, prof):
     assert r["pages"][0]["kind"] == "cover"
     c = r["pages"][0]["cover"]
     assert abs(c[0] - 120 * 72 / 150) < 6 and abs(c[2] - 780 * 72 / 150) < 6
+
+
+def test_reading_order_comes_from_the_text_layer(tmp_path, prof):
+    """spreads with an OCR layer: Arabic letters say right page first, Latin letters left page first, unasked"""
+    import os
+
+    import pytest
+
+    import synth
+
+    font = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    if not os.path.exists(font):
+        pytest.skip("no font with Arabic letters here")
+    for name, words, want in (("ar", "كتاب العلوم والفنون والآداب", "rtl"), ("la", "the book of the sciences and the arts", "ltr")):
+        d = pymupdf.open("pdf", synth.book([synth.spread(seed=i) for i in range(3)]))
+        for p in d:
+            for k in range(8):  # an invisible text layer over the scan
+                p.insert_text((100, 100 + 20 * k), words, fontsize=9, fontname="dv", fontfile=font, render_mode=3)
+        path = tmp_path / f"{name}.pdf"
+        path.write_bytes(d.tobytes())
+        r = safha.plan(str(path), prof)
+        assert (r["direction"], r["direction_from"]) == (want, "text layer") and len(r["split"]) == 3, name
+
+
+def test_split_never_always_and_a_wrap_around_cover(tmp_path, books, prof):
+    import synth
+    from safha.pages import find_spreads
+
+    d = pymupdf.open(books["spread"])
+    assert len(find_spreads(d, "auto")) == 3 and find_spreads(d, "never") == {}
+    # one two-page sheet among portrait pages: no book of spreads, so it is split only when asked
+    mixed = synth.write(tmp_path / "mixed.pdf", [synth.page(seed=i) if i != 3 else synth.spread(seed=3) for i in range(7)])
+    d = pymupdf.open(mixed)
+    assert find_spreads(d, "auto") == {} and list(find_spreads(d, "always")) == ["3"]
+    r = safha.plan(mixed, prof.with_values(split="always", direction="ltr"))
+    assert len(r["pages"]) == 8 and r["split"].keys() == {"3"}
+    # a wrap-around cover (back, spine and front on one sheet, more than half again as wide as tall) opens the book:
+    # split down its middle, the book's own pages left alone
+    from PIL import Image, ImageDraw
+
+    cover = Image.new("L", (2200, 1300), 235)
+    dr = ImageDraw.Draw(cover)
+    dr.rectangle([1070, 0, 1130, 1299], fill=90)  # the spine
+    dr.text((1400, 500), "A TITLE", fill=20, font=synth.font(90))
+    wrapped = synth.write(tmp_path / "cover.pdf", [cover] + [synth.page(seed=i) for i in range(6)])
+    sp = find_spreads(pymupdf.open(wrapped), "auto")
+    assert list(sp) == ["0"] and abs(sp["0"] - 2200 * 72 / 150 / 2) <= 30
+
+
+def test_progress_is_told_as_the_pages_are_worked(books, prof):
+    for jobs in (1, 2):
+        seen: list[tuple[str, int, int]] = []
+        r = safha.plan(books["offcentre"], prof, jobs=jobs, progress=lambda stage, done, n: seen.append((stage, done, n)))
+        assert r["mode"] == "crop" and {s for s, _, _ in seen} == {"measure", "check"}
+        for stage in ("measure", "check"):
+            done = [d for s, d, _ in seen if s == stage]
+            assert len(done) >= 3 and done == sorted(done) and done[-1] == 6, f"{stage}, {jobs} jobs: {done}"

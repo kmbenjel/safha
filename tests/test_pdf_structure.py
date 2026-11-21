@@ -230,6 +230,19 @@ def test_scan_in_strips(tmp_path):
     check_lossless(src, rec, out, rep, tmp_path)
 
 
+def test_scan_inside_a_form(base, tmp_path):
+    """each page draws a form that holds the scan (as files written by "print to PDF" and by some imposition tools
+    do): the image inside the form is still listed, checked and untouched"""
+    src_doc = pymupdf.open("pdf", base)
+    d = pymupdf.open()
+    for i in range(src_doc.page_count):
+        p = d.new_page(width=src_doc[i].rect.width, height=src_doc[i].rect.height)
+        p.show_pdf_page(p.rect, src_doc, i)
+    src, rec, out, rep = run(tmp_path, "form", d.tobytes())
+    assert rec["summary"]["turned"] == [4] and all(len(row) == 1 for row in images_of(pymupdf.open(src)))
+    check_lossless(src, rec, out, rep, tmp_path)
+
+
 def test_safha_on_its_own_output_restores_step_by_step(base, tmp_path):
     src, rec, out, rep = run(tmp_path, "one", base)
     rec2 = safha.plan(out, safha.load_profile("reader", {"min_text_pages": 1}))

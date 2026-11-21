@@ -104,10 +104,6 @@ def test_bench(books, prof, tmp_path, capsys):
     assert rows[0]["filters"] == rows[0]["filters_out"]
 
 
-def test_demo(tmp_path, capsys):
-    assert main(["demo", "-o", str(tmp_path / "demo"), "-j", "2"]) == 0
-    out = capsys.readouterr().out
-    assert "sample-spreads" in out and (tmp_path / "demo" / "sample-latin.safha.pdf").exists()
 def test_bench_keeps_recipes_and_uses_them_again(books, prof, tmp_path, capsys):
     """a second run over the same books (``--compact``, an audit) describes the same decisions without planning again"""
     from safha.bench import bench
@@ -124,3 +120,7 @@ def test_bench_keeps_recipes_and_uses_them_again(books, prof, tmp_path, capsys):
     assert "recipe" not in c[0]  # another profile: planned again
 
 
+def test_demo(tmp_path, capsys):
+    assert main(["demo", "-o", str(tmp_path / "demo"), "-j", "2"]) == 0
+    out = capsys.readouterr().out
+    assert "sample-spreads" in out and (tmp_path / "demo" / "sample-latin.safha.pdf").exists()

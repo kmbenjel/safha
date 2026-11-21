@@ -95,3 +95,35 @@ def test_skew_of_reads_known_angles(angle):
     ang, gain = skew_of(marks(a, z, d[0].rect.width)["xy"])
     assert gain > 1.02
     assert abs(abs(ang) - abs(angle)) <= 0.1
+
+
+def test_baseline_tilt_certifies_by_the_lines_themselves():
+    from safha.tilt import baseline_tilt
+
+    for tilt in (0.0, 0.6, -1.0):
+        d = pymupdf.open("pdf", synth.book([synth.page(seed=7, tilt=tilt)]))
+        a, z = gray(d[0], 1000)
+        b = baseline_tilt(a, marks(a, z, d[0].rect.width)["paper"])
+        assert b is not None and abs(abs(b) - abs(tilt)) <= 0.15, f"{tilt}: {b}"
+    blank = pymupdf.open("pdf", synth.book([synth.page(blank=True)]))
+    a, z = gray(blank[0], 1000)
+    assert baseline_tilt(a, 250.0) is None  # no lines to read
+
+
+def test_print_certifies_a_turn_its_lines_cannot_judge():
+    """an index under a head rule: the entries' own lines read at every angle, the rule is the print's straight line"""
+    from safha.tilt import print_turn
+
+    def tr(y, ang, rule=False):
+        return (y, ang, 0.9, 0.3, 12, rule)
+
+    scattered = [0.6, 1.3, 0.1, 1.1, -0.2, 0.9, 1.6, 0.2]  # lines that follow no common tilt
+    t0 = [tr(40.0, 0.6, True)] + [tr(60.0 + 12 * k, v) for k, v in enumerate(scattered)]
+    t1 = [tr(40.0, 0.0, True)] + [tr(60.0 + 12 * k, v - 0.6) for k, v in enumerate(scattered)]
+    ok, rules = print_turn(t0, t1, 0.6)
+    assert ok and rules == [(40.0, 0.6, 0.0)]  # the rule stands level once turned: the print certifies the turn
+    assert not print_turn(t0, t1, 0.2)[0]  # a turn that leaves the rule leaning certifies nothing
+    steady0 = [tr(40.0, 0.6, True)] + [tr(60.0 + 12 * k, 0.6) for k in range(8)]
+    steady1 = [tr(40.0, 0.0, True)] + [tr(60.0 + 12 * k, 0.0) for k in range(8)]
+    assert not print_turn(steady0, steady1, 0.6)[0]  # lines that read steadily speak for themselves
+    assert not print_turn([t for t in t0 if not t[5]], [t for t in t1 if not t[5]], 0.6)[0]  # no rule, no certificate

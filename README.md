@@ -119,7 +119,7 @@ What the table says:
    rule inside their print, which an independent script can read ([`bench/rule_audit.py`](bench/rule_audit.py),
    [results](bench/results/rule-audit.md)): after the turn the rule stood within 0.15 degree of upright on 427 of
    them and within 0.3 degree on 456. Of the 16 others, 12 are hand-ruled tables of a manuscript, and 15 stand nearer
-   upright than they did. 3 pages were left further from upright than on the scan: two by 0.22 and 0.12 degree, and
+   upright than they did. 3 pages were left further from upright than on the scan: two by 0.22 and 0.11 degree, and
    one manuscript leaf by 1.5 degree, where the line the script reads is the leaf's own edge on the film: the hand
    slopes on that leaf, and safha levelled the hand. 153 pages whose lines lie at two angles and 174 whose witnesses
    disagreed were left as scanned and listed.
@@ -274,7 +274,8 @@ prints the numbers quoted on this page from the result files.
 - A cover fills the page: a strip of it is left out at two opposite edges to match the book's proportions. A cover
   found on the scanner bed loses at most 4 % at each edge, or is shown whole; a picture page at either end of the
   book is cut to the proportions whatever the strip: in the benchmark 3 % or less at each edge in seven printed
-  books, 8 to 10 % on the boards of an eighth ([every cover](bench/results/covers.md), `bench/covers.py`).
+  books, 8 to 10 % on the boards of an eighth, 18 to 24 % on the first and last frames of the two microfilmed
+  manuscripts ([every cover](bench/results/covers.md), `bench/covers.py`).
 - Links and form fields keep their own coordinates: on a page that was turned or drawn smaller they sit off by
   that much.
 - A lone mark in the margin of a book that prints nothing there (a pencil stroke, a single sign) is left outside

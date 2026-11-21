@@ -496,16 +496,33 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
     prof = profile if isinstance(profile, Profile) else load_profile(profile)
     t0 = time.time()
     src = pymupdf.open(path)
-    if src.needs_pass:
-        raise ValueError(f"{path}: the PDF is encrypted with a password")
-    n0 = src.page_count
-    found = None if prof.direction in ("ltr", "rtl") else text_direction(src)
+    try:
+        if not src.is_pdf:
+            raise ValueError(f"{path} is not a PDF: safha works on scanned books stored as PDF")
+        if src.needs_pass:
+            raise ValueError(f"{path}: the PDF is encrypted with a password")
+        n0 = src.page_count
+        if n0 == 0:
+            raise ValueError(f"{path}: the PDF has no pages")
+        repaired = bool(src.is_repaired)
+        try:
+            found = None if prof.direction in ("ltr", "rtl") else text_direction(src)
+            split = find_spreads(src, prof.split)
+        except RuntimeError as e:
+            if repaired:
+                raise _damaged(path, e) from e
+            raise
+    finally:
+        src.close()
     direction = prof.direction if prof.direction in ("ltr", "rtl") else (found or "ltr")
     direction_from = "option" if prof.direction in ("ltr", "rtl") else ("text layer" if found else "default")
-    split = find_spreads(src, prof.split)
-    src.close()
     n = n0 + len(split)
-    pages_d = _run(_measure_chunk, (path, split, direction, prof), n, jobs, progress, "measure")
+    try:
+        pages_d = _run(_measure_chunk, (path, split, direction, prof), n, jobs, progress, "measure")
+    except RuntimeError as e:
+        if repaired:
+            raise _damaged(path, e) from e
+        raise
     pages = [pages_d[i] for i in range(n)]
     rec: dict = {}
     for wq in prof.width_quantiles:
@@ -530,6 +547,12 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
         rec = level_only(rec)
     rec["direction_from"] = direction_from
     return finish(rec, path, prof, split, direction, n0, drop, time.time() - t0)
+
+
+def _damaged(path: str, e: Exception) -> ValueError:
+    """a page MuPDF cannot read, in a file whose structure it had to repair on reading: said plainly"""
+    return ValueError(f"{path} is damaged: its structure had to be repaired on reading and some pages still cannot be "
+                      f"read ({e}). The file is left as it is")
 
 
 SUMMARY_FLAGS = ("found_in_check", "by_columns", "frame_turn", "frame_shear", "two_angles", "unsure_tilt", "untreated_tilt",

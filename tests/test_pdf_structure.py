@@ -13,7 +13,7 @@ import pytest
 import safha
 import synth
 from safha.cli import main
-from safha.pdf import gray, images_of, open_book, turned
+from safha.pdf import gray, images_of, open_book, raw_box, turned
 
 
 def md5(path) -> str:
@@ -84,6 +84,36 @@ def test_cropbox_that_already_trims_the_scan(base, tmp_path):
     for p in d:
         d.xref_set_key(p.xref, "CropBox", "[40 30 412 604]")
     src, rec, out, rep = run(tmp_path, "trimmed", d.tobytes())
+    check_lossless(src, rec, out, rep, tmp_path)
+
+
+def test_boxes_written_the_unusual_ways(base, tmp_path):
+    """a MediaBox kept in an object of its own, written from its top left to its bottom right corner, holding a number
+    that is an object of its own, or inherited from the page tree: read all the same"""
+    d = pymupdf.open("pdf", base)
+    root = int(d.xref_get_key(d.pdf_catalog(), "Pages")[1].split()[0])
+    box = d.xref_get_key(d[0].xref, "MediaBox")[1]
+    v = box.strip("[] ").split()
+    for i, p in enumerate(d):
+        if i % 4 == 0:
+            x = d.get_new_xref()
+            d.update_object(x, box)
+            d.xref_set_key(p.xref, "MediaBox", f"{x} 0 R")
+        elif i % 4 == 1:
+            d.xref_set_key(p.xref, "MediaBox", f"[{v[0]} {v[3]} {v[2]} {v[1]}]")
+        elif i % 4 == 2:
+            x = d.get_new_xref()
+            d.update_object(x, v[3])
+            d.xref_set_key(p.xref, "MediaBox", f"[{v[0]} {v[1]} {v[2]} {x} 0 R]")
+        else:
+            d.xref_set_key(p.xref, "MediaBox", "null")
+    d.xref_set_key(root, "MediaBox", box)
+    d = pymupdf.open("pdf", d.tobytes())
+    for p in d:
+        assert raw_box(d, p.xref, "MediaBox") == [float(x) for x in v], f"page {p.number + 1}"
+        assert raw_box(d, p.xref, "CropBox") is None
+    src, rec, out, rep = run(tmp_path, "boxes", d.tobytes())
+    assert rec["mode"] == "crop" and rec["summary"]["turned"] == [4]
     check_lossless(src, rec, out, rep, tmp_path)
 
 

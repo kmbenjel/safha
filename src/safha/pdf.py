@@ -27,15 +27,53 @@ def gray(page: pymupdf.Page, px: int) -> tuple[np.ndarray, float]:
     return a, z
 
 
+def _numbers(doc: pymupdf.Document, text: str) -> list[float] | None:
+    """the numbers of a PDF array as text (``[0 0 595.28 841.89]``); a number written as an indirect object
+    (``12 0 R``) is looked up. None when the text is no array of numbers"""
+    tok = text.strip().strip("[]").split()
+    out: list[float] = []
+    k = 0
+    try:
+        while k < len(tok):
+            if k + 2 < len(tok) and tok[k + 2] == "R":
+                out.append(float(doc.xref_object(int(tok[k]), compressed=True)))
+                k += 3
+            else:
+                out.append(float(tok[k]))
+                k += 1
+    except (ValueError, RuntimeError):
+        return None
+    return out
+
+
 def raw_box(doc: pymupdf.Document, xref: int, key: str) -> list[float] | None:
-    """a page's own or inherited box (``MediaBox``, ``CropBox``) as numbers, in PDF coordinates"""
-    while xref:
+    """a page's own or inherited box (``MediaBox``, ``CropBox``) as numbers, in PDF coordinates: [left, bottom, right,
+    top] whatever order its corners were written in. The box may be written in the page, in a parent of the page tree,
+    or as an indirect object. None when there is none (or it cannot be read)"""
+    for _ in range(64):  # (a page tree is never that deep: a loop in a damaged file ends here)
+        if not xref:
+            break
         t, v = doc.xref_get_key(xref, key)
+        if t == "xref":  # the box is an object of its own
+            v = doc.xref_object(int(v.split()[0]), compressed=True)
+            t = "array" if v.lstrip().startswith("[") else "null"
         if t == "array":
-            return [float(z) for z in v.strip("[] ").split()]
+            a = _numbers(doc, v)
+            if a is None or len(a) != 4:
+                return None
+            return [min(a[0], a[2]), min(a[1], a[3]), max(a[0], a[2]), max(a[1], a[3])]
         t, par = doc.xref_get_key(xref, "Parent")
         xref = int(par.split()[0]) if t == "xref" else 0
     return None
+
+
+def media_box(page: pymupdf.Page) -> list[float]:
+    """the page's MediaBox in PDF coordinates (as MuPDF reads it when the file gives none that can be read)"""
+    mb = raw_box(page.parent, page.xref, "MediaBox")
+    if mb is None:
+        r = page.mediabox
+        mb = [r.x0, r.y0, r.x1, r.y1]
+    return mb
 
 
 def turn_cm(doc: pymupdf.Document, page: pymupdf.Page, deg: float, dx: float = 0.0, dy: float = 0.0,
@@ -43,7 +81,7 @@ def turn_cm(doc: pymupdf.Document, page: pymupdf.Page, deg: float, dx: float = 0
     """the ``q ... cm`` line that draws the page's content turned by ``deg`` degrees about the MediaBox centre, its rows
     then tilted by ``shear`` degrees (y' = y + tan(shear)(x - cx); the columns stay upright), then moved by (dx, dy) pt
     (page coordinates: dy > 0 moves down)"""
-    mb = raw_box(doc, page.xref, "MediaBox") or [0, 0, page.rect.width, page.rect.height]
+    mb = media_box(page)
     cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
     t = math.radians(deg)
     c, s = math.cos(t), math.sin(t)
@@ -85,7 +123,7 @@ def frame_matrix(page: pymupdf.Page, p: dict) -> pymupdf.Matrix:
     same map turn_cm writes into the content stream"""
     mv = p.get("move") or [0, 0]
     deg, sh = p.get("skew") or 0, p.get("shear") or 0
-    mb = raw_box(page.parent, page.xref, "MediaBox") or [0, 0, page.rect.width, page.rect.height]
+    mb = media_box(page)
     cx, cy = (mb[0] + mb[2]) / 2, (mb[1] + mb[3]) / 2
     fwd = pymupdf.Matrix(1, 0, 0, 1, -cx, -cy) * pymupdf.Matrix(deg)
     if sh:
@@ -191,7 +229,7 @@ def split_pages(doc: pymupdf.Document, split: dict, rtl: bool = False) -> None:
         g = float(split[str(i)] if str(i) in split else split[i])
         page = doc[i]
         inv = ~page.transformation_matrix
-        cb = raw_box(doc, page.xref, "CropBox") or raw_box(doc, page.xref, "MediaBox")
+        cb = raw_box(doc, page.xref, "CropBox") or media_box(page)
         a, b = pymupdf.Point(g, 0) * inv, pymupdf.Point(g, page.rect.height) * inv
         gx = (a.x + b.x) / 2
         doc.fullcopy_page(i, i + 1 if i + 1 < doc.page_count else -1)

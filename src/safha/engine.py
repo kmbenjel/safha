@@ -12,7 +12,7 @@ import math
 import os
 import time
 from collections.abc import Callable
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Any
 
 import numpy as np
@@ -35,49 +35,74 @@ Progress = Callable[[str, int, int], None] | None
 
 # -- parallel page work -------------------------------------------------------------------------------------------------
 
+_BOOKS: dict[tuple, pymupdf.Document] = {}  # the book a process is working on, opened once (and split, if it is)
+
+
+def _book(path: str, split: dict, direction: str) -> pymupdf.Document:
+    key = (path, direction, tuple(sorted(split.items())))
+    if key not in _BOOKS:
+        _close_books()
+        _BOOKS[key] = open_book(path, {"split": split, "direction": direction})
+    return _BOOKS[key]
+
+
+def _close_books() -> None:
+    for doc in _BOOKS.values():
+        doc.close()
+    _BOOKS.clear()
+
+
 def _measure_chunk(args: tuple) -> dict[int, dict]:
     path, split, direction, prof, idx = args
-    doc = open_book(path, {"split": split, "direction": direction})
-    try:
-        return {i: measure_page(doc, i, prof) for i in idx}
-    finally:
-        doc.close()
+    doc = _book(path, split, direction)
+    return {i: measure_page(doc, i, prof) for i in idx}
 
 
 def _check_chunk(args: tuple) -> dict[int, dict]:
-    path, split, direction, prof, rec, idx = args
-    doc = open_book(path, {"split": split, "direction": direction})
-    try:
-        out = {}
-        for i in idx:
-            p = rec["pages"][i]
-            check_page(doc, i, p, rec, prof)
-            out[i] = p
-        return out
-    finally:
-        doc.close()
+    path, split, direction, prof, book, pages = args  # book: what the check needs of the recipe; pages: {index: page}
+    doc = _book(path, split, direction)
+    for i, p in pages.items():
+        check_page(doc, i, p, book, prof)
+    return pages
 
 
-def _run(fn: Callable, base: tuple, n: int, jobs: int, progress: Progress, stage: str) -> dict[int, Any]:
+def _run(fn: Callable, base: tuple, n: int, jobs: int, progress: Progress, stage: str,
+         pages: list | None = None) -> dict[int, Any]:
+    """``fn`` over the book's n pages, a few pages at a time (each piece: the page indices, or with ``pages`` those
+    pages' records), in ``jobs`` processes; the progress is told after every piece. The result does not depend on the
+    pieces or on the number of processes"""
     idx = list(range(n))
+
+    def piece(c: list[int]) -> tuple:
+        return base + (c if pages is None else {i: pages[i] for i in c},)
+
+    out: dict[int, Any] = {}
+    done = 0
     if jobs <= 1 or n < 4:
-        out: dict[int, Any] = {}
         step = max(1, n // 50)
-        for k in range(0, n, step):
-            out.update(fn(base + (idx[k:k + step],)))
-            if progress:
-                progress(stage, min(n, k + step), n)
+        try:
+            for k in range(0, n, step):
+                out.update(fn(piece(idx[k:k + step])))
+                if progress:
+                    progress(stage, min(n, k + step), n)
+        finally:
+            _close_books()
         return out
     jobs = min(jobs, n)
-    chunks = [idx[k::jobs] for k in range(jobs)]
-    out = {}
+    step = max(1, min(8, n // (4 * jobs)))
     with ProcessPoolExecutor(jobs) as ex:
-        done = 0
-        for part in ex.map(fn, [base + (c,) for c in chunks]):
-            out.update(part)
-            done += len(part)
-            if progress:
-                progress(stage, done, n)
+        futs = [ex.submit(fn, piece(idx[k:k + step])) for k in range(0, n, step)]
+        try:
+            for f in as_completed(futs):
+                part = f.result()
+                out.update(part)
+                done += len(part)
+                if progress:
+                    progress(stage, done, n)
+        except BaseException:  # one page failed, or the user stopped the run: the pieces not yet begun are dropped
+            for f in futs:
+                f.cancel()
+            raise
     return out
 
 
@@ -192,7 +217,7 @@ def check_page(doc: pymupdf.Document, i: int, p: dict, rec: dict, prof: Profile)
     whatever the first look took its letters for."""
     if not p.get("crop") or p["kind"] != "text":
         return
-    lk = Looker(doc, i, prof.first_px, p.get("bed"))
+    lk = Looker(doc, i, prof.first_px, p.get("bed"))  # (rec: the recipe, or what the check needs of it: see plan)
     try:
         q = {k: p[k] for k in ("skew", "shear", "move") if p.get(k)}
         mk = lk.look(q, prof.check_px)
@@ -205,7 +230,7 @@ def check_page(doc: pymupdf.Document, i: int, p: dict, rec: dict, prof: Profile)
         # a page smaller than the book's box is drawn a little larger, the strips this leaves out read here: if they
         # hold print, the page is shown at its own size on blank paper instead
         W, H = rec["size"]
-        fr = _frame_page(p, i, len(rec["pages"]), W, H, rec.get("margin_pt") or 0.0, prof)
+        fr = _frame_page(p, i, rec["n"], W, H, rec.get("margin_pt") or 0.0, prof)
         if fr.get("scale", 1.0) > 1.0001 and cut_print(mk, fr["show"], p):
             p["no_magnify"] = True
 
@@ -531,7 +556,8 @@ def plan(path: str, profile: Profile | str | None = None, jobs: int = 1, progres
             if rec["decision"] == "skip" and "do not fit" in rec.get("why", "") and wq < prof.width_quantiles[-1]:
                 continue
             break
-        checked = _run(_check_chunk, (path, split, direction, prof, rec), n, jobs, progress, "check")
+        book = {k: rec.get(k) for k in ("clean_margins", "margin_pt", "size", "n")}
+        checked = _run(_check_chunk, (path, split, direction, prof, book), n, jobs, progress, "check", rec["pages"])
         for i, p in checked.items():
             rec["pages"][i] = p
         rec["whole"] = sorted(i for i, p in enumerate(rec["pages"]) if "whole" in p["flags"])

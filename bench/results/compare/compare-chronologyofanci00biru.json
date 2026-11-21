@@ -1,8 +1,27 @@
 [
  {
+  "book": "",
+  "tool": "versions",
+  "safha": "safha 0.1.0",
+  "PyMuPDF": "2.1",
+  "MuPDF": "1.28.6",
+  "pdfCropMargins": "pdfCropMargins 2.2.1",
+  "Briss": "Briss-2.0-all.jar",
+  "k2pdfopt": "k2pdfopt v2.55 (w/DjVuLibre,OCR) (c) 2024, GPLv3, http://willus.com",
+  "unpaper": "7.0.0",
+  "OCRmyPDF": "15.2.0+dfsg1",
+  "OCRmyPDF (new)": "17.14.2",
+  "tesseract": "tesseract 5.3.4",
+  "Ghostscript": "10.02.1",
+  "jbig2enc": "jbig2enc 0.28",
+  "pngquant": "2.18.0 (January 2023)",
+  "poppler": "pdftoppm version 24.02.0",
+  "img2pdf": "img2pdf 0.5.1"
+ },
+ {
   "book": "chronologyofanci00biru.pdf",
   "tool": "safha",
-  "seconds": 38.8,
+  "seconds": 30.0,
   "pages_out": 40,
   "bytes_out": 2514749,
   "filters_out": {
@@ -20,7 +39,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "safha-reader",
-  "seconds": 39.8,
+  "seconds": 39.5,
   "pages_out": 40,
   "bytes_out": 2514536,
   "filters_out": {
@@ -37,24 +56,8 @@
  },
  {
   "book": "chronologyofanci00biru.pdf",
-  "tool": "input",
-  "pages": 40,
-  "bytes_in": 2502639,
-  "filters_in": {
-   "JPXDecode": 80
-  },
-  "place_in": {
-   "sizes": 1,
-   "offcentre_median": 0.013,
-   "sway_iqr": 0.0275,
-   "text_width_share": 0.764
-  },
-  "rule_in": null
- },
- {
-  "book": "chronologyofanci00biru.pdf",
   "tool": "pdfCropMargins",
-  "seconds": 26.7,
+  "seconds": 19.1,
   "pages_out": 40,
   "bytes_out": 2504597,
   "filters_out": {
@@ -72,7 +75,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "briss",
-  "seconds": 2.5,
+  "seconds": 2.0,
   "pages_out": 40,
   "bytes_out": 2503735,
   "filters_out": {
@@ -90,7 +93,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "k2pdfopt",
-  "seconds": 248.0,
+  "seconds": 223.7,
   "pages_out": 88,
   "bytes_out": 8164280,
   "filters_out": {
@@ -108,7 +111,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "k2pdfopt-as",
-  "seconds": 133.4,
+  "seconds": 83.1,
   "pages_out": 39,
   "bytes_out": 15522137,
   "filters_out": {
@@ -126,7 +129,7 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "unpaper",
-  "seconds": 100.6,
+  "seconds": 94.3,
   "pages_out": 40,
   "bytes_out": 21533207,
   "filters_out": {
@@ -143,10 +146,28 @@
  },
  {
   "book": "chronologyofanci00biru.pdf",
-  "tool": "ocrmypdf",
-  "seconds": 78.2,
+  "tool": "ocrmypdf-pdfa",
+  "seconds": 99.6,
   "pages_out": 40,
-  "bytes_out": 123057347,
+  "bytes_out": 20271190,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.024,
+   "text_width_share": 0.764
+  },
+  "psnr_level_pages": 3.63
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
+  "tool": "ocrmypdf",
+  "seconds": 93.2,
+  "pages_out": 40,
+  "bytes_out": 123057346,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -162,9 +183,9 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "ocrmypdf-O2",
-  "seconds": 89.5,
+  "seconds": 137.9,
   "pages_out": 40,
-  "bytes_out": 53419066,
+  "bytes_out": 53419065,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -180,9 +201,9 @@
  {
   "book": "chronologyofanci00biru.pdf",
   "tool": "ocrmypdf-O3",
-  "seconds": 103.5,
+  "seconds": 158.7,
   "pages_out": 40,
-  "bytes_out": 39174964,
+  "bytes_out": 39174962,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -197,10 +218,10 @@
  },
  {
   "book": "chronologyofanci00biru.pdf",
-  "tool": "ocrmypdf-pdfa",
-  "seconds": 121.4,
+  "tool": "ocrmypdf-new-pdfa",
+  "seconds": 55.2,
   "pages_out": 40,
-  "bytes_out": 20271190,
+  "bytes_out": 20874782,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -211,6 +232,40 @@
    "sway_iqr": 0.024,
    "text_width_share": 0.764
   },
-  "psnr_level_pages": 3.63
+  "psnr_level_pages": 3.62
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
+  "tool": "ocrmypdf-new",
+  "seconds": 43.0,
+  "pages_out": 40,
+  "bytes_out": 121288633,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.024,
+   "text_width_share": 0.764
+  },
+  "psnr_level_pages": 3.62
+ },
+ {
+  "book": "chronologyofanci00biru.pdf",
+  "tool": "input",
+  "pages": 40,
+  "bytes_in": 2502639,
+  "filters_in": {
+   "JPXDecode": 80
+  },
+  "place_in": {
+   "sizes": 1,
+   "offcentre_median": 0.013,
+   "sway_iqr": 0.0275,
+   "text_width_share": 0.764
+  },
+  "rule_in": null
  }
 ]

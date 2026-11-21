@@ -1,8 +1,27 @@
 [
  {
+  "book": "",
+  "tool": "versions",
+  "safha": "safha 0.1.0",
+  "PyMuPDF": "2.1",
+  "MuPDF": "1.28.6",
+  "pdfCropMargins": "pdfCropMargins 2.2.1",
+  "Briss": "Briss-2.0-all.jar",
+  "k2pdfopt": "k2pdfopt v2.55 (w/DjVuLibre,OCR) (c) 2024, GPLv3, http://willus.com",
+  "unpaper": "7.0.0",
+  "OCRmyPDF": "15.2.0+dfsg1",
+  "OCRmyPDF (new)": "17.14.2",
+  "tesseract": "tesseract 5.3.4",
+  "Ghostscript": "10.02.1",
+  "jbig2enc": "jbig2enc 0.28",
+  "pngquant": "2.18.0 (January 2023)",
+  "poppler": "pdftoppm version 24.02.0",
+  "img2pdf": "img2pdf 0.5.1"
+ },
+ {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "safha",
-  "seconds": 11.5,
+  "seconds": 6.5,
   "pages_out": 40,
   "bytes_out": 1656218,
   "filters_out": {
@@ -20,7 +39,7 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "safha-reader",
-  "seconds": 11.8,
+  "seconds": 6.8,
   "pages_out": 40,
   "bytes_out": 1656436,
   "filters_out": {
@@ -37,24 +56,8 @@
  },
  {
   "book": "in.ernet.dli.2015.361017.pdf",
-  "tool": "input",
-  "pages": 40,
-  "bytes_in": 1645654,
-  "filters_in": {
-   "CCITTFaxDecode": 40
-  },
-  "place_in": {
-   "sizes": 1,
-   "offcentre_median": 0.006,
-   "sway_iqr": 0.0092,
-   "text_width_share": 0.786
-  },
-  "rule_in": null
- },
- {
-  "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "pdfCropMargins",
-  "seconds": 1.4,
+  "seconds": 0.8,
   "pages_out": 40,
   "bytes_out": 1649012,
   "filters_out": {
@@ -72,7 +75,7 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "briss",
-  "seconds": 6.3,
+  "seconds": 6.6,
   "pages_out": 40,
   "bytes_out": 1647451,
   "filters_out": {
@@ -90,7 +93,7 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "k2pdfopt",
-  "seconds": 130.8,
+  "seconds": 107.9,
   "pages_out": 70,
   "bytes_out": 3883091,
   "filters_out": {
@@ -108,7 +111,7 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "k2pdfopt-as",
-  "seconds": 73.2,
+  "seconds": 51.8,
   "pages_out": 40,
   "bytes_out": 6055100,
   "filters_out": {
@@ -126,9 +129,9 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "unpaper",
-  "seconds": 141.3,
+  "seconds": 131.8,
   "pages_out": 40,
-  "bytes_out": 1298731,
+  "bytes_out": 1295779,
   "filters_out": {
    "CCITTFaxDecode": 40
   },
@@ -136,15 +139,33 @@
   "place_out": {
    "sizes": 1,
    "offcentre_median": 0.002,
-   "sway_iqr": 0.0033,
-   "text_width_share": 0.788
+   "sway_iqr": 0.003,
+   "text_width_share": 0.786
   },
   "psnr_level_pages": null
  },
  {
   "book": "in.ernet.dli.2015.361017.pdf",
+  "tool": "ocrmypdf-pdfa",
+  "seconds": 20.3,
+  "pages_out": 40,
+  "bytes_out": 1208492,
+  "filters_out": {
+   "JBIG2Decode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.006,
+   "sway_iqr": 0.0112,
+   "text_width_share": 0.787
+  },
+  "psnr_level_pages": 11.69
+ },
+ {
+  "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "ocrmypdf",
-  "seconds": 18.8,
+  "seconds": 22.5,
   "pages_out": 40,
   "bytes_out": 1297179,
   "filters_out": {
@@ -162,9 +183,9 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "ocrmypdf-O2",
-  "seconds": 19.7,
+  "seconds": 22.3,
   "pages_out": 40,
-  "bytes_out": 1297178,
+  "bytes_out": 1297179,
   "filters_out": {
    "JBIG2Decode": 40
   },
@@ -180,9 +201,9 @@
  {
   "book": "in.ernet.dli.2015.361017.pdf",
   "tool": "ocrmypdf-O3",
-  "seconds": 19.4,
+  "seconds": 22.6,
   "pages_out": 40,
-  "bytes_out": 1297178,
+  "bytes_out": 1297179,
   "filters_out": {
    "JBIG2Decode": 40
   },
@@ -197,10 +218,10 @@
  },
  {
   "book": "in.ernet.dli.2015.361017.pdf",
-  "tool": "ocrmypdf-pdfa",
-  "seconds": 20.1,
+  "tool": "ocrmypdf-new-pdfa",
+  "seconds": 17.0,
   "pages_out": 40,
-  "bytes_out": 1208488,
+  "bytes_out": 1495883,
   "filters_out": {
    "JBIG2Decode": 40
   },
@@ -208,9 +229,43 @@
   "place_out": {
    "sizes": 1,
    "offcentre_median": 0.006,
-   "sway_iqr": 0.0112,
-   "text_width_share": 0.787
+   "sway_iqr": 0.0088,
+   "text_width_share": 0.788
   },
-  "psnr_level_pages": 11.69
+  "psnr_level_pages": 11.72
+ },
+ {
+  "book": "in.ernet.dli.2015.361017.pdf",
+  "tool": "ocrmypdf-new",
+  "seconds": 19.7,
+  "pages_out": 40,
+  "bytes_out": 1492348,
+  "filters_out": {
+   "JBIG2Decode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 1,
+   "offcentre_median": 0.006,
+   "sway_iqr": 0.0088,
+   "text_width_share": 0.788
+  },
+  "psnr_level_pages": 11.72
+ },
+ {
+  "book": "in.ernet.dli.2015.361017.pdf",
+  "tool": "input",
+  "pages": 40,
+  "bytes_in": 1645654,
+  "filters_in": {
+   "CCITTFaxDecode": 40
+  },
+  "place_in": {
+   "sizes": 1,
+   "offcentre_median": 0.006,
+   "sway_iqr": 0.0092,
+   "text_width_share": 0.786
+  },
+  "rule_in": null
  }
 ]

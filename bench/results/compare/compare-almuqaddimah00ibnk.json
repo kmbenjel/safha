@@ -1,8 +1,27 @@
 [
  {
+  "book": "",
+  "tool": "versions",
+  "safha": "safha 0.1.0",
+  "PyMuPDF": "2.1",
+  "MuPDF": "1.28.6",
+  "pdfCropMargins": "pdfCropMargins 2.2.1",
+  "Briss": "Briss-2.0-all.jar",
+  "k2pdfopt": "k2pdfopt v2.55 (w/DjVuLibre,OCR) (c) 2024, GPLv3, http://willus.com",
+  "unpaper": "7.0.0",
+  "OCRmyPDF": "15.2.0+dfsg1",
+  "OCRmyPDF (new)": "17.14.2",
+  "tesseract": "tesseract 5.3.4",
+  "Ghostscript": "10.02.1",
+  "jbig2enc": "jbig2enc 0.28",
+  "pngquant": "2.18.0 (January 2023)",
+  "poppler": "pdftoppm version 24.02.0",
+  "img2pdf": "img2pdf 0.5.1"
+ },
+ {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "safha",
-  "seconds": 27.2,
+  "seconds": 20.6,
   "pages_out": 40,
   "bytes_out": 3262156,
   "filters_out": {
@@ -20,7 +39,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "safha-reader",
-  "seconds": 27.3,
+  "seconds": 29.2,
   "pages_out": 40,
   "bytes_out": 3262156,
   "filters_out": {
@@ -37,24 +56,8 @@
  },
  {
   "book": "almuqaddimah00ibnk.pdf",
-  "tool": "input",
-  "pages": 40,
-  "bytes_in": 3262156,
-  "filters_in": {
-   "JPXDecode": 80
-  },
-  "place_in": {
-   "sizes": 19,
-   "offcentre_median": 0.0275,
-   "sway_iqr": 0.0557,
-   "text_width_share": 0.835
-  },
-  "rule_in": null
- },
- {
-  "book": "almuqaddimah00ibnk.pdf",
   "tool": "pdfCropMargins",
-  "seconds": 36.6,
+  "seconds": 23.2,
   "pages_out": 40,
   "bytes_out": 3263653,
   "filters_out": {
@@ -72,7 +75,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "briss",
-  "seconds": 2.6,
+  "seconds": 1.9,
   "pages_out": 40,
   "bytes_out": 3258941,
   "filters_out": {
@@ -87,7 +90,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "k2pdfopt",
-  "seconds": 252.6,
+  "seconds": 209.4,
   "pages_out": 46,
   "bytes_out": 8493993,
   "filters_out": {
@@ -105,7 +108,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "k2pdfopt-as",
-  "seconds": 146.6,
+  "seconds": 112.0,
   "pages_out": 40,
   "bytes_out": 38380384,
   "filters_out": {
@@ -123,7 +126,7 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "unpaper",
-  "seconds": 208.9,
+  "seconds": 193.3,
   "pages_out": 40,
   "bytes_out": 27079674,
   "filters_out": {
@@ -140,10 +143,28 @@
  },
  {
   "book": "almuqaddimah00ibnk.pdf",
-  "tool": "ocrmypdf",
-  "seconds": 124.5,
+  "tool": "ocrmypdf-pdfa",
+  "seconds": 161.1,
   "pages_out": 40,
-  "bytes_out": 213704416,
+  "bytes_out": 25541857,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 19,
+   "offcentre_median": 0.027,
+   "sway_iqr": 0.0518,
+   "text_width_share": 0.83
+  },
+  "psnr_level_pages": 8.41
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "ocrmypdf",
+  "seconds": 190.1,
+  "pages_out": 40,
+  "bytes_out": 213704415,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -159,9 +180,9 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "ocrmypdf-O2",
-  "seconds": 153.2,
+  "seconds": 248.0,
   "pages_out": 40,
-  "bytes_out": 97226436,
+  "bytes_out": 97226434,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -177,9 +198,9 @@
  {
   "book": "almuqaddimah00ibnk.pdf",
   "tool": "ocrmypdf-O3",
-  "seconds": 168.7,
+  "seconds": 219.9,
   "pages_out": 40,
-  "bytes_out": 62208698,
+  "bytes_out": 62208697,
   "filters_out": {
    "FlateDecode": 40
   },
@@ -194,20 +215,54 @@
  },
  {
   "book": "almuqaddimah00ibnk.pdf",
-  "tool": "ocrmypdf-pdfa",
-  "seconds": 165.7,
+  "tool": "ocrmypdf-new-pdfa",
+  "seconds": 64.2,
   "pages_out": 40,
-  "bytes_out": 25541857,
+  "bytes_out": 23732545,
   "filters_out": {
    "FlateDecode": 40
   },
   "kept_streams": 0.0,
   "place_out": {
    "sizes": 19,
-   "offcentre_median": 0.027,
-   "sway_iqr": 0.0518,
-   "text_width_share": 0.83
+   "offcentre_median": 0.0295,
+   "sway_iqr": 0.0568,
+   "text_width_share": 0.832
   },
-  "psnr_level_pages": 8.41
+  "psnr_level_pages": 8.43
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "ocrmypdf-new",
+  "seconds": 55.5,
+  "pages_out": 40,
+  "bytes_out": 205726031,
+  "filters_out": {
+   "FlateDecode": 40
+  },
+  "kept_streams": 0.0,
+  "place_out": {
+   "sizes": 19,
+   "offcentre_median": 0.0295,
+   "sway_iqr": 0.0562,
+   "text_width_share": 0.831
+  },
+  "psnr_level_pages": 8.45
+ },
+ {
+  "book": "almuqaddimah00ibnk.pdf",
+  "tool": "input",
+  "pages": 40,
+  "bytes_in": 3262156,
+  "filters_in": {
+   "JPXDecode": 80
+  },
+  "place_in": {
+   "sizes": 19,
+   "offcentre_median": 0.0275,
+   "sway_iqr": 0.0557,
+   "text_width_share": 0.835
+  },
+  "rule_in": null
  }
 ]

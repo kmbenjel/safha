@@ -33,7 +33,7 @@ safha does the whole job **through the PDF's drawing instructions**: each page's
 matrix. The image streams stay byte for byte, the file keeps its size, and the original can be restored from the
 output.
 
-| | safha 0.1 | pdfCropMargins 2.2.1 | Briss 2.0a5 | k2pdfopt 2.55 | ScanTailor Advanced 1.0 | unpaper 7.0 | OCRmyPDF 15.2 `--deskew` |
+| | safha 0.1 | pdfCropMargins 2.2.1 | Briss 2.0a5 | k2pdfopt 2.55 | ScanTailor Advanced 1.0 | unpaper 7.0 | OCRmyPDF 15.2 and 17.14 `--deskew` |
 |---|---|---|---|---|---|---|---|
 | Keeps the scan's image streams (lossless) | ✓ R | ✓ R | ✓ R | ✗ R when it reflows or straightens; its trim mode (`-mode tm`) keeps the page content (D) | ✗ D (TIFF output) | ✗ R (raster in, raster out) | ✗ R (deskewed pages re-encoded) |
 | One page size for the whole book | ✓ R | ✓ R (`-u -s`) | partial R | partial R (device pages) | ✓ D | ✗ D (works on images) | ✗ R |
@@ -49,48 +49,56 @@ output.
 | Review sheet of what it did | ✓ R (`safha sheet`) | partial D (`-gui`) | ✓ D (GUI) | partial D (preview) | ✓ D (GUI) | ✗ | ✗ |
 | Output restorable to the original bytes | ✓ R | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
-R: checked by running it on the benchmark pages below (2026-11-13, Ubuntu 24.04 packages, pdfCropMargins and Briss from
-their releases). D: from the tool's documentation (2026-11-13). The script that produced the R cells is
-[`bench/compare.sh`](bench/compare.sh).
+R: checked by running it on the benchmark pages below (2026-11-21: Ubuntu 24.04 packages, pdfCropMargins and Briss from
+their releases, OCRmyPDF also in its current release; every version that ran is written with the results). D: from
+the tool's documentation (2026-11-13). The script that produced the R cells is [`bench/compare.sh`](bench/compare.sh).
 
 ### What the difference looks like, measured
 
 Five 40-page excerpts of public-domain scans (an Arabic print in colour, JPEG 2000; an English print, JPEG 2000; an
 Urdu print, bitonal CCITT G4; an Arabic manuscript on microfilm; a French-Arabic dictionary in two columns, bitonal
-JBIG2) and a synthetic book with a known truth. Every tool runs the way a careful user would run it for this job, with
-its optional helpers installed; where a tool has several reasonable settings, each one is a row
-([full tables and commands](bench/results/compare.md)):
+JBIG2) and a book with a known truth, drawn as a 300 dpi scan. Every tool runs the way a careful user would run it for
+this job, with its optional helpers installed; where a tool has several reasonable settings, each one is a row
+([full tables, commands and versions](bench/results/compare.md)):
 
-| | size of the output | image streams kept byte for byte | tilted pages levelled | warped pages wrongly turned | ruled pages upright after | ruled pages made worse |
-|---|---:|---:|---:|---:|---:|---:|
-| the scans as they are | | | | | 18 of 39 | |
-| **safha** | **100-102 %** | **100 %** | **3/3** | **0/3** | 29 | 0 |
-| pdfCropMargins | 100 % | 100 % | no deskew | 0/3 | 18 | 0 |
-| Briss | 100 % | 100 % | no deskew | 0/3 | 19 | 0 |
-| k2pdfopt (its default: reflow) | 25-326 % | 0 % | n/a (reflowed) | n/a | n/a | n/a |
-| k2pdfopt `-mode copy -as` | 330-1177 % | 0 % | 3/3 | 1/3 | 11 | 21 |
-| unpaper | 79-860 % | 0 % | 0/3 | 2/3 | 29 | 6 |
-| OCRmyPDF `--deskew` (its default: PDF/A) | 73-1453 % | 0 % | 3/3 | 3/3 | 35 | 1 |
-| OCRmyPDF `--deskew --output-type pdf` | 79-6551 % | 0 % | 3/3 | 3/3 | 35 | 1 |
-| ... with `-O2` / `-O3` (lossy) | 79-2980 % / 79-2395 % | 0 % | 3/3 | 3/3 | 35 | 1 |
+| | size of the output | image streams kept byte for byte | level pages left level | tilted pages levelled | warped pages wrongly turned | ruled pages upright after | ruled pages made worse |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| the scans as they are |  |  | 8/8 | 0/8 | 0/8 | 18 of 39 |  |
+| **safha** | **100-102 %** | **100 %** | **8/8** | **8/8** | **0/8** | 29 (of 38 read) | 0 |
+| pdfCropMargins | 100 % | 100 % | 8/8 | no deskew | 0/8 | 18 (of 38 read) | 0 |
+| Briss | 100 % | 100 % | 8/8 | no deskew | 0/8 | 19 | 0 |
+| k2pdfopt (its default: reflow) | 25-326 % | 0 % | n/a (reflowed) | n/a | n/a | n/a | n/a |
+| k2pdfopt `-mode copy -as` | 330-1177 % | 0 % | 8/8 | 8/8 | 2/8 | 11 | 21 |
+| unpaper | 79-860 % | 0 % | 6/8 | 2/8 | 4/8 | 27 | 5 |
+| OCRmyPDF 15.2 `--deskew` (its default: PDF/A) | 73-1453 % | 0 % | 8/8 | 8/8 | 4/8 | 35 | 1 |
+| OCRmyPDF 15.2 `--deskew --output-type pdf` | 79-6551 % | 0 % | 8/8 | 8/8 | 4/8 | 35 | 1 |
+| ... with `-O2` / `-O3` (lossy) | 79-2980 % / 79-2311 % | 0 % | 8/8 | 8/8 | 4/8 | 35 | 1 |
+| OCRmyPDF 17.14 `--deskew` (its default: PDF/A) | 91-834 % | 0 % | 8/8 | 8/8 | 4/8 | 35 | 1 |
+| OCRmyPDF 17.14 `--deskew --output-type pdf` | 91-6306 % | 0 % | 8/8 | 8/8 | 4/8 | 35 | 1 |
 
-The two middle columns are the synthetic book: three pages tilted 1 degree, three warped pages whose upper lines
-are level and lower lines tilted 1.5 degrees. The last two are the dictionary's 39 pages that carry a printed rule
-between their columns: the rule is the print's own upright, read on every tool's output by a script independent of
-safha's measures ("upright": within 0.2 degree; "made worse": at least 0.1 degree further from upright than on the
-scan).
+The three middle columns are the book with a known truth: 8 level pages, 8 pages tilted by 0.5 to 3 degrees either
+way, and 8 warped pages whose upper lines are level and whose lower lines lean by 1 to 2.5 degrees (no single turn
+levels such a page). The last two are the dictionary's 39 pages that carry a printed rule between their columns: the
+rule is the print's own upright. Both are read on every tool's output by [`bench/rules.py`](bench/rules.py), a judge
+that owes nothing to safha's measures and is itself held to pages of known tilt (`tests/test_judges.py`): a page's
+lines by their projection profile (level: within 0.2 degree; a warped page wrongly turned: its level upper lines made
+to lean by more than 0.35 degree), a rule by its own lean ("upright": within 0.2 degree; "made worse": at least 0.1
+degree further from upright than on the scan; "of 38 read": the rule could be read on 38 pages of that output).
 
 What the table says:
 
 - **Only the tools that leave the image streams alone keep the file's size on every kind of scan.** On bitonal scans
-  the tools that re-encode stay small (OCRmyPDF writes the deskewed pages back as JBIG2, unpaper's output was stored
-  as CCITT G4: 73 to 140 %). On JPEG 2000 scans a deskewed page has to be stored again, and comes back 3 to 65 times
+  OCRmyPDF and unpaper stay small (OCRmyPDF writes the deskewed pages back as JBIG2, unpaper's output was stored as
+  CCITT G4: 73 to 171 %). On JPEG 2000 scans a deskewed page has to be stored again, and comes back 3 to 65 times
   larger, or lossy.
-- **Only safha left all three warped pages alone.** The three other tools that deskew turned at least one of them, so
-  that its level upper lines now lean.
-- **On the dictionary's ruled pages OCRmyPDF's deskew did best** (35 of 39 upright). safha and unpaper stood 29
-  upright; unpaper made 6 pages worse, safha none: it turns a page by its rule only when the rule is straight and
-  the lines agree, and leaves the others as scanned. k2pdfopt's auto-straighten made 21 of the 39 worse.
+- **Only safha levelled every tilted page and left every warped page alone.** k2pdfopt and OCRmyPDF levelled the
+  eight tilted pages too, and turned two and four of the eight warped ones, so that their level upper lines now
+  lean. unpaper levelled two of the eight, and made two level pages and four warped ones lean.
+- **On the dictionary's ruled pages OCRmyPDF's deskew did best** (35 of 39 upright, in both its versions). safha
+  stood 29 upright and made none worse: it turns a page by its rule only when the rule is straight and the lines
+  agree, and leaves the others as scanned. unpaper stood 27 upright and made 5 worse (its figures move by a page or
+  two from one run to the next: the 1-bit page images poppler renders for it are not the same twice). k2pdfopt's
+  auto-straighten made 21 of the 39 worse.
 - The lossless croppers (pdfCropMargins, Briss) keep the pixels but do not deskew, centre the text page by page, or
   split spreads.
 
@@ -106,8 +114,8 @@ What the table says:
    within 0.3 % of the page's (pdfCropMargins: 63 % and 3.1 %; Briss: 54 % and 23 %); on the Urdu excerpt the
    text's place swayed 0.9 % of the page width from page to page before and 0.1 % after (pdfCropMargins: 1.2 %).
 3. **No invented tilt.** A turn needs two measures that agree, then passes the page's own witnesses: its lines
-   followed one by one, its margins, its printed rules. On the synthetic book safha levelled the three tilted pages
-   and turned none of the warped ones. Across the corpus, 472 of the 1,112 pages it turned carry a long straight
+   followed one by one, its margins, its printed rules. On the book with a known truth safha kept the eight level
+   pages level, levelled the eight tilted ones and turned none of the eight warped ones. Across the corpus, 472 of the 1,112 pages it turned carry a long straight
    rule inside their print, which an independent script can read ([`bench/rule_audit.py`](bench/rule_audit.py),
    [results](bench/results/rule-audit.md)): after the turn the rule stood within 0.15 degree of upright on 427 of
    them and within 0.3 degree on 456. Of the 16 others, 12 are hand-ruled tables of a manuscript, and 15 stand nearer

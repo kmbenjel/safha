@@ -92,12 +92,15 @@ print("Each book: a 40-page excerpt copied object for object from the Internet A
       "OCRmyPDF with its optional helpers installed (jbig2enc, pngquant), first exactly as it runs by default (PDF/A "
       "output, written through Ghostscript), then writing a plain PDF at its default lossless optimisation and at its two "
       "lossy ones, in the version the distribution packages and, for the two main settings, in the current release; "
-      "unpaper at the scan's own resolution and kind, written back as CCITT G4 (1-bit pages) or JPEG 85; "
+      "unpaper on the pages rendered by poppler (`pdftoppm`) at the scan's own resolution and kind, written back as "
+      "CCITT G4 (1-bit pages) or JPEG 85 (poppler's 1-bit rendering is not the same twice, so unpaper's figures on "
+      "bitonal scans move by a page or two from one run to the next); "
       "k2pdfopt in its default reflow mode and in copy mode with auto-straighten (one output page per source page). "
       "k2pdfopt's lossless trim mode (`-mode tm`, native PDF output) needs a build with MuPDF; the Ubuntu 24.04 package "
       "has none and writes no file in that mode, so it is not measured.\n")
 if versions:
-    print("Versions that ran: " + "; ".join(f"{k} {v}" for k, v in versions.items() if k not in ("book", "tool")) + ".\n")
+    print("Versions that ran: " + "; ".join(v if str(v).lower().startswith(k.lower()) else f"{k} {v}"
+                                            for k, v in versions.items() if k not in ("book", "tool")) + ".\n")
 print("Who judges: sizes, streams and codecs are read from the files; the turns are judged by "
       "[`bench/rules.py`](../rules.py), which owes nothing to safha's own measures; the place of the text (the last three "
       "columns) is read on every tool's output alike with safha's own text-block measure, and describes the outputs.\n")

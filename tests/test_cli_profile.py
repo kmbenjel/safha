@@ -37,18 +37,18 @@ def test_drop_blank(books, tmp_path, capsys):
     assert main(["drop", books["blank"], "--pages", "3", "-o", str(out)]) == 0
 
 
-def test_drop_refuses_text_page(books, tmp_path):
-    with pytest.raises(SystemExit):
-        main(["drop", books["blank"], "--pages", "1", "-o", str(tmp_path / "d.pdf")])
+def test_drop_refuses_text_page(books, tmp_path, capsys):
+    assert main(["drop", books["blank"], "--pages", "1", "-o", str(tmp_path / "d.pdf")]) == 2
+    assert "not blank" in capsys.readouterr().err and not (tmp_path / "d.pdf").exists()
 
 
 def test_errors_are_plain(books, tmp_path, capsys):
     assert main(["crop", str(tmp_path / "missing.pdf")]) == 2
     assert "no such file" in capsys.readouterr().err
-    with pytest.raises(SystemExit):
-        main(["crop", books["tilt"], "--set", "nonsense"])
-    with pytest.raises(SystemExit):
-        main(["crop", books["tilt"], "--set", "nonsense=1"])
+    assert main(["crop", books["tilt"], "--set", "nonsense"]) == 2
+    assert "NAME=VALUE" in capsys.readouterr().err
+    assert main(["crop", books["tilt"], "--set", "nonsense=1"]) == 2
+    assert "unknown profile setting" in capsys.readouterr().err
 
 
 def test_profiles(tmp_path, capsys):

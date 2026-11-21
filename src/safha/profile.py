@@ -59,7 +59,12 @@ class Profile:
         for k, v in kw.items():
             if k not in known:
                 raise ValueError(f"unknown profile setting {k!r}; known: {', '.join(sorted(known))}")
-            out[k] = _coerce(known[k].type, v)
+            try:
+                out[k] = _coerce(known[k].type, v)
+            except (TypeError, ValueError):
+                raise ValueError(f"profile setting {k} expects {_KIND.get(str(known[k].type), 'a value')}, got {v!r}") from None
+            if k in CHOICES and out[k] not in CHOICES[k]:
+                raise ValueError(f"profile setting {k} is one of {', '.join(CHOICES[k])}; got {v!r}")
         return replace(self, **out)
 
     def to_dict(self) -> dict[str, Any]:
@@ -73,20 +78,44 @@ class Profile:
         return {k: v for k, v in self.to_dict().items() if k != "name" and base.get(k) != v}
 
 
+CHOICES = {"split": ("auto", "always", "never"), "direction": ("auto", "ltr", "rtl")}
+_KIND = {"bool": "true or false", "int": "a whole number", "float": "a number", "str": "a word",
+         "tuple[float, ...]": "numbers separated by commas"}
+_TRUE, _FALSE = ("1", "true", "yes", "on"), ("0", "false", "no", "off")
+
+
 def _coerce(typ: Any, v: Any) -> Any:
+    """a setting's value as its field's type; a value of another kind raises (TypeError, ValueError)"""
     t = str(typ)
     if isinstance(v, str):
+        w = v.strip()
         if t == "bool":
-            return v.strip().lower() in ("1", "true", "yes", "on")
+            if w.lower() not in _TRUE + _FALSE:
+                raise ValueError(v)
+            return w.lower() in _TRUE
         if t == "int":
-            return int(v)
+            return int(w)
         if t == "float":
-            return float(v)
+            return float(w)
         if t.startswith("tuple"):
-            return tuple(float(x) for x in v.split(","))
-        return v
+            return tuple(float(x) for x in w.split(","))
+        return w
     if t.startswith("tuple"):
         return tuple(float(x) for x in v)
+    if t == "bool":
+        if not isinstance(v, bool):
+            raise TypeError(v)
+        return v
+    if t == "int":
+        if isinstance(v, bool) or not isinstance(v, int):
+            raise TypeError(v)
+        return v
+    if t == "float":
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            raise TypeError(v)
+        return float(v)
+    if not isinstance(v, str):
+        raise TypeError(v)
     return v
 
 
@@ -111,14 +140,21 @@ def load_profile(spec: str | None, overrides: dict[str, Any] | None = None) -> P
         p = Path(spec)
         if not p.exists():
             raise ValueError(f"no profile named {spec!r} and no such file; built-in: {', '.join(PROFILES)}")
-        if p.suffix == ".toml":
-            try:
-                import tomllib
-            except ImportError:  # Python 3.10
-                import tomli as tomllib  # type: ignore[no-redef]
-            data = tomllib.loads(p.read_text())
-        else:
-            data = json.loads(p.read_text())
-        base = PROFILES.get(data.pop("base", "warraq"), PROFILES["warraq"])
-        prof = base.with_values(name=data.pop("name", p.stem), **data)
+        try:
+            if p.suffix == ".toml":
+                try:
+                    import tomllib
+                except ImportError:  # Python 3.10
+                    import tomli as tomllib  # type: ignore[no-redef]
+                data = tomllib.loads(p.read_text(encoding="utf-8"))
+            else:
+                data = json.loads(p.read_text(encoding="utf-8"))
+        except ValueError as e:  # (TOML and JSON syntax errors are both ValueErrors)
+            raise ValueError(f"profile file {spec} cannot be read: {e}") from None
+        if not isinstance(data, dict):
+            raise ValueError(f"profile file {spec} must hold settings (name = value), not {type(data).__name__}")
+        base_name = data.pop("base", "warraq")
+        if base_name not in PROFILES:
+            raise ValueError(f"profile file {spec}: base = {base_name!r} is no built-in profile ({', '.join(PROFILES)})")
+        prof = PROFILES[base_name].with_values(name=str(data.pop("name", p.stem)), **data)
     return prof.with_values(**overrides) if overrides else prof

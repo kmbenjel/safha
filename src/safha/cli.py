@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
+import re
 import sys
 import time
 from typing import Any
@@ -31,7 +33,7 @@ def _profile(a: argparse.Namespace) -> Any:
     over: dict[str, Any] = {}
     for kv in a.set or []:
         if "=" not in kv:
-            raise SystemExit(f"--set expects NAME=VALUE, got {kv!r}")
+            raise ValueError(f"--set expects NAME=VALUE, got {kv!r} (the settings: `safha profiles -v`)")
         k, v = kv.split("=", 1)
         over[k.strip().replace("-", "_")] = v.strip()
     if getattr(a, "always", False):
@@ -44,20 +46,45 @@ def _profile(a: argparse.Namespace) -> Any:
         over["direction"] = "ltr"
     if getattr(a, "split", None):
         over["split"] = a.split
-    try:
-        return load_profile(a.profile, over)
-    except ValueError as e:
-        raise SystemExit(f"safha: {e}") from None
+    return load_profile(a.profile, over)
 
 
-def _pages(spec: str | None) -> list[int]:
+def _pages(spec: str | None, last: int | None = None, what: str = "--pages") -> list[int]:
+    """page numbers from ``3``, ``1,4-6``, ``10-`` (to the last page, when the book's length is known)"""
     out: set[int] = set()
     for part in (spec or "").split(","):
-        if not part.strip():
+        part = part.strip()
+        if not part:
             continue
-        lo, _, hi = part.partition("-")
-        out |= set(range(int(lo), int(hi or lo) + 1))
+        m = re.fullmatch(r"(\d+)(?:\s*-\s*(\d*))?", part)
+        if not m or (m.group(2) == "" and last is None):
+            raise ValueError(f"{what} expects page numbers such as 3 or 1,4-6 (pages are counted from 1), got {part!r}")
+        lo = int(m.group(1))
+        hi = lo if m.group(2) is None else (int(m.group(2)) if m.group(2) else last or lo)
+        if lo < 1 or hi < lo:
+            raise ValueError(f"{what}: {part!r} is no range of pages (pages are counted from 1, the lower number first)")
+        if last is not None and hi > last:
+            raise ValueError(f"{what}: page {hi} is not in the book ({last} pages)")
+        out |= set(range(lo, hi + 1))
     return sorted(out)
+
+
+def _recipe(path: str, summary: bool = False) -> dict:
+    """a recipe file read and checked: a plain message when it is no JSON, no recipe, or a newer safha's"""
+    from .engine import SCHEMA
+
+    with open(path, encoding="utf-8") as f:
+        try:
+            rec = json.load(f)
+        except ValueError as e:
+            raise ValueError(f"{path} is not a recipe: not JSON ({e})") from None
+    if not isinstance(rec, dict) or not isinstance(rec.get("pages"), list) or "mode" not in rec \
+            or (summary and not (isinstance(rec.get("summary"), dict) and isinstance(rec.get("source"), dict))):
+        raise ValueError(f"{path} is not a safha recipe (write one with `safha plan book.pdf -o {os.path.basename(path)}`)")
+    if isinstance(rec.get("schema"), int) and rec["schema"] > SCHEMA:
+        raise ValueError(f"{path} was written by a newer safha (recipe schema {rec['schema']}, this one reads {SCHEMA}): "
+                         "upgrade safha")
+    return rec
 
 
 class _Bar:
@@ -112,7 +139,7 @@ def summary_lines(rec: dict) -> list[str]:
 def cmd_plan(a: argparse.Namespace) -> int:
     from .engine import plan
 
-    rec = plan(a.pdf, _profile(a), jobs=a.jobs, progress=_Bar(a.quiet), drop=_pages(a.drop))
+    rec = plan(a.pdf, _profile(a), jobs=a.jobs, progress=_Bar(a.quiet), drop=_pages(a.drop, what="--drop"))
     out = a.output or os.path.splitext(a.pdf)[0] + ".recipe.json"
     with open(out, "w", encoding="utf-8") as f:
         json.dump(rec, f, ensure_ascii=False, indent=1 if a.pretty else None)
@@ -126,23 +153,42 @@ def _apply_report(rep: dict) -> str:
     d = rep["bytes_out"] - rep["bytes_in"]
     return (f"  {rep['pages']} pages: {rep['cropped']} cropped, {rep['turned']} turned/moved, {rep['scaled']} scaled"
             + (f", {rep['dropped']} dropped" if rep.get("dropped") else "")
-            + f"; {_mb(rep['bytes_in'])} -> {_mb(rep['bytes_out'])} ({'+' if d >= 0 else ''}{_mb(d)}); images untouched"
-            + ("; reversible (safha restore)" if rep.get("reversible") else ""))
+            + f"; {_mb(rep['bytes_in'])} -> {_mb(rep['bytes_out'])} ({'+' if d >= 0 else '-'}{_mb(abs(d))}); images untouched"
+            + ("; reversible (safha restore)" if rep.get("reversible") else "")
+            + (f"\n  note: {rep['rewritten']}, so the output was written whole and `safha restore` cannot give the "
+               "original back from it: keep the original" if rep.get("rewritten") else ""))
+
+
+def _nothing(rec: dict) -> str:
+    """why a file is left as it is, and the option that would change it, when there is one"""
+    why = rec.get("why") or ""
+    hint = ""
+    if "good scan" in why:
+        hint = " (crop anyway: --profile reader or --always)"
+    elif "few text pages" in why:
+        s = rec.get("summary") or {}
+        text, pages = s.get("text", 0), s.get("pages", 0)
+        least = (rec.get("profile", {}).get("changed") or {}).get("min_text_pages", PROFILES["warraq"].min_text_pages)
+        if 1 <= text < least and text >= 0.5 * pages:  # (text on fewer than half the pages is another matter)
+            hint = f" (a book of fewer than {least} text pages is left alone; crop it anyway: --set min_text_pages={text})"
+    return "nothing to do: the file is left as it is" + hint
 
 
 def cmd_crop(a: argparse.Namespace) -> int:
     from .apply import ApplyError, apply_recipe
     from .engine import plan
 
-    rec = plan(a.pdf, _profile(a), jobs=a.jobs, progress=_Bar(a.quiet), drop=_pages(a.drop))
+    rec = plan(a.pdf, _profile(a), jobs=a.jobs, progress=_Bar(a.quiet), drop=_pages(a.drop, what="--drop"))
     if not a.quiet:
         print("\n".join(summary_lines(rec)))
     if a.recipe:
         with open(a.recipe, "w", encoding="utf-8") as f:
             json.dump(rec, f, ensure_ascii=False)
     if rec["mode"] == "skip" and not rec.get("drop") and not rec.get("split"):
-        print("  nothing to do: the file is left as it is"
-              + (" (crop anyway: --profile reader or --always)" if "good scan" in (rec.get("why") or "") else ""))
+        if a.quiet:  # (the summary was not printed: the one line says why)
+            print(f"{rec['source']['file']}: " + (f"{rec['why']}: " if rec.get("why") else "") + _nothing(rec))
+        else:
+            print("  " + _nothing(rec))
         return 0
     out = a.output or os.path.splitext(a.pdf)[0] + ".safha.pdf"
     try:
@@ -153,6 +199,8 @@ def cmd_crop(a: argparse.Namespace) -> int:
     if not a.quiet:
         print(_apply_report(rep))
         print(f"written: {out}")
+    elif rep.get("rewritten"):
+        print(_apply_report(rep).split("\n", 1)[1], file=sys.stderr)
     if a.sheet:
         from .sheet import contact_sheet
 
@@ -163,8 +211,7 @@ def cmd_crop(a: argparse.Namespace) -> int:
 def cmd_apply(a: argparse.Namespace) -> int:
     from .apply import ApplyError, apply_recipe
 
-    with open(a.recipe, encoding="utf-8") as f:
-        rec = json.load(f)
+    rec = _recipe(a.recipe)
     out = a.output or os.path.splitext(a.pdf)[0] + ".safha.pdf"
     try:
         rep = apply_recipe(a.pdf, rec, out, compact=a.compact, check_source=not a.force)
@@ -179,9 +226,8 @@ def cmd_apply(a: argparse.Namespace) -> int:
 def cmd_inspect(a: argparse.Namespace) -> int:
     from .engine import plan
 
-    if a.pdf.endswith(".json"):
-        with open(a.pdf, encoding="utf-8") as f:
-            rec = json.load(f)
+    if a.pdf.lower().endswith(".json"):
+        rec = _recipe(a.pdf, summary=True)
     else:
         rec = plan(a.pdf, _profile(a), jobs=a.jobs, progress=_Bar(a.quiet))
     if a.json:
@@ -207,10 +253,10 @@ def cmd_sheet(a: argparse.Namespace) -> int:
     from .sheet import contact_sheet, html_review
 
     if a.recipe:
-        with open(a.recipe, encoding="utf-8") as f:
-            rec = json.load(f)
+        rec = _recipe(a.recipe, summary=True)
     else:
         rec = plan(a.pdf, _profile(a), jobs=a.jobs, progress=_Bar(a.quiet))
+    asked = _pages(a.pages, last=len(rec["pages"]))  # (checked before anything is drawn)
     if a.html:
         out = html_review(a.pdf, rec, a.html, every=a.all)
         print(f"review page: {out}")
@@ -219,7 +265,7 @@ def cmd_sheet(a: argparse.Namespace) -> int:
 
         print(f"review cards: {review_cards(a.pdf, rec, a.cards)}")
     if a.output or not (a.html or a.cards):
-        pages = [(n - 1, "asked") for n in _pages(a.pages)] if a.pages else None
+        pages = [(n - 1, "asked") for n in asked] if asked else None
         out = contact_sheet(a.pdf, rec, a.output or os.path.splitext(a.pdf)[0] + ".sheet.jpg", pages, px=a.px, cols=a.cols)
         print(f"sheet: {out}")
     return 0
@@ -246,8 +292,12 @@ def cmd_drop(a: argparse.Namespace) -> int:
     from .engine import file_md5
     from .pages import ink_share
 
-    pages = _pages(a.pages)
     doc = pymupdf.open(a.pdf)
+    if not doc.is_pdf:
+        raise ValueError(f"{a.pdf} is not a PDF")
+    if doc.needs_pass:
+        raise ValueError(f"{a.pdf}: the PDF is encrypted with a password")
+    pages = _pages(a.pages, last=doc.page_count)
     if a.blank:
         n = doc.page_count
         lead = []
@@ -256,11 +306,9 @@ def cmd_drop(a: argparse.Namespace) -> int:
                 lead.append(i + 1)
         pages = sorted(set(pages) | set(lead))
     for k in pages:
-        if not 1 <= k <= doc.page_count:
-            raise SystemExit(f"safha: page {k} is not in the file ({doc.page_count} pages)")
         e = ink_share(doc[k - 1])
         if e > 0.001 and not a.force:
-            raise SystemExit(f"safha: page {k} is not blank (ink {e:.2%}); add --force to drop it anyway")
+            raise ValueError(f"page {k} is not blank (ink {e:.2%}); add --force to drop it anyway")
     n0 = doc.page_count
     doc.close()
     if not pages:
@@ -417,18 +465,46 @@ def main(argv: list[str] | None = None) -> int:
     if not getattr(a, "fn", None):
         ap.print_help()
         return 0
-    for k in ("pdf",):
+    for k in ("pdf", "a", "b", "recipe"):
         v = getattr(a, k, None)
-        if v and not os.path.exists(v):
+        if not v or (k == "recipe" and a.cmd == "crop"):  # (crop --recipe names a file to write)
+            continue
+        if not os.path.exists(v):
             print(f"safha: no such file: {v}", file=sys.stderr)
             return 2
+        if os.path.isdir(v):
+            print(f"safha: {v} is a folder, not a file" + (" (one book per run: loop over its files in your shell)"
+                                                           if k == "pdf" else ""), file=sys.stderr)
+            return 2
+    _mupdf_messages_to_stderr()
     try:
         return int(a.fn(a) or 0)
     except KeyboardInterrupt:
         return 130
+    except OSError as e:  # an output that cannot be written, a file that cannot be read
+        print(f"safha: {e.strerror or e}" + (f": {e.filename}" if e.filename else ""), file=sys.stderr)
+        return 2
     except (ValueError, RuntimeError) as e:
         print(f"safha: {e}", file=sys.stderr)
         return 2
+
+
+class _Stderr:
+    """whatever ``sys.stderr`` is at the time of writing"""
+
+    def write(self, text: str) -> int:
+        return sys.stderr.write(text)
+
+    def flush(self) -> None:
+        sys.stderr.flush()
+
+
+def _mupdf_messages_to_stderr() -> None:
+    """MuPDF's own warnings about a damaged file go to stderr, never into what a command prints (``inspect --json``)"""
+    import pymupdf
+
+    with contextlib.suppress(Exception):  # (an older PyMuPDF: its messages stay where they were)
+        pymupdf.set_messages(stream=_Stderr())
 
 
 if __name__ == "__main__":
